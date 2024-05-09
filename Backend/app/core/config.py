@@ -1,0 +1,78 @@
+import os
+import pathlib
+import secrets
+
+from typing import List
+from dotenv import load_dotenv
+from pydantic import BaseSettings
+
+load_dotenv()
+
+ENV: str = ""
+
+
+class Settings(BaseSettings):
+    ENV: str = os.getenv("ENV", "dev")
+    API: str = os.getenv("API", "/api")
+    API_V1_STR: str = "/api/v1"
+    PROJECT_NAME: str = "Ripple"
+
+    PROJECT_ROOT: str = str(pathlib.Path(__file__).parent.parent.parent)
+
+    # date
+    DATE_FORMAT: str = "%Y-%m-%d"
+    DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
+
+    # auth
+    SECRET_KEY: str = secrets.token_urlsafe(32)
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+
+    # CORS
+    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+
+    # database
+    DB_NAME = os.getenv("DB_NAME", "ripple")
+    DB_USER: str = os.getenv("DB_USER", "postgres")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "password")
+    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    DB_PORT: str = os.getenv("DB_PORT", "5432")
+
+    DATABASE_URI_FORMAT: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}"
+    DATABASE_URI = "postgresql://{user}:{password}@{host}:{port}/{database}".format(
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT,
+        database=DB_NAME,
+    )
+
+    # redis
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT: int = os.getenv("REDIS_PORT", 6379)
+    REDIS_DB: int = os.getenv("REDIS_DB", 0)
+
+    # email
+    SMTP_TLS: bool = True
+    SMTP_SSL: bool = False
+    SMTP_PORT: int = 587
+    SMTP_HOST: str | None = None
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+
+    # celery
+    CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+    CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+    CELERY_ACCEPT_CONTENT: List[str] = ["json"]
+    CELERY_TASK_SERIALIZER: str = "json"
+    CELERY_RESULT_SERIALIZER: str = "json"
+
+    # find query
+    PAGE = 1
+    PAGE_SIZE = 20
+    ORDERING = "-id"
+
+    class Config:
+        case_sensitive = True
+
+
+settings = Settings()
