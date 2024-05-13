@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy":"http://127.0.0.1:3001/",
+  "dev": "next dev -p 5000",
   "scripts": {
+    "start": "set PORT=5000 && vite start",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
