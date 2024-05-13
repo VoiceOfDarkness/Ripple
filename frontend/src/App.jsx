@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Filename - App.js
+
+// Importing modules
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+	// usestate for setting a javascript
+	// object for storing and using data
+	const [data, setdata] = useState({
+		name: "",
+		age: 0,
+		date: "",
+		programming: "",
+	});
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	// Using useEffect for single rendering
+	useEffect(() => {
+		// Using fetch to fetch the api from 
+		// flask server it will be redirected to proxy
+		fetch("/data").then((res) =>
+			res.json().then((data) => {
+				// Setting a data from api
+				setdata({
+					name: data.Name,
+					age: data.Age,
+					date: data.Date,
+					programming: data.programming,
+				});
+			})
+		);
+	}, []);
+
+	return (
+		<div className="App">
+			<header className="App-header">
+				<h1>React and flask</h1>
+				{/* Calling a data from setdata for showing */}
+				<p>{data.name}</p>
+				<p>{data.age}</p>
+				<p>{data.date}</p>
+				<p>{data.programming}</p>
+
+			</header>
+		</div>
+	);
 }
 
-export default App
+export default App;
