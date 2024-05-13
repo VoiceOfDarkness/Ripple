@@ -2,9 +2,10 @@ import os
 import pathlib
 import secrets
 
-from typing import List
+from typing import List, Union
 from dotenv import load_dotenv
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+from pydantic import AnyHttpUrl, field_validator
 
 load_dotenv()
 
@@ -28,22 +29,32 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
 
     # CORS
-    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]] = "localhost,localhost:8000,localhost:3000"
+
+    @field_validator("BACKEND_CORS_ORIGINS")
+    def parse_cors_origins(cls, v):
+        if isinstance(v, str):
+            return v.split(",")
+        return v
 
     # database
-    DB_NAME = os.getenv("DB_NAME", "ripple")
+    DB_NAME: str = os.getenv("DB_NAME", "ripple")
     DB_USER: str = os.getenv("DB_USER", "postgres")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "password")
     DB_HOST: str = os.getenv("DB_HOST", "localhost")
     DB_PORT: str = os.getenv("DB_PORT", "5432")
 
-    DATABASE_URI_FORMAT: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}"
-    DATABASE_URI = "postgresql://{user}:{password}@{host}:{port}/{database}".format(
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
+    DATABASE_URI_FORMAT: str = (
+        "{db_engine}://{user}:{password}@{host}:{port}/{database}"
+    )
+    DATABASE_URI: str = (
+        "postgresql://{user}:{password}@{host}:{port}/{database}".format(
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME,
+        )
     )
 
     # redis
@@ -61,15 +72,17 @@ class Settings(BaseSettings):
 
     # celery
     CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-    CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+    CELERY_RESULT_BACKEND: str = os.getenv(
+        "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
+    )
     CELERY_ACCEPT_CONTENT: List[str] = ["json"]
     CELERY_TASK_SERIALIZER: str = "json"
     CELERY_RESULT_SERIALIZER: str = "json"
 
     # find query
-    PAGE = 1
-    PAGE_SIZE = 20
-    ORDERING = "-id"
+    PAGE: int = 1
+    PAGE_SIZE: int = 20
+    ORDERING: str = "-id"
 
     class Config:
         case_sensitive = True

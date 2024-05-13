@@ -21,9 +21,11 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+    restart: on-failure:3
 
   redis:
     image: redis:6.2-alpine
+    command: redis-server
     volumes:
       - redis_data:/data
     ports:
