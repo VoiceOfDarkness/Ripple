@@ -1,7 +1,7 @@
 from enum import Enum
 
 from sqlmodel import Field
-from model.base_model import BaseModel
+from app.model.base_model import BaseModel
 
 
 class UserType(Enum):
@@ -9,7 +9,7 @@ class UserType(Enum):
     seller = "seller"
 
 
-class User(BaseModel):
+class User(BaseModel, table=True):
     user_id: int = Field(default=None, primary_key=True, index=True)
     role: UserType = Field(default="buyer")
     name: str = Field(default=None)

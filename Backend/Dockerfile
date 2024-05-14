@@ -27,12 +27,20 @@ RUN pip install "poetry==$POETRY_VERSION"
 # Copy the poetry.lock and pyproject.toml
 COPY poetry.lock pyproject.toml ./
 
+
+
 # Install project dependencies
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
 # Copy the app
 COPY ./app ./app
+
+# Copy alembic
+COPY ./alembic ./alembic
+COPY ./alembic.ini ./alembic.ini
+
+RUN poetry run alembic upgrade head
 
 # Expose the port the app runs in
 EXPOSE 8000
