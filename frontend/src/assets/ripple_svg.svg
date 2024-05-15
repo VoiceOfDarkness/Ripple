@@ -1,0 +1,15 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="162" height="59">
+	<title>Новый проект</title>
+	<style>
+		tspan { white-space:pre } 
+		.t0 { font-size: 150px;fill: #ffffff;font-weight: 800;font-family: "Montserrat-ExtraBold", "Montserrat" } 
+	</style>
+	<text id="Ripple" style="transform: matrix(1,0,0,1,376.52,382.8)" >
+		<tspan x="0" y="0" class="t0">R</tspan><tspan  y="0" class="t0">i</tspan><tspan  y="0" class="t0">p</tspan><tspan  y="0" class="t0">p</tspan><tspan  y="0" class="t0">l</tspan><tspan  y="0" class="t0">e
+</tspan>
+	</text>
+	<text id="Text layer 2" style="transform: matrix(1,.017,-0.017,1,993,151)" >
+	</text>
+	<text id="" style="transform: matrix(.689,.725,-0.725,.689,583.312,138.081)" >
+	</text>
+</svg>
