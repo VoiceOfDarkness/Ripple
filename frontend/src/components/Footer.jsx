@@ -21,23 +21,23 @@ export default function Footer() {
 
   const sections = [
     {
-      title: 'Services',
-      links: ['Branding', 'Design', 'Marketing', 'Advertisement'],
+      title: 'Categories',
+      links: ['Graphics & Design', 'Digital Marketing', 'Writing & Translation', 'Video & Animation',"Music & Audio","Programming & Tech","Business","Lifestyle","Sitemap"],
       key: 'services',
     },
     {
-      title: 'Company',
-      links: ['About us', 'Contact', 'Jobs', 'Press kit'],
+      title: 'About',
+      links: ['Careers', 'Press & News', 'Partnerships', 'Privacy Policy', 'Terms of Service', 'Intellectual Property Claims', 'Security', 'Sitemap'],
       key: 'company',
     },
     {
-      title: 'Legal',
-      links: ['Terms of use', 'Privacy policy', 'Cookie policy'],
+      title: 'Support and Education',
+      links: ['Help & Support', 'Trust & Safety', 'Selling on Ripple', 'Buying on Ripple', 'Community', 'Events', 'Blog', 'Forum'],
       key: 'legal',
     },
     {
-      title: 'Another Legal',
-      links: ['Terms of use', 'Privacy policy', 'Cookie policy'],
+      title: 'Community',
+      links: ['Customer Success Stories', 'Community Hub', 'Forum', 'Blog', 'Podcast', 'Affiliates', 'Videos', 'Developers', 'Sitemap'],
       key: 'anotherLegal',
     },
   ];
@@ -57,7 +57,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="footer p-10 bg-base-200 dark:bg-slate-800 text-base-content dark:text-white">
+      <footer className="footer p-10 bg-base-200 text-base-content dark:text-white">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {sections.map((section) => (
             <FooterSection
