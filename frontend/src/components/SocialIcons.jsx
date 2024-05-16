@@ -1,5 +1,5 @@
-import { Instagram, Twitter, Facebook, LinkedIn } from '@mui/icons-material';
-import React from 'react';
+import { Instagram, Twitter, Facebook, LinkedIn } from "@mui/icons-material";
+import React from "react";
 
 const SocialIcons = () => {
   const icons = [
