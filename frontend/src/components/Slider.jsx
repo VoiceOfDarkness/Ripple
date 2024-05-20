@@ -21,7 +21,7 @@ export default function MainSlider() {
     { text: "Learn your business", title: "Data Entry", img: img6 },
   ];
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 5,

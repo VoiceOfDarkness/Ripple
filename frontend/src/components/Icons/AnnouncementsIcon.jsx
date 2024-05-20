@@ -1,0 +1,49 @@
+
+export default function AnnouncementsIcon() {
+  return (
+    <svg
+      width="20"
+      height="21"
+      viewBox="0 0 20 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="0.9"
+        y="1.4"
+        width="7.06878"
+        height="7.06878"
+        rx="0.946154"
+        stroke="#C9C9C9"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="12.0309"
+        y="1.4"
+        width="7.06878"
+        height="7.06878"
+        rx="0.946154"
+        stroke="#C9C9C9"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="12.0309"
+        y="12.5312"
+        width="7.06878"
+        height="7.06878"
+        rx="0.946154"
+        stroke="#C9C9C9"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="0.9"
+        y="12.5312"
+        width="7.06878"
+        height="7.06878"
+        rx="0.946154"
+        stroke="#C9C9C9"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
