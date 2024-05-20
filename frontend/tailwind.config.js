@@ -9,10 +9,15 @@ module.exports = {
       black: "#000000",
       grey: "#DEDEDE",
       darkgrey: "#6A6A6A",
+      backGrey: "#1c1c1c",
+      red: "#FF4141",
+      purple: "#876DD0",
     },
     extend: {
       spacing: {
         128: "120rem",
+        nav: "16vw",
+        side: "20%",
       },
     },
   },
