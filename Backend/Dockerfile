@@ -40,11 +40,9 @@ COPY ./app ./app
 COPY ./alembic ./alembic
 COPY ./alembic.ini ./alembic.ini
 
-RUN poetry run alembic upgrade head
-
-# Expose the port the app runs in
+# # Expose the port the app runs in
 EXPOSE 8000
 
-# The command to run the app when the container is started
+# # The command to run the app when the container is started
 ENTRYPOINT ["poetry", "run"]
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

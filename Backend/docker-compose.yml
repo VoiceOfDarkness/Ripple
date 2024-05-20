@@ -20,7 +20,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - "6432:5432"
+      - "5432:5432"
     restart: on-failure:3
 
   redis:
