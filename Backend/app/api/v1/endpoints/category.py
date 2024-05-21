@@ -1,38 +1,15 @@
 from fastapi import Depends, APIRouter, Body
 from dependency_injector.wiring import inject, Provide
-from pydantic import BaseModel
-from typing import Optional, List
+from typing import List
 
 from app.core.container import Container
 from app.services.category_service import CategoryService
+from app.schemas.category import Category, BaseCategory, CreateCategory
 
 category_router = APIRouter(tags=["category"])
 
 
-class GigOut(BaseModel):
-    id: int
-    seller_id: int
-    title: str
-    description: str
-    category_id: int
-    price: float
-    delivery_time: int
-    image: str
-    rating: float
-    num_reviews: int
-
-
-class CategoryOut(BaseModel):
-    id: int
-    name: str
-    gigs: Optional[List[GigOut]] = None
-
-
-class CategoryIn(BaseModel):
-    name: str
-
-
-@category_router.get("/categories", response_model=List[CategoryOut])
+@category_router.get("/categories", response_model=List[Category])
 @inject
 async def get_categories(
     service: CategoryService = Depends(Provide[Container.category_service]),
@@ -49,10 +26,10 @@ async def get_category(
     return service.get(category_id)
 
 
-@category_router.post("/categories")
+@category_router.post("/categories", response_model=CreateCategory)
 @inject
 async def create_category(
-    category: CategoryIn,
+    category: BaseCategory = Body(...),
     service: CategoryService = Depends(Provide[Container.category_service]),
 ):
     return service.add(category)
