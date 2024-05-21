@@ -23,6 +23,8 @@ body {
   font-family: "Montserrat", sans-serif;
   background-color: #070707;
   font-size: 1.6rem;
+  color: #ffffff;
+  height: 100%;
 }
 
 p {
@@ -37,4 +39,8 @@ img {
 .icon {
   width: 2rem !important;
   height: 2rem !important;
+}
+
+path, rect {
+  stroke: currentColor;
 }
