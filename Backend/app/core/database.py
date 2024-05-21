@@ -1,5 +1,5 @@
+from contextlib import AbstractContextManager, contextmanager
 from typing import Any, Callable
-from contextlib import contextmanager, AbstractContextManager
 
 from sqlalchemy import create_engine, orm
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
@@ -27,14 +27,13 @@ class Database:
     def create_database(self) -> None:
         BaseModel.metadata.create_all(self._engine)
 
-
-@contextmanager
-def get_session(db: Database) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
-    session: Session = db._session_factory()
-    try:
-        yield session
-    except Exception as e:
-        session.rollback()
-        raise e
-    finally:
-        session.close()
+    @contextmanager
+    def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
+        session: Session = self._session_factory()
+        try:
+            yield session
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            session.close()

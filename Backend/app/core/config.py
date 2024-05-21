@@ -1,11 +1,11 @@
 import os
 import pathlib
 import secrets
-
 from typing import List, Union
+
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
 from pydantic import AnyHttpUrl, field_validator
+from pydantic_settings import BaseSettings
 
 load_dotenv()
 
@@ -38,11 +38,11 @@ class Settings(BaseSettings):
         return v
 
     # database
-    DB_NAME: str = os.getenv("DB_NAME", "ripple")
-    DB_USER: str = os.getenv("DB_USER", "postgres")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "password")
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
-    DB_PORT: str = os.getenv("DB_PORT", "5432")
+    DB_NAME: str = os.getenv("POSTGRES_NAME", "app")
+    DB_USER: str = os.getenv("POSTGRES_USER", "ripple")
+    DB_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "password")
+    DB_HOST: str = os.getenv("POSTGRES_HOST", "db")
+    DB_PORT: str = os.getenv("POSTGRES_PORT", "5432")
 
     DATABASE_URI_FORMAT: str = (
         "{db_engine}://{user}:{password}@{host}:{port}/{database}"

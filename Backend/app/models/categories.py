@@ -1,8 +1,9 @@
 from sqlmodel import SQLModel, Field, Relationship
 
-from typing import List
+from typing import List, TYPE_CHECKING
 
-from app.models.services import Gigs
+if TYPE_CHECKING:
+    from app.models.services import Gigs
 
 
 class Category(SQLModel, table=True):

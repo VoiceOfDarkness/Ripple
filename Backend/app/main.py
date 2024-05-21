@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.container import Container
-
+from app.api.v1.main import routers
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,3 +24,10 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+app.include_router(routers, prefix=settings.API_V1_STR)
+
+
+@app.get("/")
+def check():
+    return {"message": "OK!"}

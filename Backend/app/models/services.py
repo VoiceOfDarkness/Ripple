@@ -1,8 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 
+from app.models.categories import Category
+from app.models.order import Order
+
 if TYPE_CHECKING:
-    from app.models.categories import Category
     from app.models.user import Freelancer
 
 
@@ -19,3 +21,4 @@ class Gigs(SQLModel, table=True):
     num_reviews: int = Field(default=0)
     freelancer: "Freelancer" = Relationship(back_populates="gigs")
     category: "Category" = Relationship(back_populates="gigs")
+    orders: list["Order"] = Relationship(back_populates="gigs")
