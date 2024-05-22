@@ -3,7 +3,7 @@ import SocialIcons from "../SocialIcons";
 
 const FooterMain = () => {
   return (
-    <footer className="footer px-10 py-4 border-t bg-base-200 dark:bg-slate-800 text-base-content dark:text-white border-base-300">
+    <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content dark:text-white border-base-300">
       <nav className="w-full">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5">
           <div className="flex flex-col md:flex-row items-center gap-5">
