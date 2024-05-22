@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        PlaceHolderGray: "#AAA6B9",
         inputGray: "#3D3D3D",
         cardBlack: "#0D0D0D",
         purple: "#8B7DB4",
