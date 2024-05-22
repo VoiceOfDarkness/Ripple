@@ -36,9 +36,9 @@ export default function JobsPage() {
         <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <m.div
           animate={isVisible ? { marginLeft: "20%" } : { marginLeft: "5%" }}
-          transition={{ duration: 0.8 }}
-        ></m.div>
-        <JobMain/>
+          transition={{ duration: 0.8 }}>
+          <JobMain />
+        </m.div>
       </div>
     </>
   );
