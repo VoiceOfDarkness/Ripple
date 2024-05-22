@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 import { motion as m } from "framer-motion";
+import JobMain from "../components/JobMain/index";
 
 export default function JobsPage() {
   const [isVisible, setIsVisible] = useState(true);
@@ -37,6 +38,7 @@ export default function JobsPage() {
           animate={isVisible ? { marginLeft: "20%" } : { marginLeft: "5%" }}
           transition={{ duration: 0.8 }}
         ></m.div>
+        <JobMain/>
       </div>
     </>
   );
