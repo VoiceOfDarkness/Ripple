@@ -7,13 +7,13 @@ import FooterMain from "../components/Footer/FooterMain";
 
 export default function JobsPage() {
   const [isVisible, setIsVisible] = useState(true);
-  const [marginLeftPercentage, setMarginLeftPercentage] = useState(22);
+  const [marginLeftPercentage, setMarginLeftPercentage] = useState(20);
 
   useEffect(() => {
     // Function to check the screen width and update the state
     const checkScreenSize = () => {
       const windowWidth = window.innerWidth;
-      const newMarginLeftPercentage = windowWidth <= 1200 ? 30 : 22;
+      const newMarginLeftPercentage = windowWidth <= 1200 ? 30 : 20;
       const newMarginLeftPercentage1 = windowWidth <= 768 ? 40 : 30;
       setMarginLeftPercentage(newMarginLeftPercentage1);
       setMarginLeftPercentage(newMarginLeftPercentage);
@@ -34,14 +34,14 @@ export default function JobsPage() {
 
   return (
     <>
-      <div className="bg-backGrey w-full absolute ">
+      <div className="bg-backGrey w-full h-full absolute ">
         <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <m.div
-          animate={{ marginLeft: isVisible ? `${marginLeftPercentage}%` : '5%' }}
-          transition={{ duration: 0.8 }}
-        >
+          animate={{
+            marginLeft: isVisible ? `${marginLeftPercentage}%` : "5%",
+          }}
+          transition={{ duration: 0.8 }}>
           <JobMain />
-          <FooterMain/>
         </m.div>
       </div>
     </>
