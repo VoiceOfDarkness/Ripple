@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field
 from typing import List, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from app.schemas.services import Gigs
+from pydantic import BaseModel, Field
+
+from app.schemas.services import Gigs
+
 
 class BaseCategory(BaseModel):
     name: str = Field(..., max_length=128)

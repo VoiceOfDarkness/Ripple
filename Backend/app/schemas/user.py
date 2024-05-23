@@ -1,21 +1,23 @@
-from pydantic import BaseModel, EmailStr, ConfigDict, Field
-from typing import List, TYPE_CHECKING
 from datetime import datetime
+from typing import List, TYPE_CHECKING
 
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+from app.schemas.order import Order
 
 if TYPE_CHECKING:
-    from app.schemas.order import Order
     from app.schemas.services import Gigs
+
 
 # User schemas
 class BaseUser(BaseModel):
-    user_name: str = Field(..., alias="username", max_length=128)
+    user_name: str = Field(..., max_length=128)
     email: EmailStr
-    first_name: str = Field(..., alias="firstname", max_length=128)
-    last_name: str = Field(..., alias="lastname", max_length=128)
+    first_name: str = Field(..., max_length=128)
+    last_name: str = Field(..., max_length=128)
 
 class User(BaseUser):
-    # model_config = ConfigDict(orm_mode=True)
+    model_config = ConfigDict(orm_mode=True)
 
     id: int
     is_active: bool = True
