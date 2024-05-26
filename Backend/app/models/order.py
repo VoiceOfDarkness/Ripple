@@ -1,13 +1,13 @@
+import enum
 from datetime import datetime
 from decimal import Decimal
-
-from sqlmodel import Field, SQLModel, Relationship
 from typing import TYPE_CHECKING, ForwardRef
-import enum
+
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.models.user import Freelancer, HireManager
     from app.models.services import Gigs
+    from app.models.user import Freelancer, HireManager
 
 
 class OrderStatus(str, enum.Enum):

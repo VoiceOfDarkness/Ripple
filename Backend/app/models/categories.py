@@ -1,9 +1,6 @@
-from sqlmodel import SQLModel, Field, Relationship
-
-from typing import List, TYPE_CHECKING
-
 from typing import TYPE_CHECKING, List
 
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from app.models.services import Gigs

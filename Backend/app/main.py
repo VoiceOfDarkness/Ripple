@@ -1,9 +1,11 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import logging
 
+from app.api.v1.main import routers
 from app.core.config import settings
 from app.core.container import Container
-from app.api.v1.main import routers
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -16,16 +18,21 @@ app = FastAPI(
 container = Container()
 db = container.db()
 
+app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
+
 if settings.BACKEND_CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
 
 app.include_router(routers, prefix=settings.API_V1_STR)
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 @app.get("/")

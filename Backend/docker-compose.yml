@@ -22,6 +22,11 @@ services:
     ports:
       - "5432:5432"
     restart: on-failure:3
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ripple" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:6.2-alpine
@@ -30,6 +35,21 @@ services:
       - redis_data:/data
     ports:
       - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - 4040:4040
+    env_file:
+      - ../.env
+    command: ngrok http web:8000
+    depends_on:
+      - web
 
 volumes:
   postgres_data:

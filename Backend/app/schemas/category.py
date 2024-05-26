@@ -1,15 +1,17 @@
-from pydantic import BaseModel, Field
-from typing import List, TYPE_CHECKING
+from typing import List
 
-if TYPE_CHECKING:
-    from app.schemas.services import Gigs
+from app.schemas.services import Gigs
+from pydantic import BaseModel, Field
+
 
 class BaseCategory(BaseModel):
     name: str = Field(..., max_length=128)
 
+
 class Category(BaseCategory):
     id: int
-    gigs: list["Gigs"]
+    gigs: List["Gigs"]
+
 
 class CreateCategory(BaseCategory):
     pass

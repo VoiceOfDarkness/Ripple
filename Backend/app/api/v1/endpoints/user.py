@@ -1,38 +1,22 @@
-from fastapi import Depends, APIRouter
-
-from dependency_injector.wiring import inject, Provide
-from pydantic import BaseModel
+from typing import List
 
 from app.core.container import Container
+from app.core.dependencies import get_current_user
+from app.schemas.user import User
 from app.services.user_service import UserService
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
 
-user_router = APIRouter(tags=["user"])
-
-
-class UserOut(BaseModel):
-    id: int
-    user_name: str
-    email: str
-    hash_password: str
-    first_name: str
-    last_name: str
+user_router = APIRouter(
+    prefix="/user", tags=["user"], dependencies=[Depends(get_current_user)]
+)
 
 
-class UserIn(BaseModel):
-    user_name: str
-    email: str
-    password: str
-    first_name: str
-    last_name: str
-
-
-@user_router.get("/{user_id}", response_model=UserOut)
+@user_router.get("/", response_model=List[User])
 @inject
-async def get_user(user_id: int, service: UserService = Depends(Provide[Container.user_service])):  # type: ignore
-    return service.get(user_id)
-
-
-@user_router.post("/")
-@inject
-async def create_user(user: UserIn, service: UserService = Depends(Provide[Container.user_service])):  # type: ignore
-    return service.add(user)
+def get_all_users(
+    service: UserService = Depends(Provide[Container.user_service]),
+    current_user: User = Depends(get_current_user),
+):
+    return service.get_list()

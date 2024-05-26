@@ -26,6 +26,8 @@ class Settings(BaseSettings):
 
     # auth
     SECRET_KEY: str = secrets.token_urlsafe(32)
+    GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "")
+    GOOGLE_CLIENT_SECRET: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
 
     # CORS
@@ -41,7 +43,7 @@ class Settings(BaseSettings):
     DB_NAME: str = os.getenv("POSTGRES_NAME", "app")
     DB_USER: str = os.getenv("POSTGRES_USER", "ripple")
     DB_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "password")
-    DB_HOST: str = os.getenv("POSTGRES_HOST", "db")
+    DB_HOST: str = os.getenv("POSTGRES_HOST", "localhost")
     DB_PORT: str = os.getenv("POSTGRES_PORT", "5432")
 
     DATABASE_URI_FORMAT: str = (

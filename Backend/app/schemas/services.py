@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field
-from typing import List
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
+
+from app.schemas.user import Freelancer
+from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
-    from app.schemas.user import Freelancer
     from app.schemas.category import Category
 
 # Gigs schemas
@@ -16,7 +16,7 @@ class BaseGigs(BaseModel):
     price: Decimal = Field(..., max_digits=5, decimal_places=2)
     # delivery_time: int
     image: str = Field(..., max_length=512)
-    rating: float = Field(..., ge=0, le=10, default=0)
+    rating: float = Field(ge=0, le=10, default=0)
     num_reviews: int = Field(default=0)
 
 class Gigs(BaseGigs):

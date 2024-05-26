@@ -1,19 +1,18 @@
-"""created categories
+"""initial commit 2
 
-Revision ID: 8eecaec88e65
+Revision ID: d5c4a4f9d5b5
 Revises: 
-Create Date: 2024-05-18 18:59:40.411650
+Create Date: 2024-05-24 18:47:04.958506
 
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import sqlmodel
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = '8eecaec88e65'
+revision: str = 'd5c4a4f9d5b5'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -28,12 +27,15 @@ def upgrade() -> None:
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('user_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('hash_password', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('first_name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('last_name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('email', sa.String(length=255), nullable=True),
+    sa.Column('first_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('last_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_blocked', sa.Boolean(), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('freelancer',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -58,10 +60,10 @@ def upgrade() -> None:
     sa.Column('title', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=False),
-    sa.Column('price', sa.Float(), nullable=False),
+    sa.Column('price', sa.Numeric(precision=5, scale=2), nullable=False),
     sa.Column('delivery_time', sa.Integer(), nullable=False),
     sa.Column('image', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('rating', sa.Float(), nullable=False),
+    sa.Column('rating', sa.Float(precision=3, asdecimal=True), nullable=True),
     sa.Column('num_reviews', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),
     sa.ForeignKeyConstraint(['seller_id'], ['freelancer.id'], ),
@@ -74,7 +76,7 @@ def upgrade() -> None:
     sa.Column('gig_id', sa.Integer(), nullable=False),
     sa.Column('status', sa.Enum('pending', 'accepted', 'completed', 'cancelled', name='orderstatus'), nullable=False),
     sa.Column('order_date', sa.DateTime(), nullable=False),
-    sa.Column('total_price', sa.Float(), nullable=False),
+    sa.Column('total_price', sa.Numeric(), nullable=False),
     sa.ForeignKeyConstraint(['buyer_id'], ['hire_manager.id'], ),
     sa.ForeignKeyConstraint(['gig_id'], ['gigs.id'], ),
     sa.ForeignKeyConstraint(['seller_id'], ['freelancer.id'], ),
