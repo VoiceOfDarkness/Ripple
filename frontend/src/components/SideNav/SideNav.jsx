@@ -28,7 +28,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
   return (
     <m.div
       className="fixed h-screen bg-black z-50 pr-24 rounded-r-3xl"
-      animate={isVisible ? { translate: 0 } : { translate: "-85%" }}
+      animate={isVisible ? { translate: 0 } : { translate: "-99.4%" }}
       transition={{ duration: 0.8 }}
     >
       <StarShape className="flex justify-end text-black absolute -right-12 top-1/2 -translate-y-1/2 -z-50">

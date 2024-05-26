@@ -1,20 +1,23 @@
 import SideNav from "../components/SideNav/SideNav";
-import { useState } from "react";
-import { useEffect } from "react";
-
+import { useState, useEffect } from "react";
 import { motion as m } from "framer-motion";
+import JobMain from "../components/JobMain/index";
+import Footer from "../components/Footer/Footer";
+import FooterMain from "../components/Footer/FooterMain";
 
 export default function JobsPage() {
   const [isVisible, setIsVisible] = useState(true);
+  const [marginLeftPercentage, setMarginLeftPercentage] = useState(20);
 
   useEffect(() => {
     // Function to check the screen width and update the state
     const checkScreenSize = () => {
-      if (window.innerWidth <= 768) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
+      const windowWidth = window.innerWidth;
+      const newMarginLeftPercentage = windowWidth <= 1200 ? 30 : 20;
+      const newMarginLeftPercentage1 = windowWidth <= 768 ? 40 : 30;
+      setMarginLeftPercentage(newMarginLeftPercentage1);
+      setMarginLeftPercentage(newMarginLeftPercentage);
+      setIsVisible(windowWidth > 768);
     };
 
     // Initial check when component mounts
@@ -27,16 +30,19 @@ export default function JobsPage() {
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
-  }, [setIsVisible]);
+  }, []);
 
   return (
     <>
-      <div className="bg-backGrey w-full absolute h-full">
+      <div className="bg-backGrey w-full h-full absolute ">
         <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <m.div
-          animate={isVisible ? { marginLeft: "20%" } : { marginLeft: "5%" }}
-          transition={{ duration: 0.8 }}
-        ></m.div>
+          animate={{
+            marginLeft: isVisible ? `${marginLeftPercentage}%` : "5%",
+          }}
+          transition={{ duration: 0.8 }}>
+          <JobMain />
+        </m.div>
       </div>
     </>
   );

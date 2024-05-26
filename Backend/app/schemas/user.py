@@ -3,6 +3,11 @@ from typing import TYPE_CHECKING, List, Optional
 
 from app.schemas.order import Order
 from pydantic import BaseModel, EmailStr, Field
+from typing import List, TYPE_CHECKING
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+from app.schemas.order import Order
 
 if TYPE_CHECKING:
     from app.schemas.services import Gigs
@@ -18,6 +23,15 @@ class BaseUser(BaseModel):
 
 class User(BaseUser):
     id: Optional[int] = None
+    user_name: str = Field(..., max_length=128)
+    email: EmailStr
+    first_name: str = Field(..., max_length=128)
+    last_name: str = Field(..., max_length=128)
+
+class User(BaseUser):
+    model_config = ConfigDict(orm_mode=True)
+
+    id: int
     is_active: bool = True
     is_banned: bool = False
 

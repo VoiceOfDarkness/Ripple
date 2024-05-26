@@ -39,7 +39,7 @@ const FooterSection = ({
             <a
               key={index}
               href="/"
-              className="link link-hover block text-lg md:text-base text-gray-900 dark:text-gray-900"
+              className="link link-hover block text-lg md:text-base "
             >
               {link}
             </a>

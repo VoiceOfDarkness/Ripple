@@ -3,6 +3,12 @@ from typing import TYPE_CHECKING, List
 
 from app.schemas.user import Freelancer
 from pydantic import BaseModel, Field
+from typing import List
+from typing import TYPE_CHECKING
+
+from pydantic import BaseModel, Field
+
+from app.schemas.user import Freelancer
 
 if TYPE_CHECKING:
     from app.schemas.category import Category
