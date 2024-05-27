@@ -23,15 +23,7 @@ class BaseUser(BaseModel):
 
 class User(BaseUser):
     id: Optional[int] = None
-    user_name: str = Field(..., max_length=128)
-    email: EmailStr
-    first_name: str = Field(..., max_length=128)
-    last_name: str = Field(..., max_length=128)
 
-class User(BaseUser):
-    model_config = ConfigDict(orm_mode=True)
-
-    id: int
     is_active: bool = True
     is_banned: bool = False
 

@@ -15,20 +15,24 @@ if TYPE_CHECKING:
 
 # Gigs schemas
 class BaseGigs(BaseModel):
-    seller_id: int
     title: str = Field(..., max_length=128)
     description: str = Field(..., max_length=512)
     category_id: int
     price: Decimal = Field(..., max_digits=5, decimal_places=2)
-    # delivery_time: int
+    delivery_time: int
     image: str = Field(..., max_length=512)
-    rating: float = Field(ge=0, le=10, default=0)
-    num_reviews: int = Field(default=0)
+
 
 class Gigs(BaseGigs):
     id: int
+    seller_id: int
     freelancer: "Freelancer"
     category: "Category"
+    rating: float = Field(ge=0, le=10, default=0)
+    num_reviews: int = Field(default=0)
 
 class CreateGigs(BaseGigs):
+    seller_id: int
+
+class UpdateGigs(BaseGigs):
     pass
