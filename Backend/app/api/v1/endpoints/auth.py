@@ -1,5 +1,5 @@
 from app.core.container import Container
-from app.schemas.auth import SignIn, SignInResponse, SignUp, User
+from app.schemas.auth import SignIn, SignInResponse, SignUp, User, Token
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Request
 
@@ -26,7 +26,7 @@ async def sign_in_google(
     return await service.sign_in_google(request)
 
 
-@auth_router.get("/google/callback")
+@auth_router.get("/google/callback", response_model=Token)
 @inject
 async def auth_google_callback(
     request: Request, service=Depends(Provide[Container.auth_service])

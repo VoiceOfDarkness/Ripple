@@ -15,10 +15,10 @@ class Gigs(SQLModel, table=True):
     seller_id: int = Field(foreign_key="freelancer.id")
     title: str = Field(max_length=128, nullable=False)
     description: str = Field(max_length=512)
+    image_filename: str = Field(max_length=255, default="placeholder.jpg")
     category_id: int = Field(foreign_key="category.id")
     price: Decimal = Field(default=0, max_digits=5, decimal_places=2, nullable=False)
     delivery_time: int = Field()  # Don't have any idea. Do we even need it?
-    image: str = Field(max_length=512)
     rating: float = Field(
         sa_column=Column(
             Float(precision=3, asdecimal=True),

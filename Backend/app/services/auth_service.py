@@ -26,7 +26,7 @@ class AuthService(BaseService):
     def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
         user = self.user_repository.get_by_username_or_email(form_data.email)
         if not user or not verify_password(form_data.password, user.hash_password):
-            return HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Incorrect username or password",
             )
