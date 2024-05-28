@@ -27,9 +27,9 @@ class Freelancer(SQLModel, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
-    location: str = Field(max_length=128)
-    registration_date: datetime = Field(default=datetime.now, nullable=False)
-    overview: str = Field(max_length=1024)
+    location: str = Field(max_length=128, nullable=True)
+    registration_date: datetime = Field(default=datetime.now(), nullable=False)
+    overview: str = Field(max_length=1024, nullable=True)
     user: User = Relationship(back_populates="freelancers")
     gigs: List[ForwardRef("Gigs")] = Relationship(back_populates="freelancer")  # type: ignore
     orders: List[ForwardRef("Order")] = Relationship(back_populates="freelancer")  # type: ignore

@@ -28,6 +28,12 @@ class SignUp(BaseModel):
     )
 
 
+class FreelancerSignUp():
+    user_id: int
+    location: str
+    overview: str
+
+
 class SignInResponse(BaseModel):
     access_token: str
     token_type: str

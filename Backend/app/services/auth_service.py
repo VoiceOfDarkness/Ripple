@@ -8,9 +8,10 @@ from app.core.security import (
     oauth,
     verify_password,
 )
-from app.repository.user_repository import UserRepository
+from app.repository.user_repository import UserRepository, FreelancerRepository
 from app.schemas.auth import SignUp, Token
 from app.schemas.user import UserPrivate as User
+from app.schemas.user import CreateFreelancer as Freelancer
 from app.services.base_service import BaseService
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -18,10 +19,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 logger = getLogger(__name__)
 
 
-class AuthService(BaseService):
-    def __init__(self, user_repository: UserRepository) -> None:
+class AuthService:
+    def __init__(self, user_repository: UserRepository, freelancer_repository: FreelancerRepository) -> None:
         self.user_repository = user_repository
-        super().__init__(user_repository)
+        self.freelancer_repository = freelancer_repository
 
     def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
         user = self.user_repository.get_by_username_or_email(form_data.email)
@@ -93,6 +94,12 @@ class AuthService(BaseService):
                 user_name=sign_up.username,
                 email=sign_up.email,
                 hash_password=hashed_password,
+            )
+        )
+        
+        freelancer = self.freelancer_repository.create(
+            Freelancer(
+                user_id=new_user.id,
             )
         )
 
