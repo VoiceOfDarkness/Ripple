@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const FooterSection = ({
   title,
@@ -36,13 +37,13 @@ const FooterSection = ({
       {(isOpen || isMediumScreen) && (
         <div className="block space-y-2">
           {links.map((link, index) => (
-            <a
+            <Link
               key={index}
-              href="/"
+              to="/"
               className="link link-hover block text-lg md:text-base "
             >
               {link}
-            </a>
+            </Link>
           ))}
         </div>
       )}

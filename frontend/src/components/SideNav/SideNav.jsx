@@ -7,9 +7,10 @@ import PaymentIcon from "../Icons/PaymentIcon";
 import { Settings } from "@mui/icons-material";
 import HelpIcon from "../Icons/HelpIcon";
 import LogOutIcon from "../Icons/LogOutIcon";
-import StarShape from "../../layouts/StarShape";
+import StarShape from "../UI/StarShape";
 
 import { motion as m } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function SideNav({ isVisible, setIsVisible }) {
   const click = () => {
@@ -28,6 +29,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
   return (
     <m.div
       className="fixed h-screen bg-black z-50 pr-24 rounded-r-3xl"
+      initial={{ translate: 0 }}
       animate={isVisible ? { translate: 0 } : { translate: "-99.4%" }}
       transition={{ duration: 0.8 }}
     >
@@ -60,7 +62,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
                   key={index}
                 >
                   {item[1]}
-                  <a href="/">{item[0]}</a>
+                  <Link to="/">{item[0]}</Link>
                 </li>
               );
             })}

@@ -1,4 +1,5 @@
 import { Menu } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export default function MenuNavBar() {
   return (
@@ -7,22 +8,32 @@ export default function MenuNavBar() {
       <div className="max-md:hidden">
         <ul className="flex gap-14 items-center font-semibold text-3xl">
           <li>
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <a href="/">About</a>
+            <Link to="/">About</Link>
           </li>
           <li>
-            <a href="/">Workshop</a>
+            <Link to="jobs">Jobs</Link>
           </li>
           <li>
-            <a href="/">Contact</a>
+            <Link to="/">Contact</Link>
           </li>
-          <li className="border border-white hover:bg-white hover:text-black rounded-lg border-solid p-4 px-10 transition-all duration-500">
-            <a href="/">Login</a>
+          <li>
+            <Link
+              to="auth?mode=login"
+              className="border border-white hover:bg-white hover:text-black rounded-lg border-solid p-4 px-10 transition-all duration-500"
+            >
+              Login
+            </Link>
           </li>
-          <li className="rounded-lg p-4 px-10 hover:bg-cardBlack hover:text-white border-white border bg-white text-black transition-all duration-500">
-            <a href="/">Sign up</a>
+          <li>
+            <Link
+              to="auth?mode=login"
+              className="rounded-lg p-4 px-10 hover:bg-cardBlack hover:text-white border-white border bg-white text-black transition-all duration-500"
+            >
+              Sign up
+            </Link>
           </li>
         </ul>
       </div>
