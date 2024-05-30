@@ -3,19 +3,14 @@ import signUpSvg from "../assets/SIGN-UP.svg";
 import man from "../assets/man.svg";
 import man2 from "../assets/man2.svg";
 import Box from "../layouts/Box";
-import { redirect, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Google } from "@mui/icons-material";
-import { loginGoogle } from "../store/auth-actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 export default function AuthPage() {
   const [params] = useSearchParams();
   const mode = params.get("mode");
   const isLogin = mode === "login";
-
-  const dispatch = useDispatch();
 
   return (
     <Box
@@ -53,7 +48,7 @@ export default function AuthPage() {
 
           <Link
             to="https://a563-94-20-49-98.ngrok-free.app/api/v1/auth/sign-in/google"
-            className="flex justify-between p-4 items-center border border-white w-1/3 rounded-xl hover:text-purple duration-200 hover:border-purple cursor-pointer"
+            className="flex justify-center gap-6 p-4 items-center border border-white w-1/2 rounded-xl hover:text-purple duration-200 hover:border-purple cursor-pointer"
           >
             <Google style={{ fontSize: "2rem" }} />
             <p>Continue with Google</p>

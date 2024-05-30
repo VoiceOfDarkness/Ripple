@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { VisibilityOffOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../../store/auth-actions";
+import { craeteUser, login } from "../../store/auth-actions";
 
 export default function LoginForm({ mode }) {
   const [visible, setVisible] = useState(false);
@@ -53,7 +53,11 @@ export default function LoginForm({ mode }) {
           //   alert(JSON.stringify(values, null, 2));
           //   setSubmitting(false);
           // }, 400);
-          await dispatch(login(values.email, values.password));
+          mode !== "login"
+            ? await dispatch(
+                craeteUser(values.userName, values.password, values.email)
+              )
+            : await dispatch(login(values.email, values.password));
           setSubmitting(false);
         }}
       >

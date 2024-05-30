@@ -29,7 +29,7 @@ export default function MenuNavBar() {
           </li>
           <li>
             <Link
-              to="auth?mode=login"
+              to="auth?mode=signup"
               className="rounded-lg p-4 px-10 hover:bg-cardBlack hover:text-white border-white border bg-white text-black transition-all duration-500"
             >
               Sign up
