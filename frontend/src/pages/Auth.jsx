@@ -15,7 +15,7 @@ export default function AuthPage() {
   return (
     <Box
       style={{ backgroundImage: `url(${signUpSvg})` }}
-      className="h-screen bg-no-repeat bg-cover flex items-center w-full"
+      className="h-screen bg-no-repeat bg-cover flex items-center w-full p-16"
     >
       <div className="w-5/12 flex flex-col justify-between h-full">
         <Link to="/">
