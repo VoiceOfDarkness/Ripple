@@ -2,8 +2,7 @@ import SideNav from "../components/SideNav/SideNav";
 import { useState, useEffect } from "react";
 import { motion as m } from "framer-motion";
 import JobMain from "../components/JobMain/index";
-import Footer from "../components/Footer/Footer";
-import FooterMain from "../components/Footer/FooterMain";
+
 
 export default function JobsPage() {
   const [isVisible, setIsVisible] = useState(true);
