@@ -12,15 +12,19 @@ from app.repository.user_repository import UserRepository, FreelancerRepository
 from app.schemas.auth import SignUp, Token
 from app.schemas.user import UserPrivate as User
 from app.schemas.user import CreateFreelancer as Freelancer
-from app.services.base_service import BaseService
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import RedirectResponse
 
 logger = getLogger(__name__)
 
 
 class AuthService:
-    def __init__(self, user_repository: UserRepository, freelancer_repository: FreelancerRepository) -> None:
+    def __init__(
+        self,
+        user_repository: UserRepository,
+        freelancer_repository: FreelancerRepository,
+    ) -> None:
         self.user_repository = user_repository
         self.freelancer_repository = freelancer_repository
 
@@ -69,17 +73,33 @@ class AuthService:
                     hash_password=get_password_hash("default_password"),
                 )
             )
+            
+            freelancer = self.freelancer_repository.create(
+            Freelancer(
+                user_id=user.id,
+            )
+        )
 
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token, expiration = create_access_token(
             data={"sub": user.user_name}, expires_delta=access_token_expires
         )
 
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "expiration": expiration,
-        }
+        response = RedirectResponse(url=f"{settings.FRONTEND_URL}/")
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=False,
+            expires=expiration,
+            secure=False,
+        )
+        return response
+
+        # return {
+        #     "access_token": access_token,
+        #     "token_type": "bearer",
+        #     "expiration": expiration,
+        # }
 
     def sign_up(self, sign_up: SignUp) -> User:
         user = self.user_repository.get_by_username_or_email(sign_up.email)
@@ -96,7 +116,7 @@ class AuthService:
                 hash_password=hashed_password,
             )
         )
-        
+
         freelancer = self.freelancer_repository.create(
             Freelancer(
                 user_id=new_user.id,

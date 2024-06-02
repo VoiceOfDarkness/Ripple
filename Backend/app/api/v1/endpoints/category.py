@@ -1,7 +1,7 @@
 from typing import List
 
 from app.core.container import Container
-from app.schemas.category import BaseCategory, Category, CreateCategory
+from app.schemas.category import BaseCategory, CategoryResponse, CreateCategory
 from app.services.category_service import CategoryService
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Body, Depends
@@ -9,12 +9,13 @@ from fastapi import APIRouter, Body, Depends
 category_router = APIRouter(tags=["category"])
 
 
-@category_router.get("/categories", response_model=List[Category])
+@category_router.get("/categories", response_model=List[CategoryResponse])
 @inject
 async def get_categories(
+    
     service: CategoryService = Depends(Provide[Container.category_service]),
 ):
-    return service.get_list()
+    return service.get_paginated(1, 2)
 
 
 @category_router.get("/category/{category_id}")
@@ -45,7 +46,7 @@ async def update_category(
     return service.update(category_id, category)
 
 
-@category_router.delete("/category/{category_id}", response_model=Category)
+@category_router.delete("/category/{category_id}", response_model=CategoryResponse)
 @inject
 async def delete_category(
     category_id: int,

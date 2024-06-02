@@ -25,6 +25,12 @@ class BaseRepository:
             db_obj = session.query(self.model).all()
         return db_obj
 
+    def get_all_paginated(self, page, per_page):
+        offset = (page - 1) * per_page
+        with self.session_factory() as session:
+            db_obj = session.query(self.model).limit(per_page).offset(offset).all()
+        return db_obj
+
     def get_by_id(self, id: int):
         with self.session_factory() as session:
             db_obj = session.query(self.model).filter(self.model.id == id).first()

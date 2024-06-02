@@ -36,10 +36,6 @@ RUN poetry config virtualenvs.create false \
 # Copy the app
 COPY ./app ./app
 
-# Copy alembic
-COPY ./alembic ./alembic
-COPY ./alembic.ini ./alembic.ini
-
 # # Expose the port the app runs in
 EXPOSE 8000
 

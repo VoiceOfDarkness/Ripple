@@ -8,6 +8,9 @@ class BaseService:
     def get_list(self):
         return self._repository.get()
 
+    def get_paginated(self, page: int, per_page: int):
+        return self._repository.get_all_paginated(page, per_page)
+
     def get(self, id: int):
         return self._repository.get_by_id(id)
 

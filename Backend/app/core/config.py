@@ -24,6 +24,13 @@ class Settings(BaseSettings):
     DATE_FORMAT: str = "%Y-%m-%d"
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
 
+    # front
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+    # media
+    MEDIA_ROOT: str = "/../../media"
+    DEFAULT_CHUNK_SIZE: int = 1024 * 1024 * 50 # 50MB
+
     # auth
     SECRET_KEY: str = secrets.token_urlsafe(32)
     GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "")
