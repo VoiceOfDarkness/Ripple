@@ -6,7 +6,6 @@ from app.schemas.user import User
 from app.services.user_service import UserService
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
 
 user_router = APIRouter(
     prefix="/user", tags=["user"], dependencies=[Depends(get_current_user)]

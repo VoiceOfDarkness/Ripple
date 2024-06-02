@@ -1,22 +1,31 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
+  backend:
+    build: ./Backend
     env_file:
-      - ../.env
+      - .env
     volumes:
-      - .:/app
+      - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
       - redis
 
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
   db:
     image: postgres:13
     env_file:
-      - ../.env
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
@@ -46,10 +55,20 @@ services:
     ports:
       - 4040:4040
     env_file:
-      - ../.env
-    command: ngrok http web:8000
+      - .env
+    command: ngrok http backend:8000
     depends_on:
-      - web
+      - backend
+
+  ngrok-frontend:
+    image: wernight/ngrok
+    ports:
+      - 4041:4040
+    env_file:
+      - .env
+    command: ngrok http frontend:3000
+    depends_on:
+      - frontend
 
 volumes:
   postgres_data:

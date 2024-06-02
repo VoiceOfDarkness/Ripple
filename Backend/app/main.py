@@ -4,6 +4,7 @@ from app.api.v1.main import routers
 from app.core.config import settings
 from app.core.container import Container
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -14,6 +15,7 @@ app = FastAPI(
     redoc_url=None,
     version="0.1.0",
 )
+app.mount(settings.MEDIA_ROOT, StaticFiles(directory=settings.MEDIA_ROOT), name="media")
 
 container = Container()
 db = container.db()

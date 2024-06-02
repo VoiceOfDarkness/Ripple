@@ -53,6 +53,12 @@ class Freelancer(BaseFreelancer):
 class CreateFreelancer(BaseFreelancer):
     pass
 
+class FreelancerNoRelation(BaseFreelancer):
+    location: str | None
+    overview: str | None
+    registration_date: datetime
+    user: User
+
 
 # HireManager schemas
 class BaseHireManager(BaseModel):

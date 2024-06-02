@@ -1,18 +1,19 @@
-"""initial commit 2
+"""initial
 
-Revision ID: d5c4a4f9d5b5
+Revision ID: 1460c52e4040
 Revises: 
-Create Date: 2024-05-24 18:47:04.958506
+Create Date: 2024-05-31 16:54:13.663844
 
 """
 from typing import Sequence, Union
 
+from alembic import op
 import sqlalchemy as sa
 import sqlmodel
-from alembic import op
+
 
 # revision identifiers, used by Alembic.
-revision: str = 'd5c4a4f9d5b5'
+revision: str = '1460c52e4040'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,7 +24,9 @@ def upgrade() -> None:
     op.create_table('category',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -40,9 +43,9 @@ def upgrade() -> None:
     op.create_table('freelancer',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('location', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('location', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('registration_date', sa.DateTime(), nullable=False),
-    sa.Column('overview', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('overview', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -59,10 +62,10 @@ def upgrade() -> None:
     sa.Column('seller_id', sa.Integer(), nullable=False),
     sa.Column('title', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('image_filename', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=False),
     sa.Column('price', sa.Numeric(precision=5, scale=2), nullable=False),
     sa.Column('delivery_time', sa.Integer(), nullable=False),
-    sa.Column('image', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('rating', sa.Float(precision=3, asdecimal=True), nullable=True),
     sa.Column('num_reviews', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),

@@ -3,20 +3,18 @@ from typing import List
 from app.core.container import Container
 from app.core.dependencies import get_current_user
 from app.schemas.user import User
-from app.schemas.services import BaseGigs, Gigs, CreateGigs
+from app.schemas.services import BaseGigs, Gigs, CreateGigs, GigsTest
 from app.services.gig_service import GigService
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Depends, UploadFile, File
 
 gig_router = APIRouter(tags=["gigs"])
 
 
 @gig_router.get("/gigs", response_model=List[Gigs])
 @inject
-async def get_gigs(
-    service: GigService = Depends(Provide[Container.gig_service])
-):
+async def get_gigs(service: GigService = Depends(Provide[Container.gig_service])):
     return service.get_list()
 
 
@@ -28,11 +26,13 @@ async def get_gig(
 ):
     return service.get(gig_id)
 
-@gig_router.post("/gigs/", response_model=CreateGigs)
+
+@gig_router.post("/gigs/", response_model=Gigs)
 @inject
 async def create_gig(
-    gig: BaseGigs = Body(...),
+    file: UploadFile = File(...),
     service: GigService = Depends(Provide[Container.gig_service]),
-    current_user: User = Depends(get_current_user),
+    gig: CreateGigs = Depends(CreateGigs),
 ):
-    return service.add(current_user.id, gig)
+    current_user = 47
+    return await service.add(current_user, gig, file)

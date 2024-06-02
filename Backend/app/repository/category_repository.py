@@ -4,6 +4,8 @@ from typing import Callable, Optional
 from app.models.categories import Category
 from app.repository.base_repository import BaseRepository
 from sqlalchemy.orm import Session, joinedload
+from app.models.services import Gigs
+from app.models.user import Freelancer
 
 
 class CategoryRepository(BaseRepository):
@@ -13,4 +15,8 @@ class CategoryRepository(BaseRepository):
 
     def get(self) -> Optional[Category]:
         with self._session_factory() as session:
-            return session.query(Category).options(joinedload(Category.gigs)).all()
+            return session.query(Category).options(
+                joinedload(Category.gigs).joinedload(Gigs.freelancer).joinedload(Freelancer.user),
+                joinedload(Category.gigs).joinedload(Gigs.orders),
+                joinedload(Category.gigs).joinedload(Gigs.category)
+            ).all()
