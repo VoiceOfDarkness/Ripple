@@ -1,5 +1,4 @@
 import JobCardsList from "../JobCards/JobCardsList";
-import JobHeader from "../JobHeader/JobHeader";
 
 export default function JobMain() {
   const jobs = [
@@ -76,7 +75,6 @@ export default function JobMain() {
   ];
   return (
     <div>
-      <JobHeader />
       <JobCardsList jobs={jobs} />
     </div>
   );
