@@ -3,6 +3,7 @@ from app.core.database import Database
 from app.repository import *
 from app.services import *
 from dependency_injector import containers, providers
+from redis import Redis
 
 
 class Container(containers.DeclarativeContainer):
@@ -17,6 +18,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     db = providers.Singleton(Database, db_url=settings.DATABASE_URI)
+    redis = providers.Singleton(Redis, host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
     user_repository = providers.Factory(
         UserRepository, session_factory=db.provided.session
@@ -35,7 +37,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     user_service = providers.Factory(UserService, user_repository=user_repository)
-    auth_service = providers.Factory(AuthService, user_repository=user_repository, freelancer_repository=freelancer_repository)
+    auth_service = providers.Factory(AuthService, user_repository=user_repository, freelancer_repository=freelancer_repository, redis_client=redis)
     category_service = providers.Factory(
         CategoryService, category_repository=category_repository
     )

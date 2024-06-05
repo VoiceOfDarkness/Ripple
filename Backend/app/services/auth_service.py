@@ -1,6 +1,7 @@
 from datetime import timedelta
 from logging import getLogger
 
+import redis
 from app.core.config import settings
 from app.core.security import (
     create_access_token,
@@ -8,13 +9,16 @@ from app.core.security import (
     oauth,
     verify_password,
 )
-from app.repository.user_repository import UserRepository, FreelancerRepository
-from app.schemas.auth import SignUp, Token
-from app.schemas.user import UserPrivate as User
+from app.repository.user_repository import FreelancerRepository, UserRepository
+from app.schemas.auth import ChangePassword, EmailVerification, SignUp, Token
 from app.schemas.user import CreateFreelancer as Freelancer
+from app.schemas.user import UpdatePrivateUser as UpdateUser
+from app.schemas.user import UserPrivate as User
+from app.tasks.email_service import send_verification_code
+from app.utils.verification_code import generate_verification_code
 from fastapi import Depends, HTTPException, Request, status
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import RedirectResponse
 
 logger = getLogger(__name__)
 
@@ -24,9 +28,11 @@ class AuthService:
         self,
         user_repository: UserRepository,
         freelancer_repository: FreelancerRepository,
+        redis_client: redis.Redis,
     ) -> None:
         self.user_repository = user_repository
         self.freelancer_repository = freelancer_repository
+        self.redis = redis_client
 
     def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
         user = self.user_repository.get_by_username_or_email(form_data.email)
@@ -37,7 +43,7 @@ class AuthService:
             )
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token, expiration = create_access_token(
-            data={"sub": user.user_name}, expires_delta=access_token_expires
+            data={"sub": user.email}, expires_delta=access_token_expires
         )
 
         return {
@@ -73,16 +79,16 @@ class AuthService:
                     hash_password=get_password_hash("default_password"),
                 )
             )
-            
+
             freelancer = self.freelancer_repository.create(
-            Freelancer(
-                user_id=user.id,
+                Freelancer(
+                    user_id=user.id,
+                )
             )
-        )
 
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token, expiration = create_access_token(
-            data={"sub": user.user_name}, expires_delta=access_token_expires
+            data={"sub": user.email}, expires_delta=access_token_expires
         )
 
         response = RedirectResponse(url=f"{settings.FRONTEND_URL}/")
@@ -123,4 +129,46 @@ class AuthService:
             )
         )
 
+        verification_code = generate_verification_code()
+        self.redis.set(
+            verification_code,
+            sign_up.email,
+            ex=settings.VERIFICATION_CODE_EXPIRE_SECONDS,
+        )
+
+        send_verification_code.delay(sign_up.email, verification_code)
+
         return new_user
+
+    async def verify_code(self, code: str) -> bool:
+        redis_email = self.redis.get(code)
+
+        if redis_email is not None:
+            user = self.user_repository.get_by_username_or_email(
+                redis_email.decode("utf-8")
+            )
+
+        self.user_repository.update(user.id, EmailVerification(is_active=True))
+
+        if not redis_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid code"
+            )
+        return JSONResponse(
+            content={"message": "code verified"}, status_code=status.HTTP_200_OK
+        )
+
+    async def change_password(self, user_password: ChangePassword, current_user: User):
+        user = self.user_repository.get_by_username_or_email(current_user.email)
+
+        if not verify_password(user_password.old_password, user.hash_password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password"
+            )
+
+        hashed_password = get_password_hash(user_password.new_password)
+        self.user_repository.update(user.id, UpdateUser(hash_password=hashed_password))
+
+        return JSONResponse(
+            {"message": "Password updated successfully"}, status_code=status.HTTP_200_OK
+        )

@@ -67,26 +67,26 @@ class Settings(BaseSettings):
     )
 
     # redis
-    REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "redis")
     REDIS_PORT: int = os.getenv("REDIS_PORT", 6379)
     REDIS_DB: int = os.getenv("REDIS_DB", 0)
+    
+    VERIFICATION_CODE_EXPIRE_SECONDS: int = 60 * 2  # 1 minutes
 
     # email
-    SMTP_TLS: bool = True
-    SMTP_SSL: bool = False
     SMTP_PORT: int = 587
-    SMTP_HOST: str | None = None
-    SMTP_USER: str | None = None
-    SMTP_PASSWORD: str | None = None
+    SMTP_SERVER: str = os.getenv("SMTP_SERVER", "smtp.yandex.ru")
+    SMTP_USER: str = os.getenv("SMTP_USER", "ripple")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "default_password")
 
     # celery
-    CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-    CELERY_RESULT_BACKEND: str = os.getenv(
-        "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
-    )
-    CELERY_ACCEPT_CONTENT: List[str] = ["json"]
-    CELERY_TASK_SERIALIZER: str = "json"
-    CELERY_RESULT_SERIALIZER: str = "json"
+    # CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+    # CELERY_RESULT_BACKEND: str = os.getenv(
+    #     "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
+    # )
+    # CELERY_ACCEPT_CONTENT: List[str] = ["json"]
+    # CELERY_TASK_SERIALIZER: str = "json"
+    # CELERY_RESULT_SERIALIZER: str = "json"
 
     # find query
     PAGE: int = 1

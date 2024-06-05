@@ -2,12 +2,11 @@ from typing import List
 
 from app.core.container import Container
 from app.core.dependencies import get_current_user
+from app.schemas.services import BaseGigs, CreateGigs, Gigs, GigsTest
 from app.schemas.user import User
-from app.schemas.services import BaseGigs, Gigs, CreateGigs, GigsTest
 from app.services.gig_service import GigService
-
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, File, UploadFile
 
 gig_router = APIRouter(tags=["gigs"])
 

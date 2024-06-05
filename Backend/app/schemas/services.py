@@ -1,9 +1,7 @@
 from decimal import Decimal
-from typing import TYPE_CHECKING, Optional, ForwardRef
+from typing import TYPE_CHECKING, ForwardRef, Optional
 
 from app.schemas.user import FreelancerNoRelation
-from pydantic import BaseModel, Field
-
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
