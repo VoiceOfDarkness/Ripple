@@ -1,11 +1,11 @@
-from app.models.services import Gigs
-from app.schemas.services import FileCreateGigs
-from app.repository.base_repository import BaseRepository
-from sqlalchemy.orm import Session, joinedload
 from contextlib import AbstractContextManager
-from typing import Callable, Optional
+from typing import Callable, List, Optional
+
+from app.models.services import Gigs
 from app.models.user import Freelancer
-from typing import List
+from app.repository.base_repository import BaseRepository
+from app.schemas.services import FileCreateGigs
+from sqlalchemy.orm import Session, joinedload
 
 
 class GigRepository(BaseRepository):

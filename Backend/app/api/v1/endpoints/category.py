@@ -12,10 +12,11 @@ category_router = APIRouter(tags=["category"])
 @category_router.get("/categories", response_model=List[CategoryResponse])
 @inject
 async def get_categories(
-    
+    page: int = 1,
+    size: int = 10,
     service: CategoryService = Depends(Provide[Container.category_service]),
 ):
-    return service.get_paginated(1, 2)
+    return service.get_paginated(page, size)
 
 
 @category_router.get("/category/{category_id}")
@@ -52,5 +53,4 @@ async def delete_category(
     category_id: int,
     service: CategoryService = Depends(Provide[Container.category_service]),
 ):
-    return service.delete(category_id
-)
+    return service.delete(category_id)

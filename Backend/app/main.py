@@ -4,8 +4,8 @@ from app.api.v1.main import routers
 from app.core.config import settings
 from app.core.container import Container
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI(

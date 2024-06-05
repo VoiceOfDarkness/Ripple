@@ -28,7 +28,16 @@ class SignUp(BaseModel):
     )
 
 
-class FreelancerSignUp():
+class EmailVerification(BaseModel):
+    is_active: bool
+
+
+class ChangePassword(BaseModel):
+    old_password: str = Field(..., min_length=8, description="Old password")
+    new_password: str = Field(..., min_length=8, description="New password")
+
+
+class FreelancerSignUp:
     user_id: int
     location: str
     overview: str

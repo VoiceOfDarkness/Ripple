@@ -2,10 +2,10 @@ from contextlib import AbstractContextManager
 from typing import Callable, Optional
 
 from app.models.categories import Category
-from app.repository.base_repository import BaseRepository
-from sqlalchemy.orm import Session, joinedload
 from app.models.services import Gigs
 from app.models.user import Freelancer
+from app.repository.base_repository import BaseRepository
+from sqlalchemy.orm import Session, joinedload
 
 
 class CategoryRepository(BaseRepository):

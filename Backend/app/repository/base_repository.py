@@ -39,7 +39,8 @@ class BaseRepository:
     def update(self, id: int, schema) -> None:
         with self.session_factory() as session:
             db_obj = session.get(self.model, id)
-            for key, value in schema.dict().items():
+            
+            for key, value in schema.model_dump(exclude_none=True).items():
                 setattr(db_obj, key, value)
             session.add(db_obj)
             session.commit()

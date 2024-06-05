@@ -4,7 +4,8 @@ from typing import Dict, Optional
 from app.core.config import settings
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import OAuth2AuthorizationCodeBearer, OAuth2PasswordBearer
+from fastapi.security import (OAuth2AuthorizationCodeBearer,
+                              OAuth2PasswordBearer)
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import jwt
 from passlib.context import CryptContext
