@@ -32,7 +32,9 @@ export default function JobMainLayout() {
   }, []);
 
   return (
-    <div className="bg-backGrey w-full h-full absolute ">
+    <div style={{
+      height: "200vh",
+    }} className="bg-backGrey w-full absolute ">
       <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
       <m.div
         animate={{

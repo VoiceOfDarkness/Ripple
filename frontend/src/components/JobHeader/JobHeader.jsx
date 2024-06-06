@@ -27,7 +27,7 @@ export default function JobHeader() {
           <li>
             <a href="/">Location...</a>
           </li>
-          <div className="flex items-center justify-center pl-40 gap-5">
+          <div className="flex items-center justify-center pl-64 gap-5">
             <li>
               <a href="/">
                 <div className="w-16 h-16 flex items-center justify-center bg-inputGray rounded-full">
