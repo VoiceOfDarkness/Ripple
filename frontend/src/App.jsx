@@ -3,6 +3,7 @@ import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
 import JobMainLayout from "./layouts/JobMainLayaout";
 import JobMain from "./components/JobMain";
+import CreateGigPage from "./pages/CreateGig";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/jobs" element={<JobMain />} />
       </Route>
       <Route path="/auth" element={<AuthPage />} />
-      <Route path="/dashboard" element={<AuthPage />} />
+      <Route path="/user/creategig" element={<CreateGigPage />} />
     </Routes>
   );
 }

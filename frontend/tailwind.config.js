@@ -19,7 +19,7 @@ module.exports = {
         inputBack: "#4B4B4B",
         buttonPruple: "#412E76",
         textGray: "#8A8484",
-        linkBlue: "#0075FF"
+        linkBlue: "#0075FF",
       },
       spacing: {
         128: "120rem",
