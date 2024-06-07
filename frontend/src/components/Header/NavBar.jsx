@@ -1,7 +1,10 @@
 import { Menu } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function MenuNavBar() {
+  const isToken = Cookies.get("access-token") !== undefined;
+
   return (
     <div className="bg-transparent w-full z-10 top-0 pt-16 px-14 flex text-white items-center justify-between">
       <h1 className="text-6xl font-black">Ripple</h1>
@@ -19,22 +22,28 @@ export default function MenuNavBar() {
           <li>
             <Link to="/">Contact</Link>
           </li>
-          <li>
-            <Link
-              to="auth?mode=login"
-              className="border border-white hover:bg-white hover:text-black rounded-lg border-solid p-4 px-10 transition-all duration-500"
-            >
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="auth?mode=signup"
-              className="rounded-lg p-4 px-10 hover:bg-cardBlack hover:text-white border-white border bg-white text-black transition-all duration-500"
-            >
-              Sign up
-            </Link>
-          </li>
+          {isToken ? (
+            <p>User</p>
+          ) : (
+            <>
+              <li>
+                <Link
+                  to="auth?mode=login"
+                  className="border border-white hover:bg-white hover:text-black rounded-lg border-solid p-4 px-10 transition-all duration-500"
+                >
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="auth?mode=signup"
+                  className="rounded-lg p-4 px-10 hover:bg-cardBlack hover:text-white border-white border bg-white text-black transition-all duration-500"
+                >
+                  Sign up
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <div className="hidden max-md:block">

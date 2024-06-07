@@ -2,7 +2,7 @@ from app.core.container import Container
 from app.schemas.auth import (ChangePassword, SignIn, SignInResponse, SignUp,
                               Token, User)
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Body
 
 from app.core.dependencies import get_current_user
 
@@ -23,7 +23,7 @@ def sign_up(user_data: SignUp, service=Depends(Provide[Container.auth_service]))
 
 @auth_router.post("/sign-up/verify-code")
 @inject
-async def verify_code(code: str, service=Depends(Provide[Container.auth_service])):
+async def verify_code(code: str = Body(...), service=Depends(Provide[Container.auth_service])):
     return await service.verify_code(code)
 
 

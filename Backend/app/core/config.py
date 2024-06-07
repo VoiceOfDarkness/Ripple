@@ -71,7 +71,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int = os.getenv("REDIS_PORT", 6379)
     REDIS_DB: int = os.getenv("REDIS_DB", 0)
     
-    VERIFICATION_CODE_EXPIRE_SECONDS: int = 60 * 2  # 1 minutes
+    VERIFICATION_CODE_EXPIRE_SECONDS: int = 60 * 2  # 2 minutes
 
     # email
     SMTP_PORT: int = 587
