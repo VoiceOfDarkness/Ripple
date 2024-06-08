@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
     # media
-    MEDIA_ROOT: str = "/../../media"
+    MEDIA_ROOT: str = "/app/media"
     DEFAULT_CHUNK_SIZE: int = 1024 * 1024 * 50 # 50MB
 
     # auth
