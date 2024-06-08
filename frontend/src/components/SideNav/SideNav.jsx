@@ -19,13 +19,13 @@ export default function SideNav({ isVisible, setIsVisible }) {
   };
 
   const menu = [
-    ["Announcment", <AnnouncementsIcon />],
-    ["My Work", <MyWorkIcon />],
-    ["Statistics", <StatisticIcon />],
-    ["Chat", <ChatIcon />],
-    ["My profile", <MyProfileIcon />],
-    ["Payment Info", <PaymentIcon />],
-    ["Settings", <Settings style={{ fontSize: "2.5rem" }} />],
+    ["Announcment", <AnnouncementsIcon />, "/announcements"],
+    ["My Work", <MyWorkIcon />, "/dashboard"],
+    ["Statistics", <StatisticIcon />, "/statistics"],
+    ["Chat", <ChatIcon />, "/chat"],
+    ["My profile", <MyProfileIcon />, "/profile"],
+    ["Payment Info", <PaymentIcon />, "/payment"],
+    ["Settings", <Settings style={{ fontSize: "2.5rem" }} />, "/settings"],
   ];
   return (
     <m.div
@@ -65,7 +65,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
                   key={index}
                 >
                   {item[1]}
-                  <Link to="/">{item[0]}</Link>
+                  <Link to= {item[2]}>{item[0]}</Link>
                 </li>
               );
             })}
