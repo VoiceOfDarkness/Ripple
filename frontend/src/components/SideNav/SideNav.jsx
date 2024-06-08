@@ -8,6 +8,7 @@ import { Settings } from "@mui/icons-material";
 import HelpIcon from "../Icons/HelpIcon";
 import LogOutIcon from "../Icons/LogOutIcon";
 import StarShape from "../UI/StarShape";
+import Cookies from "js-cookie";
 
 import { motion as m } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -50,7 +51,9 @@ export default function SideNav({ isVisible, setIsVisible }) {
 
       <div className="p-12 flex flex-col h-full justify-between">
         <div className="text-6xl">
-          <h1 className="font-bold">Ripple</h1>
+          <Link to="/">
+            <h1 className="font-bold">Ripple</h1>
+          </Link>
         </div>
 
         <div>
@@ -77,7 +80,9 @@ export default function SideNav({ isVisible, setIsVisible }) {
             </li>
             <li className="text-red flex gap-5">
               <LogOutIcon />
-              <a href="/">Log Out</a>
+              <button onClick={() => Cookies.remove("access-token")}>
+                Log Out
+              </button>
             </li>
           </ul>
         </div>

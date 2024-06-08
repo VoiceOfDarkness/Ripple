@@ -4,13 +4,10 @@ import Cookies from "js-cookie";
 
 export const login = (email, password) => {
   return async (dispatch) => {
-    const res = await axios.post(
-      "https://42fa-82-194-24-93.ngrok-free.app/api/v1/auth/sign-in",
-      {
-        email: email,
-        password: password,
-      }
-    );
+    const res = await axios.post("http://localhost:8000/api/v1/auth/sign-in", {
+      email: email,
+      password: password,
+    });
 
     dispatch(
       authActions.setUser({
@@ -31,18 +28,30 @@ export const login = (email, password) => {
 
 export const craeteUser = (userName, password, email) => {
   return async (dispatch) => {
-    const res = await axios.post(
-      "https://42fa-82-194-24-93.ngrok-free.app/api/v1/auth/sign-up",
-      {
-        username: userName,
-        email: email,
-        password: password,
-      }
-    );
+    const res = await axios.post("http://localhost:8000/api/v1/auth/sign-up", {
+      username: userName,
+      email: email,
+      password: password,
+    });
 
     dispatch(
       authActions.setUser({
         user: res.data,
+      })
+    );
+  };
+};
+
+export const verifyUser = (code) => {
+  return async (dispatch) => {
+    const res = await axios.post(
+      "http://localhost:8000/api/v1/auth/sign-up/verify-code",
+      code
+    );
+
+    dispatch(
+      authActions.setUser({
+        verify: res.status,
       })
     );
   };

@@ -1,11 +1,11 @@
-from app.models.services import Gigs
-from app.schemas.services import FileCreateGigs
-from app.repository.base_repository import BaseRepository
-from sqlalchemy.orm import Session, joinedload
 from contextlib import AbstractContextManager
-from typing import Callable, Optional
+from typing import Callable, List, Optional
+
+from app.models.services import Gigs
 from app.models.user import Freelancer
-from typing import List
+from app.repository.base_repository import BaseRepository
+from app.schemas.services import CreateGigs
+from sqlalchemy.orm import Session, joinedload
 
 
 class GigRepository(BaseRepository):
@@ -13,7 +13,7 @@ class GigRepository(BaseRepository):
         self._session_factory = session_factory
         super().__init__(session_factory, Gigs)
 
-    def create(self, seller_id: int, gig: FileCreateGigs) -> Optional[Gigs]:
+    def create(self, seller_id: int, gig: CreateGigs) -> Optional[Gigs]:
         with self._session_factory() as session:
             freelancer = (
                 session.query(Freelancer)
@@ -23,8 +23,7 @@ class GigRepository(BaseRepository):
 
             gig = gig.model_dump()
             db_obj = Gigs(
-                **gig["data"],
-                image_filename=gig["image_filename"],
+                **gig,
                 seller_id=freelancer.id,
             )
             session.add(db_obj)

@@ -3,7 +3,11 @@ import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
 import JobMainLayout from "./layouts/JobMainLayaout";
 import JobMain from "./components/JobMain";
+<<<<<<< HEAD:frontend/src/App.js
 import Profile from "./pages/Profile";
+=======
+import CreateGigPage from "./pages/CreateGig";
+>>>>>>> main:frontend/src/App.jsx
 
 function App() {
   return (
@@ -14,7 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/auth" element={<AuthPage />} />
-      <Route path="/dashboard" element={<AuthPage />} />
+      <Route path="/user/creategig" element={<CreateGigPage />} />
     </Routes>
   );
 }

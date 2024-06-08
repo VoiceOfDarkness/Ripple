@@ -3,10 +3,12 @@ import { VisibilityOffOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { craeteUser, login } from "../../store/auth-actions";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm({ mode }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const validation = (values) => {
     const errors = {};
@@ -49,15 +51,16 @@ export default function LoginForm({ mode }) {
         }
         validate={validation}
         onSubmit={async (values, { setSubmitting }) => {
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2));
-          //   setSubmitting(false);
-          // }, 400);
-          mode !== "login"
-            ? await dispatch(
-                craeteUser(values.userName, values.password, values.email)
-              )
-            : await dispatch(login(values.email, values.password));
+          if (mode !== "login") {
+            await dispatch(
+              craeteUser(values.userName, values.password, values.email)
+            );
+            navigate("?mode=verify");
+          } else {
+            await dispatch(login(values.email, values.password));
+          }
+
+          navigate("/");
           setSubmitting(false);
         }}
       >
