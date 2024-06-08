@@ -1,3 +1,4 @@
+// JobMain.js
 import JobCardsList from "../JobCards/JobCardsList";
 
 export default function JobMain() {
@@ -73,6 +74,7 @@ export default function JobMain() {
       cost: 100,
     },
   ];
+  
   return (
     <div>
       <JobCardsList jobs={jobs} />
