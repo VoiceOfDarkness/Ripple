@@ -4,6 +4,7 @@ from typing import List
 from app.core.container import Container
 from app.core.dependencies import get_current_user
 from app.schemas.services import BaseGigs, Gigs
+from app.schemas.user import User
 from app.services.gig_service import GigService
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -36,6 +37,7 @@ async def create_gig(
     price: Decimal = Form(...),
     delivery_time: int = Form(...),
     files: List[UploadFile] = File(...),
+    current_user: User = Depends(get_current_user),
     service: GigService = Depends(Provide[Container.gig_service]),
 ):
     try:
@@ -50,4 +52,4 @@ async def create_gig(
     except ValidationError as e:
         errors = [err['msg'] for err in e.errors()]
         raise HTTPException(status_code=422, detail=errors)
-    return await service.add(1, gig, files)
+    return await service.add(current_user.id, gig, files)
