@@ -3,11 +3,9 @@ import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
 import JobMainLayout from "./layouts/JobMainLayaout";
 import JobMain from "./components/JobMain";
-<<<<<<< HEAD:frontend/src/App.js
 import Profile from "./pages/Profile";
-=======
 import CreateGigPage from "./pages/CreateGig";
->>>>>>> main:frontend/src/App.jsx
+
 
 function App() {
   return (
