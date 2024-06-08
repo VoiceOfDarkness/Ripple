@@ -1,13 +1,14 @@
+from decimal import Decimal
 from typing import List
 
 from app.core.container import Container
 from app.core.dependencies import get_current_user
+from app.schemas.services import BaseGigs, Gigs
 from app.schemas.user import User
-from app.schemas.services import BaseGigs, Gigs, CreateGigs, GigsTest
 from app.services.gig_service import GigService
-
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from pydantic import ValidationError
 
 gig_router = APIRouter(tags=["gigs"])
 
@@ -27,12 +28,28 @@ async def get_gig(
     return service.get(gig_id)
 
 
-@gig_router.post("/gigs/", response_model=Gigs)
+@gig_router.post("/gigs/", status_code=201)
 @inject
 async def create_gig(
-    file: UploadFile = File(...),
+    title: str = Form(...),
+    description: str = Form(...),
+    category_id: int = Form(...),
+    price: Decimal = Form(...),
+    delivery_time: int = Form(...),
+    files: List[UploadFile] = File(...),
+    current_user: User = Depends(get_current_user),
     service: GigService = Depends(Provide[Container.gig_service]),
-    gig: CreateGigs = Depends(CreateGigs),
 ):
-    current_user = 47
-    return await service.add(current_user, gig, file)
+    try:
+        gig = BaseGigs(
+            title=title,
+            description=description,
+            category_id=category_id,
+            price=price,
+            delivery_time=delivery_time,
+            files=files,
+        )
+    except ValidationError as e:
+        errors = [err['msg'] for err in e.errors()]
+        raise HTTPException(status_code=422, detail=errors)
+    return await service.add(current_user.id, gig, files)

@@ -4,7 +4,7 @@ from typing import ForwardRef, List
 from app.models.order import Order
 from app.models.services import Gigs
 from sqlalchemy import Column, String
-from sqlmodel import Field, Relationship, SQLModel, null
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class User(SQLModel, table=True):
@@ -16,8 +16,8 @@ class User(SQLModel, table=True):
     email: str = Field(sa_column=Column("email", String(255), unique=True))
     first_name: str | None = Field(max_length=50, default=None, nullable=True)
     last_name: str | None = Field(max_length=50, default=None, nullable=True)
-    freelancers: List["Freelancer"] = Relationship(back_populates="user")
-    hire_managers: List["HireManager"] = Relationship(back_populates="user")
+    freelancers: "Freelancer" = Relationship(back_populates="user")
+    hire_managers: "HireManager" = Relationship(back_populates="user")
     is_active: bool = Field(default=True)
     is_blocked: bool = Field(default=False)
 

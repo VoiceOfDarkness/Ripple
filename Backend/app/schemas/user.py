@@ -2,12 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
 from app.schemas.order import Order
-from pydantic import BaseModel, EmailStr, Field
-from typing import List, TYPE_CHECKING
-
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
-
-from app.schemas.order import Order
 
 if TYPE_CHECKING:
     from app.schemas.services import Gigs
@@ -24,8 +19,18 @@ class BaseUser(BaseModel):
 class User(BaseUser):
     id: Optional[int] = None
 
-    is_active: bool = True
+    is_active: bool = False
     is_banned: bool = False
+
+
+class UpdateUser(BaseModel):
+    user_name: Optional[str] = Field(None, max_length=128)
+    first_name: Optional[str] = Field(None, max_length=128)
+    last_name: Optional[str] = Field(None, max_length=128)
+
+
+class UpdatePrivateUser(BaseModel):
+    hash_password: Optional[str] = Field(None, min_length=8)
 
 
 class UserPrivate(User):
@@ -52,6 +57,7 @@ class Freelancer(BaseFreelancer):
 
 class CreateFreelancer(BaseFreelancer):
     pass
+
 
 class FreelancerNoRelation(BaseFreelancer):
     location: str | None

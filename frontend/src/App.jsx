@@ -6,6 +6,8 @@ import JobMainLayout from "./layouts/JobMainLayaout";
 import JobMain from "./components/JobMain";
 import Profile from "./pages/Profile";
 import JobDetails from "./components/JobDetails"; // Import the JobDetails component
+import CreateGigPage from "./pages/CreateGig";
+
 
 function App() {
   return (
@@ -17,7 +19,7 @@ function App() {
         <Route path="/job/:id" element={<JobDetails />} /> {/* Add the job details route */}
       </Route>
       <Route path="/auth" element={<AuthPage />} />
-      <Route path="/dashboard" element={<AuthPage />} />
+      <Route path="/user/creategig" element={<CreateGigPage />} />
     </Routes>
   );
 }

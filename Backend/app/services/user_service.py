@@ -1,5 +1,4 @@
-from app.repository.user_repository import UserRepository
-from app.repository.user_repository import FreelancerRepository
+from app.repository.user_repository import FreelancerRepository, UserRepository
 from app.schemas.user import User
 from app.services.base_service import BaseService
 
