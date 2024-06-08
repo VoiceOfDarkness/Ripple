@@ -14,7 +14,6 @@ class Container(containers.DeclarativeContainer):
             "app.api.v1.endpoints.user",
             "app.api.v1.endpoints.category",
             "app.api.v1.endpoints.auth",
-            "app.api.v1.endpoints.order",
             "app.core.dependencies",
         ]
     )
@@ -40,10 +39,6 @@ class Container(containers.DeclarativeContainer):
         GigRepository, session_factory=db.provided.session
     )
 
-    order_repository = providers.Factory(
-        OrderRepository, session_facotry=db.provided.session
-    )
-
     user_service = providers.Factory(UserService, user_repository=user_repository)
     auth_service = providers.Factory(
         AuthService,
@@ -55,4 +50,3 @@ class Container(containers.DeclarativeContainer):
         CategoryService, category_repository=category_repository
     )
     gig_service = providers.Factory(GigService, gig_repository=gig_repository)
-    order_service = providers.Factory(OrderService, order_repository=order_repository)
