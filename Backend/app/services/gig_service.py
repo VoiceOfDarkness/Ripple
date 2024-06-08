@@ -1,14 +1,13 @@
 import logging
+import uuid
 from pathlib import Path
 
 import aiofiles
 from app.core.config import settings
 from app.repository.gig_repository import GigRepository
-from app.schemas.services import CreateGigs, FileCreateGigs, Gigs
+from app.schemas.services import BaseGigs, CreateGigs
 from app.services.base_service import BaseService
 from fastapi import UploadFile
-
-logger = logging.getLogger(__name__)
 
 
 class GigService(BaseService):
@@ -16,16 +15,24 @@ class GigService(BaseService):
         self.gig_repository = gig_repository
         super().__init__(gig_repository)
 
-    async def add(self, seller_id: int, gig: CreateGigs, file: UploadFile):
-        image_path = Path(settings.MEDIA_ROOT) / file.filename
+    async def add(self, seller_id: int, gig: BaseGigs, files: UploadFile):
+        unique_id = str(uuid.uuid4())
+        dir_path = Path(settings.MEDIA_ROOT) / unique_id
+        dir_path.mkdir(parents=True, exist_ok=True)
 
-        logger.info(f"Saving image to {image_path}")
-        logger.info(f"filename: {file.filename}")
+        for file in files:
+            file_path = dir_path / file.filename
+            async with aiofiles.open(file_path, "wb") as out_file:
+                while content := await file.read(settings.DEFAULT_CHUNK_SIZE):
+                    await out_file.write(content)
 
-        gig = FileCreateGigs(data=gig, image_filename=file.filename)
+        create_gig = CreateGigs(
+            title=gig.title,
+            description=gig.description,
+            category_id=gig.category_id,
+            price=gig.price,
+            delivery_time=gig.delivery_time,
+            image_filename=unique_id,
+        )
 
-        async with aiofiles.open(image_path, "wb") as out_file:
-            while content := await file.read(settings.DEFAULT_CHUNK_SIZE):
-                await out_file.write(content)
-
-        return self.gig_repository.create(seller_id, gig)
+        return self.gig_repository.create(seller_id, create_gig)
