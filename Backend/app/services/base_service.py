@@ -1,8 +1,3 @@
-import logging
-
-logger = logging.getLogger(__name__)
-
-
 class BaseService:
     def __init__(self, repository) -> None:
         self._repository = repository
@@ -20,7 +15,6 @@ class BaseService:
         return self._repository.get_by_id(id)
 
     def update(self, id: int, schema):
-        logger.info(f"ABOBA {schema.model_dump()}")
         return self._repository.update(id, schema)
 
     def delete(self, id: int):

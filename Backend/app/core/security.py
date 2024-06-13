@@ -74,34 +74,34 @@ class JWTBearer(OAuth2PasswordBearer):
         return decode_jwt(param)
 
 
-class OAuth2BearerToken(OAuth2AuthorizationCodeBearer):
-    def __init__(
-        self,
-        authorizationUrl: str,
-        tokenUrl: str,
-        auto_error: bool = True,
-    ):
-        super().__init__(
-            authorizationUrl,
-            tokenUrl,
-            auto_error,
-        )
+# class OAuth2BearerToken(OAuth2AuthorizationCodeBearer):
+#     def __init__(
+#         self,
+#         authorizationUrl: str,
+#         tokenUrl: str,
+#         auto_error: bool = True,
+#     ):
+#         super().__init__(
+#             authorizationUrl,
+#             tokenUrl,
+#             auto_error,
+#         )
 
-    async def __call__(self, request: Request) -> Optional[Dict[str, str]]:
-        authorization: str = request.headers.get("Authorization")
-        scheme, param = get_authorization_scheme_param(authorization)
-        if not authorization or scheme.lower() != "bearer":
-            if self.auto_error:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, detail="Not authenticated"
-                )
-            else:
-                return None
-        try:
-            token = await oauth.google.parse_id_token(request, param)
-            return token
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Could not validate credentials",
-            )
+#     async def __call__(self, request: Request) -> Optional[Dict[str, str]]:
+#         authorization: str = request.headers.get("Authorization")
+#         scheme, param = get_authorization_scheme_param(authorization)
+#         if not authorization or scheme.lower() != "bearer":
+#             if self.auto_error:
+#                 raise HTTPException(
+#                     status_code=status.HTTP_403_FORBIDDEN, detail="Not authenticated"
+#                 )
+#             else:
+#                 return None
+#         try:
+#             token = await oauth.google.parse_id_token(request, param)
+#             return token
+#         except Exception as e:
+#             raise HTTPException(
+#                 status_code=status.HTTP_403_FORBIDDEN,
+#                 detail="Could not validate credentials",
+#             )

@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 # User schemas
 class BaseUser(BaseModel):
     user_name: Optional[str] = Field(max_length=128)
+    user_image: Optional[str] = Field(max_length=255)
     email: EmailStr
     first_name: Optional[str] = Field(None, max_length=128)
     last_name: Optional[str] = Field(None, max_length=128)
@@ -25,6 +26,7 @@ class User(BaseUser):
 
 class UpdateUser(BaseModel):
     user_name: Optional[str] = Field(None, max_length=128)
+    user_image: Optional[str] = Field(None, max_length=255)
     first_name: Optional[str] = Field(None, max_length=128)
     last_name: Optional[str] = Field(None, max_length=128)
 

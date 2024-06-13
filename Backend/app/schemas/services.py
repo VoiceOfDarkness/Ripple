@@ -49,7 +49,7 @@ class CreateGigs(BaseModel):
         ..., decimal_places=2, example=49.99
     )
     delivery_time: int = Field(..., example=3)
-    image_filename: str = Field(..., max_length=512, example="logo_design.jpg")
+    images: List[str] = Field(..., max_length=512, example="logo_design.jpg")
 
 
 # # Model for gig updates (only modifiable fields)
@@ -60,20 +60,20 @@ class CreateGigs(BaseModel):
 #     delivery_time: Optional[int] = None
 
 
-# Model for full gig representation
-class Gigs(BaseGigs):
+class Image(BaseModel):
     id: int
+    filename: str = Field(..., max_length=512)
+    gig_id: int
+
+
+# Model for full gig representation
+class Gigs(BaseModel):
+    id: int
+    title: str
+    price: Decimal
     seller_id: int
     freelancer: "FreelancerNoRelation"
     category: "BaseCategory"
     rating: float = Field(ge=0, le=5, default=0)
     num_reviews: int = Field(default=0)
-    image_filename: str = Field(..., max_length=512, example="logo_design.jpg")
-
-
-class GigsTest(BaseGigs):
-    id: int
-    seller_id: int
-    rating: float = Field(ge=0, le=5, default=0)
-    num_reviews: int = Field(default=0)
-    image_filename: str = Field(..., max_length=512, example="logo_design.jpg")
+    images: List["Image"]

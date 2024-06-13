@@ -59,10 +59,7 @@ class AuthService:
     async def auth_google_callback(self, request: Request):
         try:
             token = await oauth.google.authorize_access_token(request)
-            logger.info(f"Received token: {token}")
-
             user_data = token["userinfo"]
-            logger.info(f"ID Token: {user_data}")
 
         except Exception as e:
             logger.error(f"Error parsing ID token: {e}")
@@ -76,6 +73,8 @@ class AuthService:
                 User(
                     user_name=user_data["name"],
                     email=user_data["email"],
+                    user_image=user_data["picture"],
+                    is_active=True,
                     hash_password=get_password_hash("default_password"),
                 )
             )

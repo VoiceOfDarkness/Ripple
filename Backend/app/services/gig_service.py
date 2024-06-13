@@ -20,11 +20,14 @@ class GigService(BaseService):
         dir_path = Path(settings.MEDIA_ROOT) / unique_id
         dir_path.mkdir(parents=True, exist_ok=True)
 
+        file_paths = []
+
         for file in files:
             file_path = dir_path / file.filename
             async with aiofiles.open(file_path, "wb") as out_file:
                 while content := await file.read(settings.DEFAULT_CHUNK_SIZE):
                     await out_file.write(content)
+            file_paths.append(f"{unique_id}/{file.filename}")
 
         create_gig = CreateGigs(
             title=gig.title,
@@ -32,7 +35,7 @@ class GigService(BaseService):
             category_id=gig.category_id,
             price=gig.price,
             delivery_time=gig.delivery_time,
-            image_filename=unique_id,
+            images=file_paths,
         )
 
         return self.gig_repository.create(seller_id, create_gig)
