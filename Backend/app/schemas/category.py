@@ -5,16 +5,16 @@ from pydantic import BaseModel, Field
 
 
 class BaseCategory(BaseModel):
+    id: int
     name: str = Field(..., max_length=128)
 
 
 class Category(BaseCategory):
-    id: int
     gigs: List["Gigs"]
 
 
 class CategoryResponse(BaseCategory):
-    id: int
+    pass
 
 
 class CreateCategory(BaseCategory):
