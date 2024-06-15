@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
 
     # front
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
     # media
     MEDIA_ROOT: str = "/app/media"
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
 
     # CORS
-    BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]] = "localhost,localhost:8000,localhost:3000"
+    BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]] = "localhost,localhost:8000,localhost:5173"
 
     @field_validator("BACKEND_CORS_ORIGINS")
     def parse_cors_origins(cls, v):

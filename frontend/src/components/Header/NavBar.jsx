@@ -1,9 +1,20 @@
 import { Menu } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getProfile } from "../../store/profile-slice";
 
 export default function MenuNavBar() {
-  const isToken = Cookies.get("access-token") !== undefined;
+  const isTokenExist = Cookies.get("access_token") !== undefined;
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    if (isTokenExist) {
+      dispatch(getProfile());
+    }
+  }, [dispatch]);
 
   return (
     <div className="bg-transparent w-full z-10 top-0 pt-16 px-14 flex text-white items-center justify-between">
@@ -22,8 +33,25 @@ export default function MenuNavBar() {
           <li>
             <Link to="/">Contact</Link>
           </li>
-          {isToken ? (
-            <p>User</p>
+          {isTokenExist ? (
+            <li className="flex gap-4 items-center">
+              {user.profile?.user_image ? (
+                <img
+                  src={`${
+                    user.profile?.user_image.includes("http")
+                      ? ""
+                      : "http://localhost:8000/app/media/"
+                  }${user.profile?.user_image}`}
+                  className=" w-16 h-16 rounded-full"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full flex justify-center items-center bg-purple">
+                  {user.profile?.user_name[0].toUpperCase()}
+                </div>
+              )}
+
+              <Link to="/profile">{user.profile?.user_name}</Link>
+            </li>
           ) : (
             <>
               <li>

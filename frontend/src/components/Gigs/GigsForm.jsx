@@ -1,18 +1,34 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useState, useEffect } from "react";
+import api from "../../helpers/request";
+import { uiMessageActions } from "../../store/uiMessage";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategories } from "../../store/category-actions";
+import { uiMessage } from "../../helpers/uiMessage";
 
 export default function GigsForm() {
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const categories = useSelector((state) => state.category.categories);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
+
   const initial = {
     title: "",
     description: "",
-    fileImg: "",
-    category: "IT",
+    category: categories[0]?.id,
     price: "",
     date: "",
   };
 
+  const handleFileChange = (event) => {
+    setSelectedFiles(event.currentTarget.files);
+  };
+
   const validate = (values) => {
     const errors = {};
-
     if (!values.title) errors.title = "Required";
     if (!values.description) errors.description = "Required";
     if (!values.price) errors.price = "Required";
@@ -21,17 +37,45 @@ export default function GigsForm() {
     return errors;
   };
 
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const formData = new FormData();
+
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    formData.append("category_id", values.category);
+    formData.append("price", values.price);
+    formData.append("delivery_time", values.date);
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append("files", selectedFiles[i]);
+    }
+
+    try {
+      const response = await api.post("gigs/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      dispatch(uiMessage("Successfully created gig", "", "success"));
+    } catch (error) {
+      dispatch(
+        uiMessage(
+          "Failed to create gig",
+          error.response?.data?.detail[0],
+          "error"
+        )
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <Formik
-      initialValues={initial}
-      validate={validate}
-      onSubmit={(values, { setSubmitting }) => {
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
-      }}
-    >
-      {({ isSubmitting, values, handleChange, handleBlur }) => (
-        <Form className="text-white flex flex-col gap-6">
+    <Formik initialValues={initial} validate={validate} onSubmit={handleSubmit}>
+      {({ isSubmitting, values, handleChange, handleBlur, setFieldValue }) => (
+        <Form
+          className="text-white flex flex-col gap-6"
+          encType="multipart/form-data"
+        >
           <Field
             type="text"
             name="title"
@@ -61,17 +105,18 @@ export default function GigsForm() {
           <Field
             as="select"
             name="category"
-            placeholder="Password"
+            placeholder="Category"
             className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
             onChange={handleChange}
             onBlur={handleBlur}
           >
-            <option value="IT">İT</option>
-            <option value="Design">Design</option>
-            <option value="Business">Business</option>
-            <option value="Marketing">Marketing</option>
+            {categories.map((category) => (
+              <option value={category.id} key={category.id}>
+                {category.name}
+              </option>
+            ))}
           </Field>
-          <ErrorMessage name="password" component="div" className="text-red" />
+          <ErrorMessage name="category" component="div" className="text-red" />
 
           <Field
             type="number"
@@ -85,21 +130,25 @@ export default function GigsForm() {
           <ErrorMessage name="price" component="div" className="text-red" />
 
           <Field
-            type="date"
+            type="number"
             className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
             name="date"
+            placeholder="Day"
             onChange={handleChange}
             onBlur={handleBlur}
           />
           <ErrorMessage name="date" component="div" className="text-red" />
 
-          <Field
+          <input
             type="file"
             className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
-            name="fileImg"
+            name="files"
             placeholder="File"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            multiple
+            onChange={(event) => {
+              handleFileChange(event);
+              setFieldValue("files", event.currentTarget.files);
+            }}
           />
 
           <button
@@ -116,10 +165,3 @@ export default function GigsForm() {
     </Formik>
   );
 }
-
-//Title
-// Description
-// File img
-//Category
-// Price
-// Time

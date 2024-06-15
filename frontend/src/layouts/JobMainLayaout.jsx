@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { motion as m } from "framer-motion";
 import JobHeader from "../components/JobHeader/JobHeader";
 import { Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getGigs } from "../store/gig-actions";
 
 export default function JobMainLayout() {
   const [isVisible, setIsVisible] = useState(true);
@@ -32,17 +34,16 @@ export default function JobMainLayout() {
   }, []);
 
   return (
-    <div style={{
-      height: "200vh",
-    }} className="bg-backGrey w-full absolute ">
+    <div className="bg-backGrey w-full h-full absolute ">
       <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
       <m.div
         animate={{
           marginLeft: isVisible ? `${marginLeftPercentage}%` : "5%",
         }}
-        transition={{ duration: 0.8 }}>
+        transition={{ duration: 0.8 }}
+      >
         <JobHeader />
-        <Outlet /> {/* This is where the nested routes will be rendered */}
+        <Outlet />
       </m.div>
     </div>
   );
