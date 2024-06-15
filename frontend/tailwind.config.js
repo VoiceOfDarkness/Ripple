@@ -23,6 +23,7 @@ module.exports = {
       },
       spacing: {
         128: "120rem",
+        100: "42rem",
         nav: "16vw",
         side: "20%",
       },

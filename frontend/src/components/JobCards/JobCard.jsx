@@ -1,8 +1,8 @@
 // JobCard.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
+import img from "../../assets/service-img-0.webp";
+import { Star } from "@mui/icons-material";
 
 const InfoTag = ({ children }) => {
   return (
@@ -16,10 +16,10 @@ export default function JobCard({ job }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const handleToggle = (event) => {
-    event.stopPropagation(); // Prevent triggering the handleClick
-    setIsExpanded(!isExpanded);
-  };
+  // const handleToggle = (event) => {
+  //   event.stopPropagation(); // Prevent triggering the handleClick
+  //   setIsExpanded(!isExpanded);
+  // };
 
   const handleClick = () => {
     navigate(`/job/${job.id}`);
@@ -27,39 +27,41 @@ export default function JobCard({ job }) {
 
   return (
     <div
-      className="bg-black w-full shadow-md p-6 rounded-3xl cursor-pointer"
-      onClick={handleClick}>
-      <div className="flex w-full justify-between content-between">
-        <div className="w-16 h-16 flex items-center justify-center bg-inputGray rounded-full"></div>
-        {isExpanded ? (
-          <BookmarkIcon className="text-white large" onClick={handleToggle} />
-        ) : (
-          <BookmarkBorderIcon
-            className="text-white large"
-            onClick={handleToggle}
-          />
-        )}
+      className="bg-black w-full shadow-md rounded-3xl h-100 cursor-pointer overflow-hidden"
+      onClick={handleClick}
+    >
+      <div className="w-full h-1/2 bg-inputGray">
+        <img
+          src={`http://localhost:8000/app/media/${job.images[0].filename}`}
+          // src={img}
+          alt="gig-img"
+        />
       </div>
-      <h1 className="text-white font-bold mt-5">{job.title}</h1>
-      <h2 className="text-white">{job.company}</h2>
-      <div className="flex gap-3 mt-10">
-        <InfoTag>{job.location}</InfoTag>
-        <InfoTag>{job.postedAt}</InfoTag>
-        <InfoTag>{job.contract}</InfoTag>
-      </div>
-      <div className="flex mt-10 gap-10">
-        {job.isNew && (
+      <div className="p-5">
+        <h1 className="text-white font-bold mt-5">{job.title}</h1>
+        <h2 className="text-white">{job.company}</h2>
+        <div className="flex gap-3 mt-10 items-center">
+          <div className="flex items-center gap-1">
+            <Star style={{marginBottom: "2px"}}/>
+            <span>{job.rating}</span>
+          </div>
+          <p>({job.num_reviews})</p>
+        </div>
+        <div className="flex mt-10 gap-10">
+          {/* {job.isNew && (
           <span className="bg-red text-white py-1 px-3 rounded-3xl">New</span>
         )}
         {job.isFeatured && (
           <span className="bg-purple text-white py-1 px-3 rounded-3xl">
             Featured
           </span>
-        )}
-      </div>
-      <div className="flex w-full justify-between content-between mt-10">
-        <p className="text-PlaceHolderGray">{job.postedAt} minute ago</p>
-        <p className="text-PlaceHolderGray">${job.cost}K/Mo</p>
+        )} */}
+          <p>{job.category.name}</p>
+        </div>
+        <div className="flex w-full justify-between content-between mt-10">
+          {/* <p className="text-PlaceHolderGray">{job.postedAt} minute ago</p> */}
+          <p className="text-PlaceHolderGray">From ${job.price}</p>
+        </div>
       </div>
     </div>
   );

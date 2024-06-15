@@ -3,8 +3,37 @@ import SearchIcon from "@mui/icons-material/Search";
 import JobSetting from "../Icons/JobsSetting";
 import { JobsComment } from "../Icons/JobsComment";
 import JobsAlert from "../Icons/JobsAlert";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getProfile } from "../../store/profile-slice";
+import { Link } from "react-router-dom";
 
 export default function JobHeader() {
+  const [isTokenExist, setIsTokenExist] = useState(
+    Cookies.get("access_token") !== undefined
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const tokenExists = Cookies.get("access_token") !== undefined;
+      if (tokenExists !== isTokenExist) {
+        setIsTokenExist(tokenExists);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isTokenExist]);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    if (isTokenExist) {
+      dispatch(getProfile());
+    }
+  }, [dispatch]);
+
   return (
     <div className="bg-transparent  z-10 top-0 pt-12  flex text-white items-center ">
       <div className="max-md:hidden w-full">
@@ -54,28 +83,43 @@ export default function JobHeader() {
               </a>
             </li>
           </div>
-          <div className="flex gap-5">
-            <a href="/">
+          {isTokenExist && (
+            <div className="flex gap-5">
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-zinc-200 rounded-full"></div>
-                <span className="ml-2">Username</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <div className="flex gap-4 items-center">
+                  {user.profile?.user_image ? (
+                    <img
+                      src={`${
+                        user.profile?.user_image.includes("http")
+                          ? ""
+                          : "http://localhost:8000/app/media/"
+                      }${user.profile?.user_image}`}
+                      className=" w-16 h-16 rounded-full"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full flex justify-center items-center bg-purple">
+                      {user.profile?.user_name[0].toUpperCase()}
+                    </div>
+                  )}
+                  <Link to="/profile">{user.profile?.user_name}</Link>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 ml-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
               </div>
-            </a>
-          </div>
+            </div>
+          )}
         </ul>
       </div>
       <div className="hidden max-md:block">

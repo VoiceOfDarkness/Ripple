@@ -3,18 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
-    token: null,
-    loading: false,
-    message: null,
+    errorMessage: null,
     verify: null,
   },
   reducers: {
     setUser(state, action) {
-      state.user = action.payload.user;
-      state.loading = action.payload.loading;
-      state.message = action.payload.message;
-      state.verify = action.payload.verify;
+      state.errorMessage = action.payload.errorMessage || null;
+      state.verify = action.payload.verify || null;
     },
   },
 });

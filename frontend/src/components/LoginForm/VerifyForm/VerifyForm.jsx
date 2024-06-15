@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { verifyUser } from "../../../store/auth-actions";
+import { useNavigate } from "react-router-dom";
 
 export default function VerifyForm() {
   const [error, setError] = useState("");
@@ -8,6 +9,15 @@ export default function VerifyForm() {
   const [timeLeft, setTimeLeft] = useState(120);
   const inputsRef = useRef([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const verifyStatus = useSelector((state) => state.auth.verify);
+
+  useEffect(() => {
+    if (verifyStatus === 200) {
+      navigate("/auth?mode=login");
+    }
+  }, [verifyStatus, navigate]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -26,12 +36,25 @@ export default function VerifyForm() {
   const handleChange = (e, index) => {
     const value = e.target.value;
     setError("");
+
+    // if (/^\d$/.test(value)) {
     const newValues = [...values];
     newValues[index] = value;
     setValues(newValues);
+
     if (index < 5) {
       inputsRef.current[index + 1].focus();
     }
+
+    if (index === 5) {
+      const code = newValues.join("");
+    }
+    // } else if (/^\d+$/.test(value)) {
+    if (value.length === 6) {
+      const newValues = value.split("").slice(0, 6);
+      setValues(newValues);
+    }
+    // }
   };
 
   const handleKeyDown = (e, index) => {
@@ -64,7 +87,7 @@ export default function VerifyForm() {
               min={0}
               max={9}
               value={values[index]}
-              className="w-full h-52 flex-1 text-7xl bg-inputBack rounded-xl text-center placeholder:text-white focus:border-purple focus:border-2 focus:outline-none"
+              className="w-full h-52 flex-1 text-7xl bg-inputBack appearance-none rounded-xl text-center placeholder:text-white focus:border-purple focus:border-2 focus:outline-none"
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               ref={(el) => (inputsRef.current[index] = el)}

@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { VisibilityOffOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { craeteUser, login } from "../../store/auth-actions";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ export default function LoginForm({ mode }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const errorMessages = useSelector((state) => state.auth.errorMessage);
 
   const validation = (values) => {
     const errors = {};
@@ -55,12 +56,15 @@ export default function LoginForm({ mode }) {
             await dispatch(
               craeteUser(values.userName, values.password, values.email)
             );
-            navigate("?mode=verify");
+            if (!errorMessages) {
+              navigate("?mode=verify");
+            }
           } else {
             await dispatch(login(values.email, values.password));
+            if (!errorMessages) {
+              navigate("/");
+            }
           }
-
-          navigate("/");
           setSubmitting(false);
         }}
       >
@@ -123,7 +127,7 @@ export default function LoginForm({ mode }) {
               component="div"
               className="text-red"
             />
-
+            {errorMessages && <p className="text-red">{errorMessages}</p>}
             <button
               type="submit"
               disabled={isSubmitting}

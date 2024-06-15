@@ -9,17 +9,25 @@ import HelpIcon from "../Icons/HelpIcon";
 import LogOutIcon from "../Icons/LogOutIcon";
 import StarShape from "../UI/StarShape";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 import { motion as m } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 export default function SideNav({ isVisible, setIsVisible }) {
+  const isTokenExist = Cookies.get("access_token") !== undefined;
+  const navigation = useNavigate();
   const click = () => {
     setIsVisible((prevState) => !prevState);
   };
 
+  const handleLogout = () => {
+    Cookies.remove("access_token");
+    navigation("/");
+  };
+
   const menu = [
-    ["Announcment", <AnnouncementsIcon />, "/announcements"],
+    ["Jobs", <AnnouncementsIcon />, "/jobs"],
     ["My Work", <MyWorkIcon />, "/dashboard"],
     ["Statistics", <StatisticIcon />, "/statistics"],
     ["Chat", <ChatIcon />, "/chat"],
@@ -27,11 +35,12 @@ export default function SideNav({ isVisible, setIsVisible }) {
     ["Payment Info", <PaymentIcon />, "/payment"],
     ["Settings", <Settings style={{ fontSize: "2.5rem" }} />, "/settings"],
   ];
+
   return (
     <m.div
       className="fixed h-screen bg-black z-50 pr-24 rounded-r-3xl"
       initial={{ translate: 0 }}
-      animate={isVisible ? { translate: 0 } : { translate: "-99.4%" }}
+      animate={isVisible ? { translate: 0 } : { translate: "-98.4%" }}
       transition={{ duration: 0.8 }}
     >
       <StarShape className="flex justify-end text-black absolute -right-12 top-1/2 -translate-y-1/2 -z-50">
@@ -60,12 +69,19 @@ export default function SideNav({ isVisible, setIsVisible }) {
           <ul className="flex flex-col gap-14">
             {menu.map((item, index) => {
               return (
-                <li
-                  className="flex gap-5 hover:text-purple duration-200"
-                  key={index}
-                >
-                  {item[1]}
-                  <Link to= {item[2]}>{item[0]}</Link>
+                <li key={index}>
+                  <NavLink
+                    to={item[2]}
+                    className={({ isActive }) =>
+                      [
+                        isActive && "text-purple",
+                        "flex gap-5 hover:text-purple duration-200",
+                      ].join(" ")
+                    }
+                  >
+                    {item[1]}
+                    {item[0]}
+                  </NavLink>
                 </li>
               );
             })}
@@ -78,12 +94,19 @@ export default function SideNav({ isVisible, setIsVisible }) {
               <HelpIcon />
               <a href="/">Help Center</a>
             </li>
-            <li className="text-red flex gap-5">
-              <LogOutIcon />
-              <button onClick={() => Cookies.remove("access-token")}>
-                Log Out
-              </button>
-            </li>
+            {isTokenExist ? (
+              <li className="text-red flex gap-5">
+                <LogOutIcon />
+                <button onClick={handleLogout}>Log Out</button>
+              </li>
+            ) : (
+              <Link
+                to="/auth?mode=login"
+                className="border border-white hover:bg-white text-center hover:text-black rounded-lg border-solid p-4 px-10 transition-all duration-500"
+              >
+                Login
+              </Link>
+            )}
           </ul>
         </div>
       </div>
