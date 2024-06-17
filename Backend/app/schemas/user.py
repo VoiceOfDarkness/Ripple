@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
 from app.schemas.order import Order
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field
 
 if TYPE_CHECKING:
     from app.schemas.services import Gigs
@@ -13,6 +13,7 @@ class BaseUser(BaseModel):
     user_name: Optional[str] = Field(max_length=128)
     user_image: Optional[str] = Field(None, max_length=255)
     email: EmailStr
+    localtion: str = Field(None, max_length=128)
     first_name: Optional[str] = Field(None, max_length=128)
     last_name: Optional[str] = Field(None, max_length=128)
 
@@ -22,6 +23,8 @@ class User(BaseUser):
 
     is_active: bool = False
     is_banned: bool = False
+    is_freelancer: bool = False
+    is_hire_manager: bool = True
 
 
 class UpdateUser(BaseModel):
@@ -49,7 +52,6 @@ class BaseFreelancer(BaseModel):
 
 
 class Freelancer(BaseFreelancer):
-    location: str | None
     overview: str | None
     registration_date: datetime
     user: User
@@ -62,10 +64,9 @@ class CreateFreelancer(BaseFreelancer):
 
 
 class FreelancerNoRelation(BaseFreelancer):
-    location: str | None
     overview: str | None
     registration_date: datetime
-    user: User
+    user: "User"
 
 
 # HireManager schemas
@@ -74,10 +75,8 @@ class BaseHireManager(BaseModel):
 
 
 class HireManager(BaseHireManager):
-    location: str | None
     registration_date: datetime
-    user: User
-    orders: List["Order"]
+    user: "User"
 
 
 class CreateHireManager(BaseHireManager):

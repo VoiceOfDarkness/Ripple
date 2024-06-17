@@ -1,6 +1,9 @@
 import uuid
+import logging
 import aiofiles
 from pathlib import Path
+from fastapi import status
+from fastapi.responses import JSONResponse
 
 from app.repository.user_repository import FreelancerRepository, UserRepository
 from app.schemas.user import User
@@ -8,9 +11,17 @@ from app.services.base_service import BaseService
 from app.core.config import settings
 
 
+logger = logging.getLogger(__name__)
+
+
 class UserService(BaseService):
-    def __init__(self, user_repository: UserRepository) -> None:
+    def __init__(
+        self,
+        user_repository: UserRepository,
+        freelancer_repository: FreelancerRepository,
+    ) -> None:
         self.user_repository = user_repository
+        self.freelancer_repository = freelancer_repository
         super().__init__(user_repository)
 
     def get_by_username_or_email(self, username: str) -> User:
@@ -29,7 +40,7 @@ class UserService(BaseService):
             async with aiofiles.open(file_path, "wb") as out_file:
                 while content := await user_image.read(settings.DEFAULT_CHUNK_SIZE):
                     await out_file.write(content)
-        
+
         try:
             if user_image:
                 user_data.user_image = f"{unique_id}/{user_data.user_image}"
@@ -37,8 +48,27 @@ class UserService(BaseService):
         except Exception as e:
             raise Exception("Error updating user: ", e)
 
+    async def switch_to_freelancer(self, user: User):
+        freelancer = self.freelancer_repository.get_by_id(user.id)
+        
+        if not freelancer:
+            self.freelancer_repository.create(user_id=user.id)
 
-class FreelancerService(BaseService):
-    def __init__(self, freelancer_repository: FreelancerRepository) -> None:
-        self.freelancer_repository = freelancer_repository
-        super().__init__(freelancer_repository)
+        user.is_freelancer = True
+        user.is_hire_manager = False
+        self.user_repository.update(user.id, user)
+
+        return JSONResponse(
+            content={"message": "User switched to freelancer"},
+            status_code=status.HTTP_200_OK,
+        )
+
+    async def switch_to_hire_manager(self, user: User):
+        user.is_freelancer = False
+        user.is_hire_manager = True
+        self.user_repository.update(user.id, user)
+
+        return JSONResponse(
+            content={"message": "User switched to hire manager"},
+            status_code=status.HTTP_200_OK,
+        )

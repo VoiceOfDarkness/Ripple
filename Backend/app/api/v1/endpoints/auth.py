@@ -2,7 +2,7 @@ from app.core.container import Container
 from app.schemas.auth import (ChangePassword, SignIn, SignInResponse, SignUp,
                               Token, User)
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, Request, Body
+from fastapi import APIRouter, Depends, Request, Body, status
 
 from app.core.dependencies import get_current_user
 
@@ -37,7 +37,7 @@ async def change_password(
     return await service.change_password(user_password, current_user)
 
 
-@auth_router.get("/sign-in/google", response_model=SignInResponse)
+@auth_router.get("/sign-in/google", status_code=status.HTTP_302_FOUND)
 @inject
 async def sign_in_google(
     request: Request, service=Depends(Provide[Container.auth_service])
@@ -45,7 +45,7 @@ async def sign_in_google(
     return await service.sign_in_google(request)
 
 
-@auth_router.get("/google/callback", response_model=Token)
+@auth_router.get("/google/callback", status_code=status.HTTP_302_FOUND)
 @inject
 async def auth_google_callback(
     request: Request, service=Depends(Provide[Container.auth_service])

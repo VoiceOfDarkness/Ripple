@@ -17,5 +17,5 @@ class CategoryResponse(BaseCategory):
     pass
 
 
-class CreateCategory(BaseCategory):
-    pass
+class CreateCategory(BaseModel):
+    name: str = Field(..., max_length=128)

@@ -9,9 +9,9 @@ from app.core.security import (
     oauth,
     verify_password,
 )
-from app.repository.user_repository import FreelancerRepository, UserRepository
+from app.repository.user_repository import HireManagerRepository, UserRepository
 from app.schemas.auth import ChangePassword, EmailVerification, SignUp, Token
-from app.schemas.user import CreateFreelancer as Freelancer
+from app.schemas.user import CreateHireManager as HireManager
 from app.schemas.user import UpdatePrivateUser as UpdateUser
 from app.schemas.user import UserPrivate as User
 from app.tasks.email_service import send_verification_code
@@ -27,11 +27,11 @@ class AuthService:
     def __init__(
         self,
         user_repository: UserRepository,
-        freelancer_repository: FreelancerRepository,
+        hire_manager_repository: HireManagerRepository,
         redis_client: redis.Redis,
     ) -> None:
         self.user_repository = user_repository
-        self.freelancer_repository = freelancer_repository
+        self.hire_manager_repository = hire_manager_repository
         self.redis = redis_client
 
     def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
@@ -78,9 +78,11 @@ class AuthService:
                     hash_password=get_password_hash("default_password"),
                 )
             )
+            
+            logger.info(f"AAAAAAAAAAAAAAAA {user}")
 
-            freelancer = self.freelancer_repository.create(
-                Freelancer(
+            self.hire_manager_repository.create(
+                HireManager(
                     user_id=user.id,
                 )
             )
@@ -100,12 +102,6 @@ class AuthService:
         )
         return response
 
-        # return {
-        #     "access_token": access_token,
-        #     "token_type": "bearer",
-        #     "expiration": expiration,
-        # }
-
     def sign_up(self, sign_up: SignUp) -> User:
         user = self.user_repository.get_by_username_or_email(sign_up.email)
         if user:
@@ -122,8 +118,8 @@ class AuthService:
             )
         )
 
-        freelancer = self.freelancer_repository.create(
-            Freelancer(
+        self.hire_manager_repository.create(
+            HireManager(
                 user_id=new_user.id,
             )
         )

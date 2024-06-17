@@ -23,7 +23,7 @@ async def get_categories(
 @inject
 async def get_category(
     category_id: int,
-    service: CategoryService = Depends(Provide[Container.category_service]),
+    service: BaseCategory = Depends(Provide[Container.category_service]),
 ):
     return service.get(category_id)
 
@@ -31,7 +31,7 @@ async def get_category(
 @category_router.post("/categories", response_model=CreateCategory)
 @inject
 async def create_category(
-    category: BaseCategory = Body(...),
+    category: CreateCategory = Body(...),
     service: CategoryService = Depends(Provide[Container.category_service]),
 ):
     return service.add(category)

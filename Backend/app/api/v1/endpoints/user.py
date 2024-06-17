@@ -36,3 +36,21 @@ async def update_profile(
         last_name=last_name,
     )
     return await service.update(current_user.id, user_data, user_image)
+
+
+@user_router.patch("/switch_to_freelancer")
+@inject
+async def switch_to_freelancer(
+    current_user: User = Depends(get_current_user),
+    service: UserService = Depends(Provide[Container.user_service]),
+):
+    return await service.switch_to_freelancer(current_user)
+
+
+@user_router.patch("/switch_to_hire_manager")
+@inject
+async def switch_to_hire_manager(
+    current_user: User = Depends(get_current_user),
+    service: UserService = Depends(Provide[Container.user_service]),
+):
+    return await service.switch_to_hire_manager(current_user)
