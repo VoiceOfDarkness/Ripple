@@ -16,7 +16,7 @@ class Gigs(SQLModel, table=True):
     title: str = Field(max_length=128, nullable=False)
     description: str = Field(max_length=512)
     category_id: int = Field(foreign_key="category.id")
-    price: Decimal = Field(default=0, max_digits=5, decimal_places=2, nullable=False)
+    price: Decimal = Field(default=0, max_digits=10, decimal_places=2, nullable=False)
     delivery_time: int = Field(default=0, nullable=False)
     rating: float = Field(
         sa_column=Column(

@@ -2,6 +2,7 @@ from contextlib import AbstractContextManager
 from typing import Callable
 
 from app.models.message import Message
+from app.schemas.message import MessageCreate
 from app.repository.base_repository import BaseRepository
 from sqlalchemy.orm import Session
 
@@ -20,3 +21,15 @@ class MessageRepository(BaseRepository):
                 )
                 .all()
             )
+
+    def add_message(self, user_id, scheme: MessageCreate):
+        message_data = scheme.model_dump()
+        message_data['sender_id'] = user_id
+        query = Message(**message_data)
+        
+        with self._session_factory() as session:
+            session.add(query)
+            session.commit()
+            session.refresh(query)
+
+        return query

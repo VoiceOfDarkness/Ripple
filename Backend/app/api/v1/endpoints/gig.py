@@ -28,7 +28,7 @@ async def get_gig(
     return service.get(gig_id)
 
 
-@gig_router.post("/gigs/", status_code=201)
+@gig_router.post("/gigs", status_code=201)
 @inject
 async def create_gig(
     title: str = Form(...),

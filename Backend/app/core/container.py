@@ -14,6 +14,8 @@ class Container(containers.DeclarativeContainer):
             "app.api.v1.endpoints.user",
             "app.api.v1.endpoints.category",
             "app.api.v1.endpoints.auth",
+            "app.api.v1.endpoints.message",
+            "app.api.v1.endpoints.order",
             "app.core.dependencies",
         ]
     )
@@ -27,10 +29,14 @@ class Container(containers.DeclarativeContainer):
         UserRepository, session_factory=db.provided.session
     )
 
-    freelancer_repository = providers.Factory(
-        FreelancerRepository, session_factory=db.provided.session
+    hire_manager_repository = providers.Factory(
+        HireManagerRepository, session_factory=db.provided.session
     )
 
+    freelancer_repository = providers.Factory(
+        FreelancerRepository, session_factory=db.provided.session   
+    )
+    
     category_repository = providers.Factory(
         CategoryRepository, session_factory=db.provided.session
     )
@@ -38,15 +44,23 @@ class Container(containers.DeclarativeContainer):
     gig_repository = providers.Factory(
         GigRepository, session_factory=db.provided.session
     )
+    order_repository = providers.Factory(
+        OrderRepository, session_factory=db.provided.session
+    )
+    message_repository = providers.Factory(
+        MessageRepository, session_factory=db.provided.session
+    )
 
-    user_service = providers.Factory(UserService, user_repository=user_repository)
+    user_service = providers.Factory(UserService, user_repository=user_repository, freelancer_repository=freelancer_repository)
     auth_service = providers.Factory(
         AuthService,
         user_repository=user_repository,
-        freelancer_repository=freelancer_repository,
+        hire_manager_repository=hire_manager_repository,
         redis_client=redis,
     )
     category_service = providers.Factory(
         CategoryService, category_repository=category_repository
     )
     gig_service = providers.Factory(GigService, gig_repository=gig_repository)
+    order_service = providers.Factory(OrderService, order_repository=order_repository)
+    message_service = providers.Factory(MessageService, message_repository=message_repository)

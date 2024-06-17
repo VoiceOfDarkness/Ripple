@@ -1,14 +1,12 @@
 import enum
 from datetime import datetime
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from pydantic import BaseModel, Field
 
-
 if TYPE_CHECKING:
-    from app.schemas.services import Gigs
-    from app.schemas.user import Freelancer, HireManager
+    from app.schemas.user import User
 
 
 class OrderStatus(str, enum.Enum):
@@ -27,13 +25,30 @@ class BaseOrder(BaseModel):
     total_price: Decimal
 
 
+class ManagerOrder(BaseModel):
+    user: "User"
+
+
+class FreelancerOrder(BaseModel):
+    user: "User"
+
+
+class GigOrder(BaseModel):
+    id: int
+    title: str
+
+
 class Order(BaseOrder):
     id: int
     order_date: datetime
-    freelancer: "Freelancer"
-    hire_manager: "HireManager"
-    gigs: "Gigs"
+    hire_manager: "ManagerOrder"
+    freelancer: "FreelancerOrder"
+    gigs: "GigOrder"
 
 
 class CreateOrder(BaseOrder):
     pass
+
+
+class UpdateOrder(BaseModel):
+    status: OrderStatus = OrderStatus.pending
