@@ -23,16 +23,16 @@ class GigRepository(BaseRepository):
 
             gig = gig.model_dump()
             image_paths = gig.pop("images")
-            
+
             db_obj = Gigs(
                 **gig,
                 seller_id=freelancer.id,
             )
-            
+
             for image_path in image_paths:
                 image = Image(filename=image_path, gig=db_obj)
                 session.add(image)
-            
+
             session.add(db_obj)
             session.commit()
             session.refresh(db_obj)
@@ -60,4 +60,17 @@ class GigRepository(BaseRepository):
                     joinedload(Gigs.images),
                 )
                 .all()
+            )
+
+    def get_by_id(self, gig_id: int):
+        with self._session_factory() as session:
+            return (
+                session.query(Gigs)
+                .options(
+                    joinedload(Gigs.category),
+                    joinedload(Gigs.freelancer).joinedload(Freelancer.user),
+                    joinedload(Gigs.images),
+                )
+                .filter(Gigs.id == gig_id)
+                .first()
             )

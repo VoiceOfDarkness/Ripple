@@ -19,7 +19,7 @@ async def get_gigs(service: GigService = Depends(Provide[Container.gig_service])
     return service.get_list()
 
 
-@gig_router.get("/gig/{gig_id}")
+@gig_router.get("/gig/{gig_id}", response_model=Gigs)
 @inject
 async def get_gig(
     gig_id: int,
