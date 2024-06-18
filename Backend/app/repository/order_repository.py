@@ -44,7 +44,7 @@ class OrderRepository(BaseRepository):
                     joinedload(Order.freelancer).joinedload(Freelancer.user),
                     joinedload(Order.gigs).joinedload(Gigs.orders),
                 )
-                .filter(Order.buyer_id == freelancer_id)
+                .filter(Order.seller_id == freelancer_id)
                 .all()
             )
         return db_obj
