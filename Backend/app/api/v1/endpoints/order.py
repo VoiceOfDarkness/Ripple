@@ -17,7 +17,7 @@ async def get_orders(
     current_user: User = Depends(get_current_user),
     service: OrderService = Depends(Provide[Container.order_service]),
 ):
-    return service.get_list()
+    return await service.get_order(current_user)
 
 
 @order_router.post("/order")
@@ -27,7 +27,7 @@ async def create_order(
     current_user: User = Depends(get_current_user),
     service: OrderService = Depends(Provide[Container.order_service]),
 ):
-    return service.add(order)
+    return await service.add_order(current_user, order)
 
 
 @order_router.patch("/order/{order_id}")

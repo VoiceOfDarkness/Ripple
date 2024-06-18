@@ -34,9 +34,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     freelancer_repository = providers.Factory(
-        FreelancerRepository, session_factory=db.provided.session   
+        FreelancerRepository, session_factory=db.provided.session
     )
-    
+
     category_repository = providers.Factory(
         CategoryRepository, session_factory=db.provided.session
     )
@@ -51,7 +51,11 @@ class Container(containers.DeclarativeContainer):
         MessageRepository, session_factory=db.provided.session
     )
 
-    user_service = providers.Factory(UserService, user_repository=user_repository, freelancer_repository=freelancer_repository)
+    user_service = providers.Factory(
+        UserService,
+        user_repository=user_repository,
+        freelancer_repository=freelancer_repository,
+    )
     auth_service = providers.Factory(
         AuthService,
         user_repository=user_repository,
@@ -62,5 +66,12 @@ class Container(containers.DeclarativeContainer):
         CategoryService, category_repository=category_repository
     )
     gig_service = providers.Factory(GigService, gig_repository=gig_repository)
-    order_service = providers.Factory(OrderService, order_repository=order_repository)
-    message_service = providers.Factory(MessageService, message_repository=message_repository)
+    order_service = providers.Factory(
+        OrderService,
+        order_repository=order_repository,
+        freelancer_repository=freelancer_repository,
+        hire_manager_repository=hire_manager_repository,
+    )
+    message_service = providers.Factory(
+        MessageService, message_repository=message_repository
+    )

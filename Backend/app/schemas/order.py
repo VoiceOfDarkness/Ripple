@@ -45,9 +45,15 @@ class Order(BaseOrder):
     freelancer: "FreelancerOrder"
     gigs: "GigOrder"
 
+    class Config:
+        from_attributes = True
 
-class CreateOrder(BaseOrder):
-    pass
+
+class CreateOrder(BaseModel):
+    seller_id: int
+    gig_id: int
+    status: OrderStatus = OrderStatus.pending
+    total_price: Decimal
 
 
 class UpdateOrder(BaseModel):
