@@ -8,8 +8,11 @@ export const authSlice = createSlice({
   },
   reducers: {
     setUser(state, action) {
-      state.errorMessage = action.payload.errorMessage || null;
-      state.verify = action.payload.verify || null;
+      state.errorMessage = action.payload.errorMessage;
+      state.verify = action.payload.verify;
+    },
+    clearErrorMessage(state) {
+      state.errorMessage = null;
     },
   },
 });

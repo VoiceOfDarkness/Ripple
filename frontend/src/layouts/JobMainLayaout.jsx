@@ -34,13 +34,14 @@ export default function JobMainLayout() {
   }, []);
 
   return (
-    <div className="bg-backGrey w-full h-full absolute ">
+    <div className="w-full absolute">
       <SideNav isVisible={isVisible} setIsVisible={setIsVisible} />
       <m.div
         animate={{
           marginLeft: isVisible ? `${marginLeftPercentage}%` : "5%",
         }}
         transition={{ duration: 0.8 }}
+        className="h-full"
       >
         <JobHeader />
         <Outlet />

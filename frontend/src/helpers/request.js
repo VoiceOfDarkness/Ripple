@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: "http://localhost:8000/api/v1/",
 });
 
-const getToken = () => {
+export const getToken = () => {
   return Cookies.get("access_token");
 };
 

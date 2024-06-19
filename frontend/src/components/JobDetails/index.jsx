@@ -1,55 +1,26 @@
 // JobDetails.js
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Box,
-  Text,
-  Heading,
-  Stack,
-  Tag,
-  Flex,
-  Icon,
-  VStack,
-  Divider,
-  Grid,
-  GridItem,
-} from "@chakra-ui/react";
-import { MdLocationOn, MdWork, MdAttachMoney } from "react-icons/md";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { StarIcon, MapPinIcon, GlobeIcon } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { getGigById } from "../../store/gig-actions";
-
-const jobData = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    company: "Photosnap",
-    location: "Remote",
-    postedAt: "1d ago",
-    contract: "Full Time",
-    cost: 100,
-    experienceLevel: "Mid-Level",
-    projectType: "Development",
-    skills: ["React", "JavaScript", "CSS"],
-    description:
-      "Develop user-facing features using React and other modern technologies.",
-    responsibilities:
-      "Write clean, maintainable code. Collaborate with cross-functional teams.",
-    requirements:
-      "Experience with React and JavaScript. Strong problem-solving skills.",
-    niceToHave: "Experience with TypeScript and Redux.",
-    futureWork: "Potential to lead front-end projects.",
-    toApply: "Submit your resume and cover letter.",
-    clientInfo: "Established company with a strong remote work culture.",
-    type: "Worldwide",
-  },
-  // Add more job objects here...
-];
+import { createOrder } from "../../store/order-slice";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const JobDetails = () => {
   const { jobId } = useParams();
   const gig = useSelector((state) => state.gigs.gig);
+  const user = useSelector((state) => state.profile.profile);
   const dispatch = useDispatch();
-  const job = jobData.find((job) => job.id === parseInt(jobId));
 
   useEffect(() => {
     dispatch(getGigById(jobId));
@@ -57,105 +28,144 @@ const JobDetails = () => {
 
   if (!gig) {
     return (
-      <Box className="bg-black mt-10 mb-10 mr-24 text-white p-10 rounded-3xl">
-        Job not found
-      </Box>
+      <div className="bg-black mt-10 mb-10 mr-24 text-white p-10 rounded-3xl">
+        Gig not found
+      </div>
     );
   }
 
+  const handleClick = () => {
+    dispatch(createOrder(gig.seller_id, gig.id, undefined, gig.price));
+  };
+
   return (
-    <Box className="bg-gradient-to-b from-black to-zinc-950 text-white p-10 rounded-3xl mt-10 mb-10 mr-24 shadow-lg">
-      <Box mb="6">
-        <Heading as="h1" size="xl" mb="2" className="text-teal-300">
-          {gig.title}
-        </Heading>
-        <Text fontSize="lg" mb="1" className="text-gray-400">
-          {gig.description}
-        </Text>
-        <Flex align="center" mb="4" className="text-gray-400">
-          <Text fontSize="md">Delivery time {gig.delivery_time}</Text>
-        </Flex>
-        {/* <Flex align="center" className="text-gray-400">
-          <Icon as={MdWork} mr="2" />
-          <Text fontSize="md">{gig}</Text>
-        </Flex> */}
-      </Box>
-
-      <Divider my="6" borderColor="gray-700" />
-
-      {/* <Grid
-        templateColumns="repeat(2, 1fr)"
-        gap={6}
-        className="bg-gray-950 p-6 rounded-xl"
-      >
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            Job Description
-          </Heading>
-          <Text className="text-gray-300">{job.description}</Text>
-        </GridItem>
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            Responsibilities
-          </Heading>
-          <Text className="text-gray-300">{job.responsibilities}</Text>
-        </GridItem>
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            Requirements
-          </Heading>
-          <Text className="text-gray-300">{job.requirements}</Text>
-        </GridItem>
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            Nice to Have
-          </Heading>
-          <Text className="text-gray-300">{job.niceToHave}</Text>
-        </GridItem>
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            Future Work
-          </Heading>
-          <Text className="text-gray-300">{job.futureWork}</Text>
-        </GridItem>
-        <GridItem colSpan={[2, 1]} className="bg-gray-900 p-4 rounded-lg">
-          <Heading as="h2" size="md" mb="2" className="text-teal-300">
-            To Apply
-          </Heading>
-          <Text className="text-gray-300">{job.toApply}</Text>
-        </GridItem>
-      </Grid>
-
-      <Divider my="6" borderColor="gray-900" />
-
-      <Box mb="5" className="bg-gray-900 p-6 rounded-xl">
-        <Heading as="h2" size="md" mb="2" className="text-teal-300">
-          About the Client
-        </Heading>
-        <Text className="text-gray-300">{job.clientInfo}</Text>
-      </Box>
-
-      <Divider my="6" borderColor="gray-900" />
-
-      <Box mb="5" className="bg-gray-900 p-6 rounded-xl">
-        <Heading as="h2" size="md" mb="2" className="text-teal-300">
-          Skills and Expertise
-        </Heading>
-        <Stack direction="row" spacing={4} wrap="wrap">
-          {job.skills.map((skill) => (
-            <Tag size="lg" key={skill} variant="solid" colorScheme="teal">
-              {skill}
-            </Tag>
-          ))}
-        </Stack>
-      </Box> */}
-
-      <Flex align="center" mt="4">
-        <Text fontSize="lg" className="text-teal-300">
-          Price from ${gig.price}
-        </Text>
-      </Flex>
-    </Box>
+    <div className="max-w-full flex flex-col gap-7 p-16 mt-10 mr-24 bg-black rounded-2xl text-white">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div>
+          <h1 className="text-5xl font-bold mb-12 text-purple-500">
+            {gig.title}
+          </h1>
+          <div className="flex items-center mt-2">
+            <StarIcon className="w-4 h-4 text-yellow-500" />
+            <span className="ml-1">{gig.rating}</span>
+            <span className="ml-1 text-gray-500">({gig.num_reviews})</span>
+          </div>
+          <div className="flex items-center mt-4">
+            <Avatar className="w-32 h-32">
+              {gig?.freelancer?.user.user_image ? (
+                <AvatarImage
+                  src={`${
+                    gig?.freelancer?.user.user_image.includes("http")
+                      ? ""
+                      : "http://localhost:8000/app/media/"
+                  }${gig?.freelancer?.user.user_image}`}
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full flex justify-center items-center bg-purple">
+                  {gig?.freelancer?.user.user_name.toUpperCase()}
+                </div>
+              )}
+            </Avatar>
+            <div className="ml-4 flex flex-col gap-3">
+              <h2 className="text-3xl font-bold text-purple-500">
+                {gig?.freelancer?.user.user_name}
+              </h2>
+              <div className="flex items-center text-gray-500">
+                <MapPinIcon className="w-8 h-8" />
+                <span className="ml-1">Azerbaijan</span>
+              </div>
+              <div className="flex items-center text-gray-500">
+                <GlobeIcon className="w-8 h-8" />
+                <span className="ml-1">I speak Azerbaijani, English</span>
+              </div>
+              <div className="text-gray-500">591 orders completed</div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <section className="mb-8">
+        <h2 className="text-3xl font-bold text-purple-500">
+          Python Developer, Data Extraction Specialist
+        </h2>
+        <p className="mt-2">
+          Hello there! My name is Kawsar, and I'm your go-to Python developer. I
+          specialize in data extraction, web scraping, web automation, custom
+          scripts, API development, and other related services.
+        </p>
+      </section>
+      <section className="mb-8">
+        <h2 className="text-3xl font-bold">About this Gig</h2>
+        <p className="mt-2">{gig.description}</p>
+        <div className="mt-4 flex">
+          <Carousel
+            className="w-1/3 text-black"
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {gig?.images?.map((item, index) => (
+                <CarouselItem key={index}>
+                  <Card>
+                    <img
+                      src={`http://localhost:8000/app/media/${item.filename}`}
+                      alt=""
+                    />
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+        {user?.id !== gig?.seller_id && (
+          <Button
+            className="bg-purple-500 mt-12 text-3xl bg-purple text-white px-10 py-8 rounded"
+            onClick={handleClick}
+          >
+            Order
+          </Button>
+        )}
+      </section>
+      <section className="mb-8">
+        <h2 className="font-bold text-3xl text-purple-500">
+          Programming language
+        </h2>
+        <p className="mt-2">Python</p>
+      </section>
+      <section className="mb-8">
+        <Button className="bg-purple-500 text-3xl bg-purple text-white px-10 py-8 rounded">
+          Contact me
+        </Button>
+      </section>
+      <section className="mb-8">
+        <h2 className="text-4xl font-bold">Reviews</h2>
+        <Card className="mt-4 p-4 bg-inputGray text-white rounded">
+          <CardContent>
+            <div className="flex items-center">
+              <Avatar className="text-black">
+                <AvatarFallback>B</AvatarFallback>
+              </Avatar>
+              <div className="ml-4">
+                <h3 className="font-bold">bobsmith</h3>
+                <div className="flex items-center text-gray-500">
+                  <MapPinIcon className="w-4 h-4" />
+                  <span className="ml-1">Canada</span>
+                </div>
+                <div className="flex items-center mt-1">
+                  <StarIcon className="w-4 h-4 text-yellow-500" />
+                  <span className="ml-1">5</span>
+                </div>
+              </div>
+            </div>
+            <p className="mt-2">
+              Very professional and delivered on time. Will hire again!
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
   );
 };
 

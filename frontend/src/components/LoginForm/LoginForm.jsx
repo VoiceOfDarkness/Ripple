@@ -1,15 +1,21 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { VisibilityOffOutlined } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { craeteUser, login } from "../../store/auth-actions";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { authActions } from "../../store/auth-slice";
+import { createUser, login } from "../../store/auth-actions";
 
 export default function LoginForm({ mode }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const errorMessages = useSelector((state) => state.auth.errorMessage);
+  const location = useLocation();
+
+  useEffect(() => {
+    dispatch(authActions.clearErrorMessage());
+  }, [dispatch, mode]);
 
   const validation = (values) => {
     const errors = {};
@@ -51,19 +57,24 @@ export default function LoginForm({ mode }) {
             : { userName: "", email: "", password: "" }
         }
         validate={validation}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting }) => {
+          const redirectTo =
+            location.state?.from?.pathname ||
+            (mode === "login" ? "/" : "?mode=verify");
+
           if (mode !== "login") {
-            await dispatch(
-              craeteUser(values.userName, values.password, values.email)
+            dispatch(
+              createUser(
+                values.userName,
+                values.password,
+                values.email,
+                navigate
+              )
             );
-            if (!errorMessages) {
-              navigate("?mode=verify");
-            }
           } else {
-            await dispatch(login(values.email, values.password));
-            if (!errorMessages) {
-              navigate("/");
-            }
+            dispatch(
+              login(values.email, values.password, navigate, redirectTo)
+            );
           }
           setSubmitting(false);
         }}

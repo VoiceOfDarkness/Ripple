@@ -1,10 +1,10 @@
 import axios from "axios";
 import { authActions } from "./auth-slice";
 import Cookies from "js-cookie";
-import { uiMessageActions } from "./uiMessage";
 import { uiMessage } from "../helpers/uiMessage";
+import api from "../helpers/request";
 
-export const login = (email, password) => {
+export const login = (email, password, navigate, redirectTo) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
@@ -21,6 +21,8 @@ export const login = (email, password) => {
         secure: true,
         sameSite: "strict",
       });
+      dispatch(authActions.clearErrorMessage());
+      navigate(redirectTo);
     } catch (error) {
       dispatch(
         authActions.setUser({
@@ -31,7 +33,7 @@ export const login = (email, password) => {
   };
 };
 
-export const craeteUser = (userName, password, email) => {
+export const createUser = (userName, password, email, navigate) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
@@ -43,11 +45,13 @@ export const craeteUser = (userName, password, email) => {
         }
       );
 
-      dispatch(
-        authActions.setUser({
-          user: res.data,
-        })
-      );
+      // dispatch(
+      //   authActions.setUser({
+      //     user: res.data,
+      //   })
+      // );
+      dispatch(authActions.clearErrorMessage());
+      navigate("?mode=verify");
     } catch (error) {
       dispatch(
         authActions.setUser({
@@ -71,26 +75,48 @@ export const verifyUser = (code) => {
           verify: res.status,
         })
       );
+      dispatch(authActions.clearErrorMessage());
     } catch (error) {
-      dispatch(
-        uiMessage(error.message, error.response?.data?.details, "error")
-      );
+      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
     }
   };
 };
 
-export const loginGoogle = () => {
-  return async (dispatch) => {
-    const url = new URLSearchParams(window.location.search);
+// export const loginGoogle = () => {
+//   return async (dispatch) => {
+//     dispatch(
+//       authActions.setUser({
+//         token: {
+//           token: url.get("access_token"),
+//           expiration: url.get("expiration"),
+//         },
+//       })
+//     );
+//   };
+// };
 
-    console.log(url.get("access_token"), url.get("expiration"));
-    dispatch(
-      authActions.setUser({
-        token: {
-          token: url.get("access_token"),
-          expiration: url.get("expiration"),
-        },
-      })
-    );
+export const changePassword = (password, newPassword) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.post("auth/settings/change-password", {
+        old_password: password,
+        new_password: newPassword,
+      });
+
+      dispatch(uiMessage("Password changed successfully", "", "success"));
+    } catch (error) {
+      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
+    }
+  };
+};
+
+export const changeRole = (url) => {
+  return async (dispatch) => {
+    try {
+      await api.patch(`user/${url}`);
+      // dispatch(uiMessage("Successfully change"), "", "success");
+    } catch (error) {
+      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
+    }
   };
 };
