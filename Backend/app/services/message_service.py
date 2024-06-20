@@ -17,10 +17,10 @@ class MessageService(BaseService):
         super().__init__(message_repository)
 
     async def get_messages(self, user_id: int):
-        return self.message_repository.get_message_by_user_id(user_id)
+        return await self.message_repository.get_message_by_user_id(user_id)
 
     async def add_message(self, user_id: int, message: MessageCreate):
-        return self.message_repository.add_message(user_id, message)
+        return await self.message_repository.add_message(user_id, message)
 
     async def websocket_handler(self, websocket: WebSocket, user: User):
         await manager.connect(websocket, user.id)

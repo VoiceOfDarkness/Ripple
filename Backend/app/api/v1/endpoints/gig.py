@@ -16,7 +16,7 @@ gig_router = APIRouter(tags=["gigs"])
 @gig_router.get("/gigs", response_model=List[Gigs])
 @inject
 async def get_gigs(service: GigService = Depends(Provide[Container.gig_service])):
-    return service.get_list()
+    return await service.get_list()
 
 
 @gig_router.get("/gig/{gig_id}", response_model=Gigs)
@@ -25,7 +25,7 @@ async def get_gig(
     gig_id: int,
     service: GigService = Depends(Provide[Container.gig_service]),
 ):
-    return service.get(gig_id)
+    return await service.get(gig_id)
 
 
 @gig_router.post("/gigs", status_code=201)
