@@ -57,7 +57,7 @@ class Settings(BaseSettings):
         "{db_engine}://{user}:{password}@{host}:{port}/{database}"
     )
     DATABASE_URI: str = (
-        "postgresql://{user}:{password}@{host}:{port}/{database}".format(
+        "postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}".format(
             user=DB_USER,
             password=DB_PASSWORD,
             host=DB_HOST,

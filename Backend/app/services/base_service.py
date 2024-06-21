@@ -2,20 +2,20 @@ class BaseService:
     def __init__(self, repository) -> None:
         self._repository = repository
 
-    def add(self, schema):
-        return self._repository.create(schema)
+    async def add(self, schema):
+        return await self._repository.create(schema)
 
-    def get_list(self):
-        return self._repository.get()
+    async def get_list(self):
+        return await self._repository.get()
 
-    def get_paginated(self, page: int, per_page: int):
-        return self._repository.get_all_paginated(page, per_page)
+    async def get_paginated(self, page: int, per_page: int):
+        return await self._repository.get_all_paginated(page, per_page)
 
-    def get(self, id: int):
-        return self._repository.get_by_id(id)
+    async def get(self, id: int):
+        return await self._repository.get_by_id(id)
 
-    def update(self, id: int, schema):
-        return self._repository.update(id, schema)
+    async def update(self, id: int, schema):
+        return await self._repository.update(id, schema)
 
-    def delete(self, id: int):
-        return self._repository.delete(id)
+    async def delete(self, id: int):
+        return await self._repository.delete(id)

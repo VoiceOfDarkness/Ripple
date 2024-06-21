@@ -38,4 +38,4 @@ class GigService(BaseService):
             images=file_paths,
         )
 
-        return self.gig_repository.create(seller_id, create_gig)
+        return await self.gig_repository.create(seller_id, create_gig)

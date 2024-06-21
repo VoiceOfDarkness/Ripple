@@ -32,6 +32,7 @@ class UpdateUser(BaseModel):
     user_image: Optional[str] = Field(None, max_length=255)
     first_name: Optional[str] = Field(None, max_length=128)
     last_name: Optional[str] = Field(None, max_length=128)
+    overview: Optional[str] = Field(None, max_length=1024)
 
 
 class UpdatePrivateUser(BaseModel):

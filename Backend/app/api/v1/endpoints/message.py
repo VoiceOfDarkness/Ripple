@@ -5,7 +5,7 @@ from typing import List
 from app.core.container import Container
 from app.schemas.user import User
 from app.schemas.message import MessageCreate, MessageRead
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, get_current_user_from_cookie
 from app.services.message_service import MessageService
 from app.services.message_service import manager
 
@@ -21,6 +21,7 @@ async def read_messages(
     return await service.get_messages(current_user.id)
 
 
+# For testing purposes
 @message_router.post("/message", response_model=MessageRead)
 @inject
 async def create_message(
@@ -37,14 +38,7 @@ async def create_message(
 @inject
 async def websocket_endpoint(
     websocket: WebSocket,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_from_cookie),
     service: MessageService = Depends(Provide[Container.message_service]),
 ):
-    await manager.connect(websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await manager.broadcast(f"User {current_user.id} says: {data}")
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
-        await manager.broadcast(f"User {current_user.id} left the chat")
+    return await service.websocket_handler(websocket, current_user)

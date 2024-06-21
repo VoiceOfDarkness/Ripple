@@ -34,13 +34,20 @@ class AuthService:
         self.hire_manager_repository = hire_manager_repository
         self.redis = redis_client
 
-    def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
-        user = self.user_repository.get_by_username_or_email(form_data.email)
+    async def sign_in(self, form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
+        user = await self.user_repository.get_by_username_or_email(form_data.email)
         if not user or not verify_password(form_data.password, user.hash_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Incorrect username or password",
             )
+
+        if user.is_active == False:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Please verify your email",
+            )
+
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token, expiration = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
@@ -67,9 +74,9 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid ID token: {e}"
             )
 
-        user = self.user_repository.get_by_username_or_email(user_data["email"])
+        user = await self.user_repository.get_by_username_or_email(user_data["email"])
         if not user:
-            user = self.user_repository.create(
+            user = await self.user_repository.create(
                 User(
                     user_name=user_data["name"],
                     email=user_data["email"],
@@ -78,10 +85,8 @@ class AuthService:
                     hash_password=get_password_hash("default_password"),
                 )
             )
-            
-            logger.info(f"AAAAAAAAAAAAAAAA {user}")
 
-            self.hire_manager_repository.create(
+            await self.hire_manager_repository.create(
                 HireManager(
                     user_id=user.id,
                 )
@@ -102,15 +107,15 @@ class AuthService:
         )
         return response
 
-    def sign_up(self, sign_up: SignUp) -> User:
-        user = self.user_repository.get_by_username_or_email(sign_up.email)
+    async def sign_up(self, sign_up: SignUp) -> User:
+        user = await self.user_repository.get_by_username_or_email(sign_up.email)
         if user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User already registered",
             )
         hashed_password = get_password_hash(sign_up.password)
-        new_user = self.user_repository.create(
+        new_user = await self.user_repository.create(
             User(
                 user_name=sign_up.username,
                 email=sign_up.email,
@@ -118,13 +123,13 @@ class AuthService:
             )
         )
 
-        self.hire_manager_repository.create(
+        await self.hire_manager_repository.create(
             HireManager(
                 user_id=new_user.id,
             )
         )
 
-        verification_code = generate_verification_code()
+        verification_code = await generate_verification_code()
         self.redis.set(
             verification_code,
             sign_up.email,
@@ -139,11 +144,11 @@ class AuthService:
         redis_email = self.redis.get(code)
 
         if redis_email is not None:
-            user = self.user_repository.get_by_username_or_email(
+            user = await self.user_repository.get_by_username_or_email(
                 redis_email.decode("utf-8")
             )
 
-        self.user_repository.update(user.id, EmailVerification(is_active=True))
+        await self.user_repository.update(user.id, EmailVerification(is_active=True))
 
         if not redis_email:
             raise HTTPException(
@@ -151,6 +156,27 @@ class AuthService:
             )
         return JSONResponse(
             content={"message": "code verified"}, status_code=status.HTTP_200_OK
+        )
+
+    async def resend_code(self, email: str):
+        user = await self.user_repository.get_by_username_or_email(email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User not found"
+            )
+
+        verification_code = await generate_verification_code()
+        self.redis.set(
+            verification_code,
+            email,
+            ex=settings.VERIFICATION_CODE_EXPIRE_SECONDS,
+        )
+
+        send_verification_code.delay(email, verification_code)
+
+        return JSONResponse(
+            content={"message": "Verification code sent"},
+            status_code=status.HTTP_200_OK,
         )
 
     async def change_password(self, user_password: ChangePassword, current_user: User):
@@ -162,7 +188,9 @@ class AuthService:
             )
 
         hashed_password = get_password_hash(user_password.new_password)
-        self.user_repository.update(user.id, UpdateUser(hash_password=hashed_password))
+        await self.user_repository.update(
+            user.id, UpdateUser(hash_password=hashed_password)
+        )
 
         return JSONResponse(
             {"message": "Password updated successfully"}, status_code=status.HTTP_200_OK
