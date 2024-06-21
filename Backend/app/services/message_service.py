@@ -17,10 +17,10 @@ class MessageService(BaseService):
         super().__init__(message_repository)
 
     async def get_messages(self, user_id: int):
-        return self.message_repository.get_message_by_user_id(user_id)
+        return await self.message_repository.get_message_by_user_id(user_id)
 
     async def add_message(self, user_id: int, message: MessageCreate):
-        return self.message_repository.add_message(user_id, message)
+        return await self.message_repository.add_message(user_id, message)
 
     async def websocket_handler(self, websocket: WebSocket, user: User):
         await manager.connect(websocket, user.id)
@@ -31,8 +31,11 @@ class MessageService(BaseService):
                 content = message_data.get("content")
                 receiver_id = message_data.get("recipient_id")
 
+                logger.info(f"Received message: {content} to {receiver_id}")
+
                 if content and receiver_id:
                     message = MessageCreate(content=content, receiver_id=receiver_id)
+                    logger.info(f"Message: {message} {user.id}")
                     await self.add_message(user.id, message)
 
                     await manager.send_personal_message(
@@ -43,5 +46,3 @@ class MessageService(BaseService):
         except Exception as e:
             logger.error(f"Error in websocket_handler: {e}")
             await websocket.close()
-        finally:
-            await manager.send_personal_message("You were disconnected!", user.id)

@@ -1,61 +1,62 @@
-from contextlib import AbstractContextManager
+from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.future import select
 
 from app.models.order import Order
 from app.models.user import HireManager, Freelancer
-from app.models.services import Gigs
 from app.schemas.order import CreateOrder
 from app.repository.base_repository import BaseRepository
 
 
 class OrderRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
     ) -> None:
         self._session_factory = session_factory
         super().__init__(session_factory, Order)
 
-    def get_by_hire_manager(self, hire_manager_id: int):
-        with self._session_factory() as session:
-            db_obj = (
-                session.query(Order)
+    async def get_by_hire_manager(self, hire_manager_id: int):
+        async with self._session_factory() as session:
+            stmt = (
+                select(Order)
                 .options(
-                    joinedload(Order.hire_manager).joinedload(HireManager.orders),
-                    joinedload(Order.hire_manager).joinedload(HireManager.user),
-                    joinedload(Order.freelancer).joinedload(Freelancer.orders),
-                    joinedload(Order.freelancer).joinedload(Freelancer.user),
-                    joinedload(Order.gigs).joinedload(Gigs.orders),
+                    selectinload(Order.hire_manager).selectinload(HireManager.user),
+                    selectinload(Order.freelancer).selectinload(Freelancer.user),
+                    selectinload(Order.gigs),
                 )
-                .filter(Order.buyer_id == hire_manager_id)
-                .all()
+                .where(Order.buyer_id == hire_manager_id)
             )
+
+            result = await session.execute(stmt)
+            db_obj = result.scalars().all()
+
         return db_obj
 
-    def get_by_freelancer(self, freelancer_id: int):
-        with self._session_factory() as session:
-            db_obj = (
-                session.query(Order)
+    async def get_by_freelancer(self, freelancer_id: int):
+        async with self._session_factory() as session:
+            stmt = (
+                select(Order)
                 .options(
-                    joinedload(Order.hire_manager).joinedload(HireManager.orders),
-                    joinedload(Order.hire_manager).joinedload(HireManager.user),
-                    joinedload(Order.freelancer).joinedload(Freelancer.orders),
-                    joinedload(Order.freelancer).joinedload(Freelancer.user),
-                    joinedload(Order.gigs).joinedload(Gigs.orders),
+                    selectinload(Order.hire_manager).selectinload(HireManager.user),
+                    selectinload(Order.freelancer).selectinload(Freelancer.user),
+                    selectinload(Order.gigs),
                 )
-                .filter(Order.seller_id == freelancer_id)
-                .all()
+                .where(Order.seller_id == freelancer_id)
             )
+            result = await session.execute(stmt)
+            db_obj = result.scalars().all()
+
         return db_obj
 
-    def create(self, hire_manager_id: int, order: CreateOrder):
-        with self._session_factory() as session:
+    async def create(self, hire_manager_id: int, order: CreateOrder):
+        async with self._session_factory() as session:
             db_obj = Order(
                 buyer_id=hire_manager_id,
                 **order.model_dump(),
             )
-            session.add(db_obj)
-            session.commit()
-            session.refresh(db_obj)
+            await session.add(db_obj)
+            await session.commit()
+            await session.refresh(db_obj)
         return db_obj

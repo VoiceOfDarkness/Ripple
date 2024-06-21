@@ -9,9 +9,6 @@ from app.schemas.user import User
 from app.schemas.order import CreateOrder
 
 
-logger = logging.getLogger(__name__)
-
-
 class OrderService(BaseService):
     def __init__(
         self,
@@ -26,9 +23,8 @@ class OrderService(BaseService):
 
     async def add_order(self, user: User, order: CreateOrder):
         if user.is_hire_manager:
-            hire_manager = self.hire_manager_repository.get_by_user_id(user.id)
-            logger.info(f"hire_manager: {hire_manager}")
-            self.order_repository.create(hire_manager.id, order)
+            hire_manager = await self.hire_manager_repository.get_by_user_id(user.id)
+            await self.order_repository.create(hire_manager.id, order)
 
             return JSONResponse(content={"message": "Order created"}, status_code=201)
 
@@ -39,9 +35,9 @@ class OrderService(BaseService):
 
     async def get_order(self, user: User):
         if user.is_freelancer:
-            freelancer = self.freelancer_repository.get_by_user_id(user.id)
-            return self.order_repository.get_by_freelancer(freelancer.id)
+            freelancer = await self.freelancer_repository.get_by_user_id(user.id)
+            return await self.order_repository.get_by_freelancer(freelancer.id)
 
         if user.is_hire_manager:
-            hire_manager = self.hire_manager_repository.get_by_user_id(user.id)
-            return self.order_repository.get_by_hire_manager(hire_manager.id)
+            hire_manager = await self.hire_manager_repository.get_by_user_id(user.id)
+            return await self.order_repository.get_by_hire_manager(hire_manager.id)

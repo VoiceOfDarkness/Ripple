@@ -1,25 +1,26 @@
-from contextlib import AbstractContextManager
+from contextlib import AbstractAsyncContextManager
 from typing import Callable, List, Optional
 
 from app.models.services import Gigs, Image
 from app.models.user import Freelancer
 from app.repository.base_repository import BaseRepository
 from app.schemas.services import CreateGigs
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.future import select
 
 
 class GigRepository(BaseRepository):
-    def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]):
+    def __init__(
+        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+    ):
         self._session_factory = session_factory
         super().__init__(session_factory, Gigs)
 
-    def create(self, seller_id: int, gig: CreateGigs) -> Optional[Gigs]:
-        with self._session_factory() as session:
-            freelancer = (
-                session.query(Freelancer)
-                .filter(Freelancer.user_id == seller_id)
-                .first()
-            )
+    async def create(self, seller_id: int, gig: CreateGigs) -> Optional[Gigs]:
+        async with self._session_factory() as session:
+            stmt = select(Freelancer).where(Freelancer.user_id == seller_id)
+            result = await session.execute(stmt)
+            freelancer = result.scalars().one_or_none()
 
             gig = gig.model_dump()
             image_paths = gig.pop("images")
@@ -33,44 +34,53 @@ class GigRepository(BaseRepository):
                 image = Image(filename=image_path, gig=db_obj)
                 session.add(image)
 
-            session.add(db_obj)
-            session.commit()
-            session.refresh(db_obj)
+            await session.add(db_obj)
+            await session.commit()
+            await session.refresh(db_obj)
 
-            db_obj = (
-                session.query(Gigs)
+            stmt = (
+                select(Gigs)
                 .options(
-                    joinedload(Gigs.category),
-                    joinedload(Gigs.freelancer).joinedload(Freelancer.user),
-                    joinedload(Gigs.images),
+                    selectinload(Gigs.category),
+                    selectinload(Gigs.freelancer).selectinload(Freelancer.user),
+                    selectinload(Gigs.images),
                 )
-                .filter(Gigs.id == db_obj.id)
-                .one()
+                .where(Gigs.id == db_obj.id)
             )
+
+            result = await session.execute(stmt)
+            db_obj = result.scalars().one_or_none()
 
         return db_obj
 
-    def get(self) -> Optional[List[Gigs]]:
-        with self._session_factory() as session:
-            return (
-                session.query(Gigs)
+    async def get_all_paginated(self, page: int, per_page: int) -> Optional[List[Gigs]]:
+        async with self._session_factory() as session:
+            offset = (page - 1) * per_page
+            stmt = (
+                select(Gigs)
                 .options(
-                    joinedload(Gigs.category),
-                    joinedload(Gigs.freelancer).joinedload(Freelancer.user),
-                    joinedload(Gigs.images),
+                    selectinload(Gigs.category),
+                    selectinload(Gigs.freelancer).selectinload(Freelancer.user),
+                    selectinload(Gigs.images),
                 )
-                .all()
+                .offset(offset)
+                .limit(per_page)
             )
+            result = await session.execute(stmt)
+            db_obj = result.scalars().all()
+            return db_obj
 
-    def get_by_id(self, gig_id: int):
-        with self._session_factory() as session:
-            return (
-                session.query(Gigs)
+    async def get_by_id(self, gig_id: int):
+        async with self._session_factory() as session:
+            stmt = (
+                select(Gigs)
                 .options(
-                    joinedload(Gigs.category),
-                    joinedload(Gigs.freelancer).joinedload(Freelancer.user),
-                    joinedload(Gigs.images),
+                    selectinload(Gigs.category),
+                    selectinload(Gigs.freelancer).selectinload(Freelancer.user),
+                    selectinload(Gigs.images),
                 )
-                .filter(Gigs.id == gig_id)
-                .first()
+                .where(Gigs.id == gig_id)
             )
+            result = await session.execute(stmt)
+            db_obj = result.scalars().one_or_none()
+            return db_obj

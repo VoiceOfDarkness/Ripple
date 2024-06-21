@@ -11,7 +11,7 @@ from pydantic import ValidationError
 
 
 @inject
-def get_current_user(
+async def get_current_user(
     payload: str = Depends(JWTBearer(tokenUrl=f"{settings.API_V1_STR}/auth/sign-in")),
     service: UserService = Depends(Provide[Container.user_service]),
 ):
@@ -20,7 +20,7 @@ def get_current_user(
     except (JWTError, ValidationError):
         raise AuthError("Could not validate credentials")
 
-    current_user = service.get_by_username_or_email(token_data.sub)
+    current_user = await service.get_by_username_or_email(token_data.sub)
     if not current_user:
         raise AuthError(detail="User not found")
     return current_user
@@ -41,7 +41,7 @@ async def get_current_user_from_cookie(
     except (JWTError, ValidationError):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Could not validate credentials")
 
-    current_user = service.get_by_username_or_email(token_data.get("sub"))
+    current_user = await service.get_by_username_or_email(token_data.get("sub"))
     if not current_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return current_user

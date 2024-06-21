@@ -1,6 +1,5 @@
 from app.core.container import Container
-from app.schemas.auth import (ChangePassword, SignIn, SignInResponse, SignUp,
-                              Token, User)
+from app.schemas.auth import ChangePassword, SignIn, SignInResponse, SignUp, Token, User
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Request, Body, status
 
@@ -11,20 +10,30 @@ auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 @auth_router.post("/sign-in", response_model=SignInResponse)
 @inject
-def sign_in(user_data: SignIn, service=Depends(Provide[Container.auth_service])):
-    return service.sign_in(user_data)
+async def sign_in(user_data: SignIn, service=Depends(Provide[Container.auth_service])):
+    return await service.sign_in(user_data)
 
 
 @auth_router.post("/sign-up", response_model=User)
 @inject
-def sign_up(user_data: SignUp, service=Depends(Provide[Container.auth_service])):
-    return service.sign_up(user_data)
+async def sign_up(user_data: SignUp, service=Depends(Provide[Container.auth_service])):
+    return await service.sign_up(user_data)
 
 
 @auth_router.post("/sign-up/verify-code")
 @inject
-async def verify_code(code: str = Body(...), service=Depends(Provide[Container.auth_service])):
+async def verify_code(
+    code: str = Body(...), service=Depends(Provide[Container.auth_service])
+):
     return await service.verify_code(code)
+
+
+@auth_router.post("/sign-up/resend-code")
+@inject
+async def resend_code(
+    email: str = Body(...), service=Depends(Provide[Container.auth_service])
+):
+    return await service.resend_code(email)
 
 
 @auth_router.post("/settings/change-password")
