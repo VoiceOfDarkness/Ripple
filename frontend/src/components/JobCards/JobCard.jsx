@@ -27,7 +27,7 @@ export default function JobCard({ job }) {
 
   return (
     <div
-      className="bg-black w-full shadow-md rounded-3xl h-100 cursor-pointer overflow-hidden"
+      className="bg-black w-full h-max shadow-md rounded-3xl cursor-pointer overflow-hidden"
       onClick={handleClick}
     >
       <div className="w-full h-1/2 bg-inputGray">
@@ -42,7 +42,7 @@ export default function JobCard({ job }) {
         <h2 className="text-white">{job.company}</h2>
         <div className="flex gap-3 mt-10 items-center">
           <div className="flex items-center gap-1">
-            <Star style={{marginBottom: "2px"}}/>
+            <Star style={{ marginBottom: "2px" }} />
             <span>{job.rating}</span>
           </div>
           <p>({job.num_reviews})</p>

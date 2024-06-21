@@ -8,11 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getProfile } from "../../store/profile-slice";
 import { Link } from "react-router-dom";
+import api from "../../helpers/request";
+import { changeRole } from "../../store/auth-actions";
 
 export default function JobHeader() {
   const [isTokenExist, setIsTokenExist] = useState(
     Cookies.get("access_token") !== undefined
   );
+
+  const [isFreelancer, setIsFreelancer] = useState();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +36,8 @@ export default function JobHeader() {
     if (isTokenExist) {
       dispatch(getProfile());
     }
-  }, [dispatch]);
+    setIsFreelancer(user.profile?.is_freelancer);
+  }, [dispatch, isFreelancer, user.profile?.is_freelancer]);
 
   return (
     <div className="bg-transparent  z-10 top-0 pt-12  flex text-white items-center ">
@@ -52,9 +57,6 @@ export default function JobHeader() {
                 />
               </div>
             </div>
-          </li>
-          <li>
-            <a href="/">Location...</a>
           </li>
           <div className="flex items-center justify-center pl-64 gap-5">
             <li>
@@ -85,7 +87,24 @@ export default function JobHeader() {
           </div>
           {isTokenExist && (
             <div className="flex gap-5">
-              <div className="flex items-center">
+              <div className="flex items-center gap-8 font-semibold">
+                <li
+                  className="text-purple hover:text-white font-semibold duration-300"
+                  onClick={() => {
+                    dispatch(
+                      changeRole(
+                        isFreelancer
+                          ? "switch_to_hire_manager"
+                          : "switch_to_freelancer"
+                      )
+                    );
+                    setIsFreelancer(!user.profile.is_freelancer);
+                  }}
+                >
+                  <button>
+                    {isFreelancer ? "Become a buyer" : "Become a seller"}
+                  </button>
+                </li>
                 <div className="flex gap-4 items-center">
                   {user.profile?.user_image ? (
                     <img

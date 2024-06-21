@@ -4,6 +4,7 @@ import { authSlice } from "./auth-slice";
 import { gigSlice } from "./gig-slice";
 import { uiMessageSlice } from "./uiMessage";
 import { profileSlice } from "./profile-slice";
+import { orderSlice } from "./order-slice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     gigs: gigSlice.reducer,
     uiMessage: uiMessageSlice.reducer,
     profile: profileSlice.reducer,
+    order: orderSlice.reducer,
   },
 });
 

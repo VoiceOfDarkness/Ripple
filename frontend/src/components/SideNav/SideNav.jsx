@@ -7,7 +7,7 @@ import PaymentIcon from "../Icons/PaymentIcon";
 import { Settings } from "@mui/icons-material";
 import HelpIcon from "../Icons/HelpIcon";
 import LogOutIcon from "../Icons/LogOutIcon";
-import StarShape from "../UI/StarShape";
+import StarShape from "../ui/StarShape";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
@@ -28,8 +28,8 @@ export default function SideNav({ isVisible, setIsVisible }) {
 
   const menu = [
     ["Jobs", <AnnouncementsIcon />, "/jobs"],
-    ["My Work", <MyWorkIcon />, "/dashboard"],
-    ["Statistics", <StatisticIcon />, "/statistics"],
+    ["My Work", <MyWorkIcon />, "/mywork"],
+    ["Statistics", <StatisticIcon />, "/orders"],
     ["Chat", <ChatIcon />, "/chat"],
     ["My profile", <MyProfileIcon />, "/profile"],
     ["Payment Info", <PaymentIcon />, "/payment"],
