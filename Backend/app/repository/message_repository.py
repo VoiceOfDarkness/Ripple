@@ -4,12 +4,12 @@ from typing import Callable
 from app.models.message import Message
 from app.schemas.message import MessageCreate
 from app.repository.base_repository import BaseRepository
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 
 class MessageRepository(BaseRepository):
-    def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]):
+    def __init__(self, session_factory: Callable[..., AbstractContextManager[AsyncSession]]):
         self._session_factory = session_factory
         super().__init__(session_factory, Message)
 

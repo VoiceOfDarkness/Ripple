@@ -72,3 +72,6 @@ bower_components
 *.bak.*
 *.tmp
 *.tmp.*
+
+# alembic
+Backend/alembic/versions
