@@ -7,7 +7,6 @@ from app.schemas.user import User
 from app.schemas.message import MessageCreate, MessageRead
 from app.core.dependencies import get_current_user, get_current_user_from_cookie
 from app.services.message_service import MessageService
-from app.services.message_service import manager
 
 message_router = APIRouter(tags=["messages"])
 
@@ -30,7 +29,6 @@ async def create_message(
     message: MessageCreate = Body(...),
 ):
     new_message = await service.add_message(current_user.id, message)
-    await manager.broadcast(f"New message from {current_user.id}: {message.content}")
     return new_message
 
 

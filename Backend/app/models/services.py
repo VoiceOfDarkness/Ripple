@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, List
 
 from app.models.categories import Category
 from app.models.order import Order
+from app.models.review import Review
 from sqlalchemy import CheckConstraint, Column, Float
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -26,9 +27,11 @@ class Gigs(SQLModel, table=True):
         )
     )
     num_reviews: int = Field(default=0)
+
     freelancer: "Freelancer" = Relationship(back_populates="gigs")
     category: "Category" = Relationship(back_populates="gigs")
     orders: List["Order"] = Relationship(back_populates="gigs")
+    reviews: List["Review"] = Relationship(back_populates="gig")
     images: List["Image"] = Relationship(back_populates="gig")
 
 
