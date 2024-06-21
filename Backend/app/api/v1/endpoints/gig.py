@@ -15,8 +15,12 @@ gig_router = APIRouter(tags=["gigs"])
 
 @gig_router.get("/gigs", response_model=List[Gigs])
 @inject
-async def get_gigs(service: GigService = Depends(Provide[Container.gig_service])):
-    return await service.get_list()
+async def get_gigs(
+    page: int = 1,
+    size: int = 10,
+    service: GigService = Depends(Provide[Container.gig_service]),
+):
+    return await service.get_paginated(page, size)
 
 
 @gig_router.get("/gig/{gig_id}", response_model=Gigs)
@@ -50,6 +54,6 @@ async def create_gig(
             files=files,
         )
     except ValidationError as e:
-        errors = [err['msg'] for err in e.errors()]
+        errors = [err["msg"] for err in e.errors()]
         raise HTTPException(status_code=422, detail=errors)
     return await service.add(current_user.id, gig, files)
