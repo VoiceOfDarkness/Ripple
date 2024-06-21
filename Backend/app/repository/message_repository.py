@@ -29,7 +29,7 @@ class MessageRepository(BaseRepository):
         query = Message(**message_data)
 
         async with self._session_factory() as session:
-            await session.add(query)
+            session.add(query)
             await session.commit()
             await session.refresh(query)
 
