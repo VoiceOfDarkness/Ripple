@@ -53,12 +53,18 @@ class GigRepository(BaseRepository):
 
         return db_obj
 
-    async def get(self) -> Optional[List[Gigs]]:
+    async def get_all_paginated(self, page: int, per_page: int) -> Optional[List[Gigs]]:
         async with self._session_factory() as session:
-            stmt = select(Gigs).options(
-                selectinload(Gigs.category),
-                selectinload(Gigs.freelancer).selectinload(Freelancer.user),
-                selectinload(Gigs.images),
+            offset = (page - 1) * per_page
+            stmt = (
+                select(Gigs)
+                .options(
+                    selectinload(Gigs.category),
+                    selectinload(Gigs.freelancer).selectinload(Freelancer.user),
+                    selectinload(Gigs.images),
+                )
+                .offset(offset)
+                .limit(per_page)
             )
             result = await session.execute(stmt)
             db_obj = result.scalars().all()
