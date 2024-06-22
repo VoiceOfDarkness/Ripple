@@ -1,14 +1,10 @@
-
 import pathlib
 from decimal import Decimal
-from typing import TYPE_CHECKING, List
+from typing import List
 
-from app.schemas.user import FreelancerNoRelation
+from app.schemas.user import FreelancerNoRelation, User
 from fastapi import File, UploadFile
 from pydantic import BaseModel, Field, field_validator
-
-if TYPE_CHECKING:
-    from app.schemas.category import BaseCategory
 
 
 class BaseGigs(BaseModel):
@@ -19,9 +15,7 @@ class BaseGigs(BaseModel):
         example="I will create a unique and eye-catching logo for your brand.",
     )
     category_id: int = Field(..., example=1)
-    price: Decimal = Field(
-        ..., decimal_places=2, example=49.99
-    )
+    price: Decimal = Field(..., decimal_places=2, example=49.99)
     delivery_time: int = Field(..., example=3)
     files: List[UploadFile] = File(...)
 
@@ -45,9 +39,7 @@ class CreateGigs(BaseModel):
         example="I will create a unique and eye-catching logo for your brand.",
     )
     category_id: int = Field(..., example=1)
-    price: Decimal = Field(
-        ..., decimal_places=2, example=49.99
-    )
+    price: Decimal = Field(..., decimal_places=2, example=49.99)
     delivery_time: int = Field(..., example=3)
     images: List[str] = Field(..., max_length=512, example="logo_design.jpg")
 
@@ -65,6 +57,16 @@ class Image(BaseModel):
     filename: str = Field(..., max_length=512)
     gig_id: int
 
+class Reviews(BaseModel):
+    rating: int
+    comment: str
+    user: "User"
+
+
+class Category(BaseModel):
+    id: int
+    name: str
+
 
 # Model for full gig representation
 class Gigs(BaseModel):
@@ -73,7 +75,11 @@ class Gigs(BaseModel):
     price: Decimal
     seller_id: int
     freelancer: "FreelancerNoRelation"
-    category: "BaseCategory"
+    category: "Category"
     rating: float = Field(ge=0, le=5, default=0)
     num_reviews: int = Field(default=0)
     images: List["Image"]
+
+
+class GigDetail(Gigs):
+    reviews: List["Reviews"]

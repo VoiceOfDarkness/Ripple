@@ -3,13 +3,14 @@ from typing import Callable
 
 from app.models.user import HireManager, Freelancer, User
 from app.repository.base_repository import BaseRepository
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import joinedload
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 
 class UserRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ):
         self.session_factory = session_factory
         super().__init__(session_factory, User)
@@ -27,7 +28,7 @@ class UserRepository(BaseRepository):
 
 class HireManagerRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ):
         self.session_factory = session_factory
         super().__init__(session_factory, HireManager)
@@ -43,7 +44,7 @@ class HireManagerRepository(BaseRepository):
 
 class FreelancerRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ):
         self.session_factory = session_factory
         super().__init__(session_factory, Freelancer)

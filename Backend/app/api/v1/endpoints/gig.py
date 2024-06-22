@@ -3,7 +3,7 @@ from typing import List
 
 from app.core.container import Container
 from app.core.dependencies import get_current_user
-from app.schemas.services import BaseGigs, Gigs
+from app.schemas.services import BaseGigs, Gigs, GigDetail
 from app.schemas.user import User
 from app.services.gig_service import GigService
 from dependency_injector.wiring import Provide, inject
@@ -23,7 +23,7 @@ async def get_gigs(
     return await service.get_paginated(page, size)
 
 
-@gig_router.get("/gig/{gig_id}", response_model=Gigs)
+@gig_router.get("/gig/{gig_id}", response_model=GigDetail)
 @inject
 async def get_gig(
     gig_id: int,

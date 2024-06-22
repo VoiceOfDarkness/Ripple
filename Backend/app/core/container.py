@@ -16,6 +16,7 @@ class Container(containers.DeclarativeContainer):
             "app.api.v1.endpoints.auth",
             "app.api.v1.endpoints.message",
             "app.api.v1.endpoints.order",
+            "app.api.v1.endpoints.review",
             "app.core.dependencies",
         ]
     )
@@ -50,6 +51,9 @@ class Container(containers.DeclarativeContainer):
     message_repository = providers.Factory(
         MessageRepository, session_factory=db.provided.session
     )
+    review_repository = providers.Factory(
+        ReviewRepository, session_factory=db.provided.session
+    )
 
     user_service = providers.Factory(
         UserService,
@@ -74,4 +78,7 @@ class Container(containers.DeclarativeContainer):
     )
     message_service = providers.Factory(
         MessageService, message_repository=message_repository
+    )
+    review_service = providers.Factory(
+        ReviewService, review_repository=review_repository
     )
