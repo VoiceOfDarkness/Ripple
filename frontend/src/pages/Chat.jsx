@@ -1,79 +1,83 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useRef } from "react";
 import api from "../helpers/request";
-import io from "socket.io-client";
-import { getToken } from "../helpers/request";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  SearchIcon,
-  FilterIcon,
-  BellIcon,
-  UserIcon,
-  SmileIcon,
-  SendIcon,
-  MoonIcon,
-} from "lucide-react";
-import Cookies from "js-cookie";
+import { SmileIcon, SendIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "@/store/profile-slice";
+import EmojiPicker from "emoji-picker-react";
 
 export default function ChatPage() {
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.profile.profile);
+  const message = useRef();
+
+  const onEmojiClick = (emojiObject) => {
+    console.log(emojiObject.emoji);
+    message.current.value += emojiObject.emoji;
+  };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await api.get("/message");
-        setMessages(response.data);
-      } catch (error) {
-        console.error("Error fetching messages", error);
-      }
-    };
+    // const fetchMessages = async () => {
+    //   try {
+    //     const response = await api.get("/message");
+    //     const processedMessages = response.data.map((msg) => ({
+    //       content: msg.content,
+    //       type: msg.sender_id === profile.id ? "sent" : "received",
+    //     }));
+    //     setMessages(processedMessages);
+    //   } catch (error) {
+    //     console.error("Error fetching messages", error);
+    //   }
+    // };
 
-    fetchMessages();
-  }, []);
+    // fetchMessages();
+    dispatch(getProfile());
+  }, [dispatch, profile?.id]);
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:8000/api/v1/ws`);
+
     ws.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          content: newMessage.content,
+          type: newMessage.sender_id === profile?.id ? "sent" : "received",
+        },
+      ]);
     };
+
     setSocket(ws);
 
     return () => {
       ws.close();
     };
-  }, []);
+  }, [profile?.id]);
 
-  const handleSendMessage = (content) => {
+  const handleSendMessage = (e) => {
+    e.preventDefault();
     if (socket) {
-      socket.send(JSON.stringify({ content, sender_id: currentUser.id }));
+      const newMessage = {
+        content: message.current.value,
+        recipient_id: profile?.id === 10 ? 11 : 10,
+      };
+      socket.send(JSON.stringify(newMessage));
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: newMessage.content, type: "sent" },
+      ]);
+      message.current.value = "";
     }
   };
 
-  // return (
-  //   <div>
-  //     <div>
-  //       {messages.map((message) => (
-  //         <div key={message.id}>
-  //           <strong>
-  //             {message.sender_id === currentUser.id ? "You" : "Other"}:
-  //           </strong>{" "}
-  //           {message.content}
-  //         </div>
-  //       ))}
-  //     </div>
-  //     <MessageInput onSendMessage={handleSendMessage} />
-  //   </div>
-  // );
   return (
     <div className="max-w-full h-[78vh] bg-gray-900 rounded-3xl overflow-hidden mt-10 mr-24 text-white flex flex-col">
       <div className="flex flex-1 overflow-hidden">
@@ -114,70 +118,63 @@ export default function ChatPage() {
             </div>
           </div>
           <ScrollArea className="flex-1 overflow-y-auto">
-            <div className="mb-4">
-              <div className="flex items-start space-x-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src="https://raw.githubusercontent.com/magicpatterns/catalog/main/public/placeholder.png"
-                    alt="User Avatar"
-                  />
-                  <AvatarFallback>BS</AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="bg-inputGray text-white rounded-lg p-2">
-                    Hi, how are you? Let's talk.
+            {messages.map((item, index) => {
+              return item.type === "sent" ? (
+                <div className="mb-4 flex justify-end">
+                  <div>
+                    <div className="bg-purple text-white rounded-lg p-2">
+                      {item.content}
+                    </div>
+                    <p className="text-gray-400 text-xs mt-1 text-right">
+                      08:00 PM
+                    </p>
                   </div>
-                  <p className="text-gray-400 text-xs mt-1">08:30 PM</p>
                 </div>
-              </div>
-            </div>
-
-            <div className="mb-4 flex justify-end">
-              <div>
-                <div className="bg-purple text-white rounded-lg p-2">
-                  No, I wasn't.
+              ) : (
+                <div className="mb-4" key={index}>
+                  <div className="flex items-start space-x-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src="https://raw.githubusercontent.com/magicpatterns/catalog/main/public/placeholder.png"
+                        alt="User Avatar"
+                      />
+                      <AvatarFallback>BS</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="bg-inputGray text-white rounded-lg p-2">
+                        {item.content}
+                      </div>
+                      <p className="text-gray-400 text-xs mt-1">08:30 PM</p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-400 text-xs mt-1 text-right">
-                  08:00 PM
-                </p>
-              </div>
-            </div>
+              );
+            })}
           </ScrollArea>
-          <div className="flex items-center space-x-4 mt-4">
+          <form className="flex items-center relative space-x-4 mt-4">
             <Input
               type="text"
+              ref={message}
               placeholder="Type your message here..."
               className="flex-1 text-3xl bg-gray-700 text-white rounded-full pl-4 pr-8 py-10 focus:outline-none"
             />
-            <SmileIcon className="text-gray-400" />
-            <SendIcon className="text-gray-400" />
-          </div>
+            <div>
+              <SmileIcon
+                className="text-gray-400 cursor-pointer"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              />
+              {showEmojiPicker && (
+                <div className="absolute -top-[50rem]  left-[30%]">
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              )}
+            </div>
+            <button type="submit" onClick={handleSendMessage}>
+              <SendIcon className="text-gray-400" />
+            </button>
+          </form>
         </main>
       </div>
     </div>
   );
 }
-
-const MessageInput = ({ onSendMessage }) => {
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      onSendMessage(message);
-      setMessage("");
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message"
-      />
-      <button type="submit">Send</button>
-    </form>
-  );
-};

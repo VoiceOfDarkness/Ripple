@@ -22,6 +22,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.1.5",
+    "emoji-picker-react": "^4.10.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.10",
     "js-cookie": "^3.0.5",
