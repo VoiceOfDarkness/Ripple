@@ -1,42 +1,53 @@
-from fastapi import APIRouter, Depends, Body, WebSocket, WebSocketDisconnect
+import uuid
+
+from fastapi import APIRouter, Depends, Body, WebSocket
 from dependency_injector.wiring import Provide, inject
 from typing import List
 
 from app.core.container import Container
 from app.schemas.user import User
-from app.schemas.message import MessageCreate, MessageRead
+from app.schemas.message import ChatCreate, ChatResponse, ChatDetailResponse
 from app.core.dependencies import get_current_user, get_current_user_from_cookie
 from app.services.message_service import MessageService
 
 message_router = APIRouter(tags=["messages"])
 
 
-@message_router.get("/message", response_model=List[MessageRead])
+@message_router.get("/chat", response_model=List[ChatResponse])
 @inject
-async def read_messages(
+async def get_chats(
     current_user: User = Depends(get_current_user),
     service: MessageService = Depends(Provide[Container.message_service]),
 ):
-    return await service.get_messages(current_user.id)
+    return await service.get_chats(current_user.id)
 
 
-# For testing purposes
-@message_router.post("/message", response_model=MessageRead)
+@message_router.get("/chat/{chat_id}", response_model=ChatDetailResponse)
 @inject
-async def create_message(
+async def get_chat(
+    chat_id: str,
     current_user: User = Depends(get_current_user),
     service: MessageService = Depends(Provide[Container.message_service]),
-    message: MessageCreate = Body(...),
 ):
-    new_message = await service.add_message(current_user.id, message)
-    return new_message
+    return await service.get_chat(chat_id, current_user.id)
+
+
+@message_router.post("/chat")
+@inject
+async def create_chat(
+    current_user: User = Depends(get_current_user),
+    chat: ChatCreate = Body(...),
+    service: MessageService = Depends(Provide[Container.message_service]),
+):
+    return await service.create_chat(chat, current_user.id)
 
 
 @message_router.websocket("/ws")
 @inject
 async def websocket_endpoint(
     websocket: WebSocket,
+    chat_id: uuid.UUID,
     current_user: User = Depends(get_current_user_from_cookie),
     service: MessageService = Depends(Provide[Container.message_service]),
 ):
-    return await service.websocket_handler(websocket, current_user)
+    return await service.websocket_handler(websocket, chat_id, current_user)

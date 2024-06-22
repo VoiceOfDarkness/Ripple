@@ -8,8 +8,8 @@ if TYPE_CHECKING:
 
 class Review(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True, index=True)
-    gig_id: int = Field(foreign_key="gigs.id")
-    user_id: int = Field(foreign_key="user.id")
+    gig_id: int = Field(index=True, foreign_key="gigs.id")
+    user_id: int = Field(index=True, foreign_key="user.id")
     rating: int = Field(nullable=False)
     comment: str = Field(nullable=False)
     gig: "Gigs" = Relationship(back_populates="reviews")

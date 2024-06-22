@@ -13,18 +13,21 @@ if TYPE_CHECKING:
 
 class Gigs(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    seller_id: int = Field(foreign_key="freelancer.id")
+    seller_id: int = Field(index=True, foreign_key="freelancer.id")
     title: str = Field(max_length=128, nullable=False)
     description: str = Field(max_length=512)
-    category_id: int = Field(foreign_key="category.id")
-    price: Decimal = Field(default=0, max_digits=10, decimal_places=2, nullable=False)
+    category_id: int = Field(index=True, foreign_key="category.id")
+    price: Decimal = Field(
+        index=True, default=0, max_digits=10, decimal_places=2, nullable=False
+    )
     delivery_time: int = Field(default=0, nullable=False)
     rating: float = Field(
         sa_column=Column(
             Float(precision=3, asdecimal=True),
             CheckConstraint("rating >= 0 AND rating <= 10"),
+            index=True,
             default=0,
-        )
+        ),
     )
     num_reviews: int = Field(default=0)
 
@@ -38,5 +41,5 @@ class Gigs(SQLModel, table=True):
 class Image(SQLModel, table=True):
     id: int = Field(primary_key=True)
     filename: str = Field(max_length=255)
-    gig_id: int = Field(foreign_key="gigs.id")
+    gig_id: int = Field(index=True, foreign_key="gigs.id")
     gig: Gigs = Relationship(back_populates="images")
