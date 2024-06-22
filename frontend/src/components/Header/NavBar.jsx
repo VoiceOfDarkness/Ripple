@@ -49,7 +49,7 @@ export default function MenuNavBar() {
                         : "switch_to_freelancer"
                     )
                   );
-                  setIsFreelancer(!user.profile.is_freelancer);
+                  setIsFreelancer(!isFreelancer);
                 }}
               >
                 <button>

@@ -98,7 +98,7 @@ export default function JobHeader() {
                           : "switch_to_freelancer"
                       )
                     );
-                    setIsFreelancer(!user.profile.is_freelancer);
+                    setIsFreelancer(!isFreelancer);
                   }}
                 >
                   <button>

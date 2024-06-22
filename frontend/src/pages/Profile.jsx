@@ -19,6 +19,7 @@ const Profile = () => {
     user.profile?.user_image,
     user.profile?.first_name,
     user.profile?.last_name,
+    user.profile?.is_freelancer,
   ]);
 
   return (

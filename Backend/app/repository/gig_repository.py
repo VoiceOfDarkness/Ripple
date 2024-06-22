@@ -34,7 +34,7 @@ class GigRepository(BaseRepository):
                 image = Image(filename=image_path, gig=db_obj)
                 session.add(image)
 
-            await session.add(db_obj)
+            session.add(db_obj)
             await session.commit()
             await session.refresh(db_obj)
 
