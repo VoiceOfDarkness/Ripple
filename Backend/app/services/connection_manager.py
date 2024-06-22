@@ -14,10 +14,12 @@ class ConnectionManager:
         if user_id in self.active_connections:
             del self.active_connections[user_id]
 
-    async def send_personal_message(self, message: str, websocket: WebSocket, user_id: int, user_name: str):
+    async def send_personal_message(
+        self, message: str, websocket: WebSocket, user_id: int
+    ):
         if user_id in self.active_connections:
             websocket = self.active_connections[user_id]
-            data = {"content": f"{user_name}: {message}"}
+            data = {"content": message}
             await websocket.send_json(data)
 
 

@@ -1,7 +1,8 @@
 from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from sqlalchemy.future import select
 
 from app.models.order import Order
@@ -12,7 +13,7 @@ from app.repository.base_repository import BaseRepository
 
 class OrderRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ) -> None:
         self._session_factory = session_factory
         super().__init__(session_factory, Order)
@@ -56,7 +57,7 @@ class OrderRepository(BaseRepository):
                 buyer_id=hire_manager_id,
                 **order.model_dump(),
             )
-            await session.add(db_obj)
+            session.add(db_obj)
             await session.commit()
             await session.refresh(db_obj)
         return db_obj

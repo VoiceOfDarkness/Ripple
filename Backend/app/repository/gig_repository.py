@@ -3,15 +3,17 @@ from typing import Callable, List, Optional
 
 from app.models.services import Gigs, Image
 from app.models.user import Freelancer
+from app.models.review import Review
 from app.repository.base_repository import BaseRepository
 from app.schemas.services import CreateGigs
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 
 class GigRepository(BaseRepository):
     def __init__(
-        self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]
+        self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ):
         self._session_factory = session_factory
         super().__init__(session_factory, Gigs)
@@ -78,6 +80,7 @@ class GigRepository(BaseRepository):
                     selectinload(Gigs.category),
                     selectinload(Gigs.freelancer).selectinload(Freelancer.user),
                     selectinload(Gigs.images),
+                    selectinload(Gigs.reviews).selectinload(Review.user),
                 )
                 .where(Gigs.id == gig_id)
             )
