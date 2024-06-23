@@ -74,4 +74,4 @@ bower_components
 *.tmp.*
 
 # alembic
-Backend/alembic/versions
+backend/alembic/versions
