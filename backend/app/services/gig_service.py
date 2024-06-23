@@ -88,11 +88,11 @@ class GigService(BaseService):
         sources = [hit["_source"] for hit in result["hits"]["hits"]]
         return sources
 
-    async def delete(self, gig_id):
+    async def delete(self, gig_id, user_id):
         es = get_elasticsearch_client()
         es.delete(index="gigs", id=gig_id)
 
-        images = await self.gig_repository.delete(gig_id)
+        images = await self.gig_repository.delete(gig_id, user_id)
         await remove_files(images)
 
         return JSONResponse(

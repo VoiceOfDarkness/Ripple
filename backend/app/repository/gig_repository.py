@@ -88,10 +88,16 @@ class GigRepository(BaseRepository):
             db_obj = result.scalars().one_or_none()
             return db_obj
 
-    async def delete(self, gig_id: int) -> None:
+    async def delete(self, gig_id: int, user_id: int) -> None:
         async with self._session_factory() as session:
+            stmt = select(Freelancer).where(Freelancer.user_id == user_id)
+            result = await session.execute(stmt)
+            freelancer = result.scalars().one_or_none()
+
             stmt = (
-                select(Gigs).where(Gigs.id == gig_id).options(selectinload(Gigs.images))
+                select(Gigs)
+                .where((Gigs.id == gig_id) & (Gigs.seller_id == freelancer.id))
+                .options(selectinload(Gigs.images))
             )
             result = await session.execute(stmt)
             db_obj = result.scalars().one_or_none()

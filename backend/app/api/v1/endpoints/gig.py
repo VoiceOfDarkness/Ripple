@@ -74,6 +74,7 @@ async def create_gig(
 @inject
 async def delete_gig(
     gig_id: int,
+    current_user: User = Depends(get_current_user),
     service: GigService = Depends(Provide[Container.gig_service]),
 ):
-    return await service.delete(gig_id)
+    return await service.delete(gig_id, current_user.id)
