@@ -42,18 +42,24 @@ export const ProfileSection = ({ user }) => {
     <Card className="w-1/2 bg-black border text-white" data-id="element-0">
       <CardHeader data-id="element-1" className="h-2/5 mt-36">
         <div className="relative" data-id="element-2">
-          <Avatar className="mx-auto h-80 w-80" data-id="element-3">
-            <AvatarImage
-              src={`${
-                user.profile?.user_image.includes("http")
-                  ? ""
-                  : "http://localhost:8000/app/media/"
-              }${user.profile?.user_image}`}
-              alt="Profile"
-              data-id="element-4"
-            />
-            <AvatarFallback data-id="element-5">PS</AvatarFallback>
-          </Avatar>
+          {user.profile?.user_image ? (
+            <Avatar className="mx-auto h-80 w-80" data-id="element-3">
+              <AvatarImage
+                src={`${
+                  user.profile?.user_image.includes("http")
+                    ? ""
+                    : "http://localhost:8000/app/media/"
+                }${user.profile?.user_image}`}
+                alt="Profile"
+                data-id="element-4"
+              />
+              <AvatarFallback data-id="element-5">PS</AvatarFallback>
+            </Avatar>
+          ) : (
+            <div className="w-80 h-80 mx-auto text-8xl rounded-full flex justify-center items-center bg-purple">
+              {user.profile?.user_name[0].toUpperCase()}
+            </div>
+          )}
         </div>
         <div className="mt-4 text-center" data-id="element-7">
           <h2
