@@ -9,65 +9,76 @@ import { getProfile } from "@/store/profile-slice";
 import EmojiPicker from "emoji-picker-react";
 
 export default function ChatPage() {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
   const [messages, setMessages] = useState([]);
+  const [chat, setChat] = useState(null);
   const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const message = useRef();
 
   const onEmojiClick = (emojiObject) => {
-    console.log(emojiObject.emoji);
     message.current.value += emojiObject.emoji;
   };
 
   useEffect(() => {
-    // const fetchMessages = async () => {
-    //   try {
-    //     const response = await api.get("/message");
-    //     const processedMessages = response.data.map((msg) => ({
-    //       content: msg.content,
-    //       type: msg.sender_id === profile.id ? "sent" : "received",
-    //     }));
-    //     setMessages(processedMessages);
-    //   } catch (error) {
-    //     console.error("Error fetching messages", error);
-    //   }
-    // };
+    const getChat = async () => {
+      if (profile?.id) {
+        const response = await api.post("/chat", {
+          user_id_2: profile.id === 1 ? 2 : 1,
+        });
+        setChat(response.data.chat_id);
+      }
+    };
 
-    // fetchMessages();
+    getChat();
     dispatch(getProfile());
   }, [dispatch, profile?.id]);
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8000/api/v1/ws`);
-
-    ws.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          content: newMessage.content,
-          type: newMessage.sender_id === profile?.id ? "sent" : "received",
-        },
-      ]);
+    const getMessages = async () => {
+      if (chat) {
+        const response = await api.get(`/chat/${chat}`);
+        const processedMessages = response.data.messages?.map((msg) => ({
+          content: msg.content,
+          type: msg.sender_id === profile.id ? "sent" : "received",
+        }));
+        setMessages(processedMessages);
+      }
     };
 
-    setSocket(ws);
+    getMessages();
+  }, [chat, profile?.id]);
 
-    return () => {
-      ws.close();
-    };
-  }, [profile?.id]);
+  useEffect(() => {
+    if (chat) {
+      const ws = new WebSocket(`ws://localhost:8000/api/v1/ws?chat_id=${chat}`);
+
+      ws.onmessage = (event) => {
+        const newMessage = JSON.parse(event.data);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            content: newMessage.content,
+            type: newMessage.sender_id === profile?.id ? "sent" : "received",
+          },
+        ]);
+      };
+
+      setSocket(ws);
+
+      return () => {
+        ws.close();
+      };
+    }
+  }, [chat, profile?.id]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (socket) {
+    if (socket && message.current.value.trim() !== "") {
       const newMessage = {
         content: message.current.value,
-        recipient_id: profile?.id === 10 ? 11 : 10,
+        recipient_id: profile?.id === 1 ? 2 : 1,
       };
       socket.send(JSON.stringify(newMessage));
       setMessages((prevMessages) => [
@@ -118,9 +129,9 @@ export default function ChatPage() {
             </div>
           </div>
           <ScrollArea className="flex-1 overflow-y-auto">
-            {messages.map((item, index) => {
-              return item.type === "sent" ? (
-                <div className="mb-4 flex justify-end">
+            {messages.map((item, index) =>
+              item.type === "sent" ? (
+                <div className="mb-4 flex justify-end" key={index}>
                   <div>
                     <div className="bg-purple text-white rounded-lg p-2">
                       {item.content}
@@ -148,10 +159,13 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              )
+            )}
           </ScrollArea>
-          <form className="flex items-center relative space-x-4 mt-4">
+          <form
+            className="flex items-center relative space-x-4 mt-4"
+            onSubmit={handleSendMessage}
+          >
             <Input
               type="text"
               ref={message}
@@ -164,12 +178,12 @@ export default function ChatPage() {
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               />
               {showEmojiPicker && (
-                <div className="absolute -top-[50rem]  left-[30%]">
+                <div className="absolute -top-[50rem] left-[30%]">
                   <EmojiPicker onEmojiClick={onEmojiClick} />
                 </div>
               )}
             </div>
-            <button type="submit" onClick={handleSendMessage}>
+            <button type="submit">
               <SendIcon className="text-gray-400" />
             </button>
           </form>
