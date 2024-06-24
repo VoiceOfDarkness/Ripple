@@ -13,7 +13,7 @@ from app.repository.user_repository import HireManagerRepository, UserRepository
 from app.schemas.auth import ChangePassword, EmailVerification, SignUp, Token
 from app.schemas.user import CreateHireManager as HireManager
 from app.schemas.user import UpdatePrivateUser as UpdateUser
-from app.schemas.user import UserPrivate as User
+from app.schemas.user import CreateUser, User
 from app.tasks.email_service import send_verification_code
 from app.utils.verification_code import generate_verification_code
 from fastapi import Depends, HTTPException, Request, status
@@ -77,7 +77,7 @@ class AuthService:
         user = await self.user_repository.get_by_username_or_email(user_data["email"])
         if not user:
             user = await self.user_repository.create(
-                User(
+                CreateUser(
                     user_name=user_data["name"],
                     email=user_data["email"],
                     user_image=user_data["picture"],
@@ -107,7 +107,7 @@ class AuthService:
         )
         return response
 
-    async def sign_up(self, sign_up: SignUp) -> User:
+    async def sign_up(self, sign_up: SignUp):
         user = await self.user_repository.get_by_username_or_email(sign_up.email)
         if user:
             raise HTTPException(
@@ -116,7 +116,7 @@ class AuthService:
             )
         hashed_password = get_password_hash(sign_up.password)
         new_user = await self.user_repository.create(
-            User(
+            CreateUser(
                 user_name=sign_up.username,
                 email=sign_up.email,
                 hash_password=hashed_password,

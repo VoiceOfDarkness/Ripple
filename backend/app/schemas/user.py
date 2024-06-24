@@ -14,13 +14,14 @@ class BaseUser(BaseModel):
     user_image: Optional[str] = Field(None, max_length=255)
     email: EmailStr
     localtion: str = Field(None, max_length=128)
-    created_at: datetime
+    created_at: Optional[datetime]
     first_name: Optional[str] = Field(None, max_length=128)
     last_name: Optional[str] = Field(None, max_length=128)
 
 
 class User(BaseUser):
     id: Optional[int] = None
+    overview: Optional[str] = Field(None, max_length=1024)
 
     is_active: bool = False
     is_banned: bool = False
@@ -40,8 +41,13 @@ class UpdatePrivateUser(BaseModel):
     hash_password: Optional[str] = Field(None, min_length=8)
 
 
-class UserPrivate(User):
+class CreateUser(BaseModel):
+    user_name: str = Field(..., max_length=128)
+    user_image: Optional[str] = Field(None, max_length=255)
+    is_active: bool = False
+    email: EmailStr
     hash_password: str
+
 
 # Freelancer schemas
 class BaseFreelancer(BaseModel):

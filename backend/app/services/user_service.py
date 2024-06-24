@@ -30,6 +30,16 @@ class UserService(BaseService):
         except Exception as e:
             raise Exception("Error getting user by username or email: ", e)
 
+    async def get_profile(self, user: User):
+        user_data = user.model_dump()
+        if user.is_freelancer:
+            freelancer = await self.freelancer_repository.get_by_user_id(user.id)
+            if freelancer and hasattr(freelancer, "overview"):
+                user_data["overview"] = (
+                    freelancer.overview
+                )
+        return user_data
+
     async def update(self, user: User, user_data: UpdateUser, user_image):
         unique_id = str(uuid.uuid4())
         dir_path = Path(settings.MEDIA_ROOT) / unique_id
@@ -46,7 +56,9 @@ class UserService(BaseService):
                 user_data.user_image = f"{unique_id}/{user_data.user_image}"
             if user.is_freelancer:
                 freelancer = await self.freelancer_repository.get_by_user_id(user.id)
-                await self.freelancer_repository.update(freelancer.id, user_data.overview)
+                await self.freelancer_repository.update(
+                    freelancer.id, user_data.overview
+                )
                 user_data.overview = None
                 logger.info(f"Freelancer updated {user_data}")
             return await self.user_repository.update(user.id, user_data)
