@@ -44,7 +44,7 @@ async def resend_code(
     return await service.resend_code(email)
 
 
-@auth_router.post("/settings/change-password")
+@auth_router.patch("/settings/change-password")
 @inject
 async def change_password(
     user_password: ChangePassword,

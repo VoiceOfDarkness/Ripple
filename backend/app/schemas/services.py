@@ -57,7 +57,9 @@ class Image(BaseModel):
     filename: str = Field(..., max_length=512)
     gig_id: int
 
+
 class Reviews(BaseModel):
+    id: int
     rating: int
     comment: str
     user: "User"

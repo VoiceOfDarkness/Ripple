@@ -182,7 +182,7 @@ class AuthService:
         )
 
     async def change_password(self, user_password: ChangePassword, current_user: User):
-        user = self.user_repository.get_by_username_or_email(current_user.email)
+        user = await self.user_repository.get_by_username_or_email(current_user.email)
 
         if not verify_password(user_password.old_password, user.hash_password):
             raise HTTPException(
