@@ -56,32 +56,33 @@ services:
     build: ./backend
     env_file:
       - .env
-    command: celery -A app.tasks.email_service worker --loglevel=info
+    entrypoint: celery
+    command: -A app.tasks.email_service worker --loglevel=info
     volumes:
       - ./backend:/app
     depends_on:
-      - db
-      - redis
+      - backend
 
   celery-beat:
     build: ./backend
     env_file:
       - .env
-    command: celery -A app.tasks.email_service beat --loglevel=info
+    entrypoint: celery
+    command: -A app.tasks.email_service beat --loglevel=info
     volumes:
       - ./backend:/app
     depends_on:
-      - db
-      - redis
-  # ngrok:
-  #   image: wernight/ngrok
-  #   ports:
-  #     - 4040:4040
-  #   env_file:
-  #     - .env
-  #   command: ngrok http backend:8000
-  #   depends_on:
-  #     - backend
+      - backend
+
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - media:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

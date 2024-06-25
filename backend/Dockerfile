@@ -36,9 +36,23 @@ RUN poetry config virtualenvs.create false \
 # Copy the app
 COPY ./app ./app
 
-# # Expose the port the app runs in
+# alembic
+COPY ./alembic ./alembic
+COPY ./alembic.ini ./alembic.ini
+
+# Gunicorn
+COPY ./gunicorn_conf.py ./gunicorn_conf.py
+
+# Expose the port the app runs in
 EXPOSE 8000
 
-# # The command to run the app when the container is started
-ENTRYPOINT ["poetry", "run"]
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# For development
+# ENTRYPOINT ["poetry", "run"]
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# For production
+COPY ./entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
