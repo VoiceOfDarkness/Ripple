@@ -38,3 +38,17 @@ export const getGigById = (id) => {
     }
   };
 };
+
+export const deleteGig = (id) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.delete(`gig/${id}`);
+
+      dispatch(uiMessage("Deleted successfully", undefined, "success"));
+    } catch (error) {
+      dispatch(
+        uiMessage(error.message, error.response?.data?.details, "error")
+      );
+    }
+  };
+};

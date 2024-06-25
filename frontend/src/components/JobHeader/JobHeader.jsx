@@ -37,12 +37,12 @@ export default function JobHeader() {
       dispatch(getProfile());
     }
     setIsFreelancer(user.profile?.is_freelancer);
-  }, [dispatch, isFreelancer, user.profile?.is_freelancer]);
+  }, [dispatch, user.profile?.is_freelancer]);
 
   return (
     <div className="bg-transparent  z-10 top-0 pt-12  flex text-white items-center ">
-      <div className="max-md:hidden w-full">
-        <ul className="flex items-center gap-20 text-3xl">
+      <div className="w-full">
+        <ul className="flex justify-between mr-24 items-center gap-20 text-3xl">
           <li className="w-1/3">
             <div className="flex items-center">
               <div className="relative w-full">
@@ -58,7 +58,7 @@ export default function JobHeader() {
               </div>
             </div>
           </li>
-          <div className="flex items-center justify-center pl-64 gap-5">
+          {/* <div className="flex items-center justify-center pl-64 gap-5">
             <li>
               <a href="/">
                 <div className="w-16 h-16 flex items-center justify-center bg-inputGray rounded-full">
@@ -72,8 +72,8 @@ export default function JobHeader() {
                 <div className="relative w-11 h-6  bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               </label>
             </li>
-          </div>
-          <div className="flex items-center justify-center gap-5">
+          </div> */}
+          {/* <div className="flex items-center justify-center gap-5">
             <li>
               <a href="/">
                 <JobsComment />
@@ -84,7 +84,7 @@ export default function JobHeader() {
                 <JobsAlert />
               </a>
             </li>
-          </div>
+          </div> */}
           {isTokenExist && (
             <div className="flex gap-5">
               <div className="flex items-center gap-8 font-semibold">
@@ -120,29 +120,28 @@ export default function JobHeader() {
                       {user.profile?.user_name[0].toUpperCase()}
                     </div>
                   )}
-                  <Link to="/profile">{user.profile?.user_name}</Link>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 ml-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                  <div className="flex items-center">
+                    <Link to="/profile">{user.profile?.user_name}</Link>
+                    {/* <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 ml-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg> */}
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </ul>
-      </div>
-      <div className="hidden max-md:block">
-        <Menu style={{ width: "6rem", height: "6rem" }} />
       </div>
     </div>
   );

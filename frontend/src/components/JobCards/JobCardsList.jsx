@@ -22,7 +22,7 @@ export default function JobCardsList({ jobs }) {
   return (
     <>
       <div
-        className="mt-24 overflow-x-auto"
+        className="mt-24 mr-20 overflow-x-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <ul className="flex gap-6 text-black font-semibold w-max">

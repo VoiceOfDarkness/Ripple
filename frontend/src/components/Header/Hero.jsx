@@ -18,7 +18,7 @@ export default function Hero() {
       className="w-full h-screen z-0 bg-no-repeat bg-cover bg-right flex items-center"
       style={{ backgroundImage: `url(${heroImg})` }}
     >
-      <Box className="reletive z-20 h-full text-white flex p-0">
+      <Box className="reletive h-full text-white flex p-0">
         <div className="flex w-1/2 max-md:w-full flex-col justify-evenly h-full">
           <div className="tracking-wider pr-52 max-lg:w-full">
             <h1 className="text-7xl leading-snug font-bold">

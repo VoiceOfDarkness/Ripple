@@ -25,6 +25,7 @@
     "emoji-picker-react": "^4.10.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.10",
+    "input-otp": "^1.2.4",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.395.0",
     "postcss-cli": "^11.0.0",

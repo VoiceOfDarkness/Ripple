@@ -5,12 +5,16 @@ import { getProfile } from "@/store/profile-slice";
 import { Navigate } from "react-router-dom";
 
 export default function CreateGigPage() {
-  const profile = useSelector((state) => state.profile.profile);
+  const profile = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch, profile?.is_freelancer]);
 
-  return profile?.is_freelancer ? <GigsForm /> : <Navigate to="/profile" />;
+  return profile?.profile.is_freelancer ? (
+    <GigsForm />
+  ) : (
+    <Navigate to="/profile" />
+  );
 }

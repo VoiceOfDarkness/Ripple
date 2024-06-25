@@ -13,6 +13,8 @@ import OrdersPage from "./pages/Order";
 import ChatPage from "./pages/Chat";
 import MyJobPage from "./pages/MyWork";
 import { useEffect } from "react";
+import Settings from "./pages/Settings";
+import NotFoundPage from "./pages/NotFound";
 
 function App() {
   const location = useLocation();
@@ -33,22 +35,18 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route element={<JobMainLayout />}>
           <Route path="/jobs" element={<JobMain />} />
-          <Route element={<ProtectedRoot />}>
-            <Route path="/profile" element={<Profile />} />
-          </Route>
           <Route path="/job/:jobId" element={<JobDetails />} />
           <Route element={<ProtectedRoot />}>
+            <Route path="/profile" element={<Profile />} />
             <Route path="/orders" element={<OrdersPage />} />
-          </Route>
-          <Route element={<ProtectedRoot />}>
             <Route path="/chat" element={<ChatPage />} />
-          </Route>
-          <Route path="/mywork" element={<MyJobPage />} />
-          <Route element={<ProtectedRoot />}>
             <Route path="/creategig" element={<CreateGigPage />} />
+            <Route path="/mywork" element={<MyJobPage />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Toast />
     </>

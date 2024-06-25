@@ -28,8 +28,14 @@ export default function Toast() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <p>{message.message}</p>
-          {message.description && <p>{message.description}</p>}
+          <p>{message?.message}</p>
+          {message?.description && Array.isArray(message?.description) ? (
+            message?.description.map((item, index) => (
+              <p key={index}>{item.msg}</p>
+            ))
+          ) : (
+            <p>{message?.description}</p>
+          )}
         </m.div>
       )}
     </AnimatePresence>

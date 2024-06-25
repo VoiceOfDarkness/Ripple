@@ -43,7 +43,7 @@ export default function JobCard({ job }) {
         <div className="flex gap-3 mt-10 items-center">
           <div className="flex items-center gap-1">
             <Star style={{ marginBottom: "2px" }} />
-            <span>{job.rating}</span>
+            <span>{Number(job.rating).toFixed(1)}</span>
           </div>
           <p>({job.num_reviews})</p>
         </div>

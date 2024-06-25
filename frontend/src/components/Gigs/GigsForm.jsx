@@ -60,6 +60,7 @@ export default function GigsForm() {
       formData.append("files", selectedFiles[i]);
     }
 
+
     try {
       const response = await api.post("gigs/", formData, {
         headers: { "Content-Type": "multipart/form-data" },

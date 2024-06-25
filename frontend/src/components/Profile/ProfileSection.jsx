@@ -39,7 +39,10 @@ export const ProfileSection = ({ user }) => {
   };
 
   return (
-    <Card className="w-1/2 bg-black border text-white" data-id="element-0">
+    <Card
+      className="w-1/2 max-md:w-full bg-black border text-white"
+      data-id="element-0"
+    >
       <CardHeader data-id="element-1" className="h-2/5 mt-36">
         <div className="relative" data-id="element-2">
           {user.profile?.user_image ? (

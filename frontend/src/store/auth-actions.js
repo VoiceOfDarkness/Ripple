@@ -3,6 +3,7 @@ import { authActions } from "./auth-slice";
 import Cookies from "js-cookie";
 import { uiMessage } from "../helpers/uiMessage";
 import api from "../helpers/request";
+import { profileActions } from "./profile-slice";
 
 export const login = (email, password, navigate, redirectTo) => {
   return async (dispatch) => {
@@ -44,13 +45,13 @@ export const createUser = (userName, password, email, navigate) => {
           password: password,
         }
       );
-
-      // dispatch(
-      //   authActions.setUser({
-      //     user: res.data,
-      //   })
-      // );
       dispatch(authActions.clearErrorMessage());
+      Cookies.set("temp_email", email, {
+        expires: 7,
+        path: "/",
+        secure: true,
+        sameSite: "strict",
+      });
       navigate("?mode=verify");
     } catch (error) {
       dispatch(
@@ -58,6 +59,9 @@ export const createUser = (userName, password, email, navigate) => {
           errorMessage: error.response?.data?.detail,
         })
       );
+      if (error.code === "ERR_NETWORK") {
+        dispatch(uiMessage(error.message, undefined, "error"));
+      }
     }
   };
 };
@@ -75,9 +79,76 @@ export const verifyUser = (code) => {
           verify: res.status,
         })
       );
+      Cookies.remove("temp_email");
       dispatch(authActions.clearErrorMessage());
     } catch (error) {
-      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
+      dispatch(
+        uiMessage(
+          "There is a problem when try verify",
+          error.response?.data?.detail,
+          "error"
+        )
+      );
+    }
+  };
+};
+
+export const resendCode = () => {
+  return async (dispatch) => {
+    try {
+      const email = Cookies.get("temp_email");
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/auth/sign-up/resend-code",
+        email
+      );
+      dispatch(authActions.clearErrorMessage());
+    } catch (error) {
+      dispatch(
+        uiMessage(
+          "Something went wrong when try resend code",
+          error.response?.data?.detail,
+          "error"
+        )
+      );
+    }
+  };
+};
+
+export const changePassword = (password, newPassword) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.patch("auth/settings/change-password", {
+        old_password: password,
+        new_password: newPassword,
+      });
+
+      dispatch(uiMessage("Password changed successfully", "", "success"));
+    } catch (error) {
+      dispatch(
+        uiMessage(
+          "Can not change password",
+          error.response?.data?.detail,
+          "error"
+        )
+      );
+    }
+  };
+};
+
+export const changeRole = (url) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.patch(`user/${url}`);
+      dispatch(
+        profileActions.changeRole(
+          response.data?.message?.includes("hire") ? false : true
+        )
+      );
+      // dispatch(uiMessage("Successfully change"), "", "success");
+    } catch (error) {
+      dispatch(
+        uiMessage("Can not change role", error.response?.data?.detail, "error")
+      );
     }
   };
 };
@@ -94,29 +165,3 @@ export const verifyUser = (code) => {
 //     );
 //   };
 // };
-
-export const changePassword = (password, newPassword) => {
-  return async (dispatch) => {
-    try {
-      const response = await api.post("auth/settings/change-password", {
-        old_password: password,
-        new_password: newPassword,
-      });
-
-      dispatch(uiMessage("Password changed successfully", "", "success"));
-    } catch (error) {
-      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
-    }
-  };
-};
-
-export const changeRole = (url) => {
-  return async (dispatch) => {
-    try {
-      await api.patch(`user/${url}`);
-      // dispatch(uiMessage("Successfully change"), "", "success");
-    } catch (error) {
-      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
-    }
-  };
-};

@@ -14,7 +14,9 @@ export default function MyJobPage() {
     dispatch(getProfile());
   }, [dispatch]);
 
-  const filteredGigs = gigs?.filter((gig) => gig.seller_id === profile?.id);
+  const filteredGigs = gigs?.filter(
+    (gig) => gig?.freelancer.user.id === profile?.id
+  );
 
   return (
     <div>
