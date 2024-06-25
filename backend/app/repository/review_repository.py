@@ -61,10 +61,13 @@ class ReviewRepository(BaseRepository):
             gig = result.scalars().first()
 
             gig.num_reviews -= 1
-            new_rating = (
-                gig.rating * (gig.num_reviews + 1) - db_obj.rating
-            ) / gig.num_reviews
-            gig.rating = new_rating
+            if gig.num_reviews > 0:
+                new_rating = (
+                    gig.rating * (gig.num_reviews + 1) - db_obj.rating
+                ) / gig.num_reviews
+                gig.rating = new_rating
+            else:
+                gig.rating = 0
 
             session.delete(db_obj)
             await session.commit()
