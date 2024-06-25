@@ -20,3 +20,11 @@ class ReviewService(BaseService):
             content={"message": "Review added successfully"},
             status_code=status.HTTP_201_CREATED,
         )
+
+    async def delete_review(self, review_id: int):
+        await self.review_repository.delete(review_id)
+
+        return JSONResponse(
+            content={"message": "Review deleted successfully"},
+            status_code=status.HTTP_200_OK,
+        )

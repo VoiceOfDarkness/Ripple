@@ -36,4 +36,4 @@ async def delete_review(
     current_user: User = Depends(get_current_user),
     review_service: ReviewService = Depends(Provide[Container.review_service]),
 ):
-    return await review_service.delete(review_id)
+    return await review_service.delete_review(review_id)
