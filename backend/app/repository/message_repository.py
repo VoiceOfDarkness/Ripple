@@ -2,6 +2,7 @@ from contextlib import AbstractContextManager
 from typing import Callable
 
 from app.models.message import Message, Chat
+from app.models.user import User
 from app.schemas.message import MessageCreate, ChatCreate
 from app.repository.base_repository import BaseRepository
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,7 +21,11 @@ class MessageRepository(BaseRepository):
         async with self._session_factory() as session:
             stmt = (
                 select(Chat)
-                .options(joinedload(Chat.messages))
+                .options(
+                    joinedload(Chat.messages),
+                    joinedload(Chat.user1),
+                    joinedload(Chat.user2),
+                )
                 .where(
                     (Chat.id == chat_id)
                     & ((Chat.user_id_1 == user_id) | (Chat.user_id_2 == user_id))
@@ -35,7 +40,11 @@ class MessageRepository(BaseRepository):
         async with self._session_factory() as session:
             stmt = (
                 select(Chat)
-                .options(joinedload(Chat.messages))
+                .options(
+                    joinedload(Chat.messages),
+                    joinedload(Chat.user1),
+                    joinedload(Chat.user2),
+                )
                 .where((Chat.user_id_1 == user_id) | (Chat.user_id_2 == user_id))
             )
             result = await session.execute(stmt)
@@ -69,7 +78,7 @@ class MessageRepository(BaseRepository):
                 session.add(chat)
                 await session.commit()
                 await session.refresh(chat)
-                
+
                 return chat
 
         return db_chat

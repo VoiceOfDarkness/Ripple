@@ -69,7 +69,6 @@ class ReviewRepository(BaseRepository):
             else:
                 gig.rating = 0
 
-            session.delete(db_obj)
+            await session.delete(db_obj)
             await session.commit()
-            session.refresh(db_obj)
         return db_obj

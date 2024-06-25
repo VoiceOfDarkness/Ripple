@@ -25,14 +25,24 @@ class ChatCreate(BaseModel):
     user_id_2: int
 
 
+class UserInfo(BaseModel):
+    user_name: str
+    user_image: Optional[str]
+
+
 class ChatResponse(BaseModel):
     id: uuid.UUID
     user_id_1: int
     user_id_2: int
-
+    
+    user1: UserInfo
+    user2: UserInfo
 
 class ChatDetailResponse(BaseModel):
     id: uuid.UUID
     user_id_1: int
     user_id_2: int
     messages: Optional[List[Messsage]]
+
+    user1: UserInfo
+    user2: UserInfo
