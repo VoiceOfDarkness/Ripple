@@ -16,9 +16,6 @@ export default function MainSlider() {
     { text: "Unlock growth online", title: "SEO", img: img4 },
     { text: "Color your dreams", title: "Illustration", img: img5 },
     { text: "Learn your business", title: "Data Entry", img: img6 },
-    { text: "Learn your business", title: "Data Entry", img: img6 },
-    { text: "Learn your business", title: "Data Entry", img: img6 },
-    { text: "Learn your business", title: "Data Entry", img: img6 },
   ];
   const settings = {
     dots: false,

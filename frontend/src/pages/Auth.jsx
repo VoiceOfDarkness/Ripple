@@ -14,11 +14,11 @@ export default function AuthPage() {
   const isLogin = mode === "login";
 
   return (
-    <Box
+    <div
       style={{ backgroundImage: `url(${signUpSvg})` }}
       className="h-screen bg-no-repeat bg-cover flex items-center w-full p-16"
     >
-      <div className="w-5/12 flex flex-col justify-between h-full">
+      <div className="lg:w-5/12 w-full flex flex-col justify-between h-full">
         <Link to="/">
           <h1 className="font-bold text-6xl">Ripple</h1>
         </Link>
@@ -71,9 +71,9 @@ export default function AuthPage() {
             backgroundPositionX: "65%",
             backgroundPositionY: "15%",
           }}
-          className="flex-1 h-screen bg-no-repeat bg-auto"
+          className="hidden lg:block flex-1 h-screen bg-no-repeat bg-auto"
         ></div>
       </div>
-    </Box>
+    </div>
   );
 }

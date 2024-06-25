@@ -28,13 +28,13 @@ export default function SideNav({ isVisible, setIsVisible }) {
 
   const menu = [
     ["Jobs", <AnnouncementsIcon />, "/jobs"],
-    ["My Work", <MyWorkIcon />, "/mywork"],
+    isTokenExist && ["My Work", <MyWorkIcon />, "/mywork"],
     ["Statistics", <StatisticIcon />, "/orders"],
     ["Chat", <ChatIcon />, "/chat"],
     ["My profile", <MyProfileIcon />, "/profile"],
     ["Payment Info", <PaymentIcon />, "/payment"],
     ["Settings", <Settings style={{ fontSize: "2.5rem" }} />, "/settings"],
-  ];
+  ].filter(Boolean);
 
   return (
     <m.div

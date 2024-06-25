@@ -19,13 +19,16 @@ const Profile = () => {
     user.profile?.user_image,
     user.profile?.first_name,
     user.profile?.last_name,
-    user.profile?.is_freelancer,
+    user.is_freelancer,
   ]);
 
   return (
     <div className="p-8 mt-10 bg-black relative mr-24 rounded-3xl">
       <GradientAnimation />
-      <div className="mt-10 gap-10 justify-between flex" data-id="element-44">
+      <div
+        className="mt-10 gap-10 justify-between flex max-md:flex-col"
+        data-id="element-44"
+      >
         <ProfileSection data-id="element-45" user={user} />
 
         {user.profile?.is_freelancer && (

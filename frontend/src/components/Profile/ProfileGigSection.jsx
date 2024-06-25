@@ -13,8 +13,8 @@ import {
   Star,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getGigs } from "@/store/gig-actions";
+import { useEffect, useState } from "react";
+import { deleteGig, getGigs } from "@/store/gig-actions";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "../ui/scroll-area";
 
@@ -22,16 +22,22 @@ export const ProfileGigsSection = ({ user }) => {
   const dispatch = useDispatch();
   const gigs = useSelector((state) => state.gigs.gigs) || [];
 
+  const [isDelete, setDelete] = useState(false);
+
   useEffect(() => {
     dispatch(getGigs());
-  }, [dispatch]);
+  }, [dispatch, isDelete]);
 
   const filteredGigs = gigs?.filter(
-    (gig) => gig.seller_id === user.profile?.id
+    (gig) => gig?.freelancer.user.id === user.profile?.id
   );
 
+
   return (
-    <Card className="w-1/2 bg-black border text-white" data-id="element-29">
+    <Card
+      className="w-1/2 max-md:w-full bg-black border text-white"
+      data-id="element-29"
+    >
       <CardHeader data-id="element-30">
         <CardTitle
           className="border-b-2 border-purple-500 pb-2"
@@ -73,8 +79,16 @@ export const ProfileGigsSection = ({ user }) => {
                   </span>
                   <span className="flex gap-3">
                     <Star />
-                    {item.rating}({item.num_reviews})
+                    {Number(item.rating).toFixed(1)}({item.num_reviews})
                   </span>
+                  <button
+                    onClick={() => {
+                      dispatch(deleteGig(item.id));
+                      setDelete((prevState) => !prevState);
+                    }}
+                  >
+                    Delete gig
+                  </button>
                 </div>
               </div>
             ))}

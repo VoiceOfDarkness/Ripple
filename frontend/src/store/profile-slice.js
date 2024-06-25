@@ -24,10 +24,14 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState: {
     profile: null,
+    is_freelancer: null,
   },
   reducers: {
     setProfile(state, action) {
       state.profile = action.payload.profile;
+    },
+    changeRole(state, action) {
+      state.is_freelancer = action.payload;
     },
   },
 });

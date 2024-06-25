@@ -16,16 +16,16 @@ import { getOrder } from "@/store/order-slice";
 
 const OrdersPage = () => {
   const orders = useSelector((state) => state.order.orders);
-  const user = useSelector((state) => state.profile.profile);
+  const user = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getOrder());
-  }, [dispatch, JSON.stringify(orders), user?.is_freelancer]);
+  }, [dispatch, user?.is_freelancer]);
 
   const filteredOrders = user?.is_freelancer
-    ? orders.filter((item) => item.freelancer.user.id === user?.id)
-    : orders.filter((item) => item.hire_manager.user.id === user?.id);
+    ? orders.filter((item) => item.freelancer.user.id === user?.profile.id)
+    : orders.filter((item) => item.hire_manager.user.id === user?.profile.id);
 
   return (
     <div
@@ -109,7 +109,7 @@ const OrdersPage = () => {
               GIG NAME
             </TableHead>
             <TableHead className="p-2 text-purple-500" data-id="element-19">
-              {user?.is_freelancer ? "BUYER" : "SELLER"}
+              {user.profile?.is_freelancer ? "BUYER" : "SELLER"}
             </TableHead>
             <TableHead className="p-2 text-purple-500" data-id="element-22">
               TOTAL
@@ -133,7 +133,7 @@ const OrdersPage = () => {
                   {item.gigs?.title}
                 </TableCell>
                 <TableCell className="p-2" data-id="element-27">
-                  {user?.is_freelancer
+                  {user.profile?.is_freelancer
                     ? item.hire_manager.user.user_name
                     : item.freelancer.user.user_name}
                 </TableCell>
