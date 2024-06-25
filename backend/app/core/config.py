@@ -66,16 +66,6 @@ class Settings(BaseSettings):
             database=DB_NAME,
         )
     )
-    
-    DATABASE_URI_MIGRATION: str = (
-        "postgresql://{user}:{password}@{host}:{port}/{database}".format(
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT,
-            database=DB_NAME,
-        )
-    )
 
     # redis
     REDIS_HOST: str = os.getenv("REDIS_HOST", "redis")
