@@ -2,6 +2,7 @@ import api from "../helpers/request";
 import { gigActions } from "./gig-slice";
 import axios from "axios";
 import { uiMessage } from "../helpers/uiMessage";
+import exp from "constants";
 
 export const getGigs = () => {
   return async (dispatch) => {
@@ -45,6 +46,20 @@ export const deleteGig = (id) => {
       const response = await api.delete(`gig/${id}`);
 
       dispatch(uiMessage("Deleted successfully", undefined, "success"));
+    } catch (error) {
+      dispatch(
+        uiMessage(error.message, error.response?.data?.details, "error")
+      );
+    }
+  };
+};
+
+export const searchGig = (query) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.get(`gig/search?query=${query}`);
+
+      dispatch(gigActions.setSearchedGig(response.data));
     } catch (error) {
       dispatch(
         uiMessage(error.message, error.response?.data?.details, "error")

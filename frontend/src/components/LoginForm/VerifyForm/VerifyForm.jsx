@@ -82,7 +82,10 @@ export default function VerifyForm() {
         If you can not recive the code please click.{" "}
         <span
           className="text-linkBlue cursor-pointer"
-          onClick={() => dispatch(resendCode())}
+          onClick={() => {
+            dispatch(resendCode());
+            setTimeLeft(120);
+          }}
         >
           Send again
         </span>

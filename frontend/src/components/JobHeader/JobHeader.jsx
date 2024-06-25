@@ -5,11 +5,12 @@ import { JobsComment } from "../Icons/JobsComment";
 import JobsAlert from "../Icons/JobsAlert";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getProfile } from "../../store/profile-slice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../helpers/request";
 import { changeRole } from "../../store/auth-actions";
+import { searchGig } from "@/store/gig-actions";
 
 export default function JobHeader() {
   const [isTokenExist, setIsTokenExist] = useState(
@@ -17,6 +18,8 @@ export default function JobHeader() {
   );
 
   const [isFreelancer, setIsFreelancer] = useState();
+  const searchQuery = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +42,12 @@ export default function JobHeader() {
     setIsFreelancer(user.profile?.is_freelancer);
   }, [dispatch, user.profile?.is_freelancer]);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`?search=${searchQuery.current.value}`);
+    searchQuery.current.value = "";
+  };
+
   return (
     <div className="bg-transparent  z-10 top-0 pt-12  flex text-white items-center ">
       <div className="w-full">
@@ -46,15 +55,18 @@ export default function JobHeader() {
           <li className="w-1/3">
             <div className="flex items-center">
               <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full rounded-full placeholder-white px-6 py-3 outline-none bg-inputGray text-white transition-all duration-500  pr-12"
-                />
-                <SearchIcon
-                  fontSize="large"
-                  className="absolute large right-4 top-1/2 transform -translate-y-1/2 text-white"
-                />
+                <form onSubmit={handleSearch}>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    ref={searchQuery}
+                    className="w-full rounded-full placeholder-white px-6 py-3 outline-none bg-inputGray text-white transition-all duration-500  pr-12"
+                  />
+                  <SearchIcon
+                    fontSize="large"
+                    className="absolute large right-4 top-1/2 transform -translate-y-1/2 text-white"
+                  />
+                </form>
               </div>
             </div>
           </li>
