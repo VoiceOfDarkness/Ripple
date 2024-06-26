@@ -32,7 +32,6 @@ export const ProfileGigsSection = ({ user }) => {
     (gig) => gig?.freelancer.user.id === user.profile?.id
   );
 
-
   return (
     <Card
       className="w-1/2 max-md:w-full bg-black border text-white"
@@ -59,7 +58,7 @@ export const ProfileGigsSection = ({ user }) => {
                 data-id="element-34"
               >
                 <img
-                  src={`http://localhost:8000/app/media/${item.images[0].filename}`}
+                  src={`http://backend:8000/app/media/${item.images[0].filename}`}
                   alt="Gig"
                   className="h-56"
                   data-id="element-35"

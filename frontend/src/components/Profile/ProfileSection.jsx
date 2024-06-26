@@ -51,7 +51,7 @@ export const ProfileSection = ({ user }) => {
                 src={`${
                   user.profile?.user_image.includes("http")
                     ? ""
-                    : "http://localhost:8000/app/media/"
+                    : "http://backend:8000/app/media/"
                 }${user.profile?.user_image}`}
                 alt="Profile"
                 data-id="element-4"

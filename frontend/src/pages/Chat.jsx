@@ -111,7 +111,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (activeChat?.id) {
       const ws = new WebSocket(
-        `ws://localhost:8000/api/v1/ws?chat_id=${activeChat?.id}`
+        `ws://backend:8000/api/v1/ws?chat_id=${activeChat?.id}`
       );
 
       ws.onmessage = (event) => {
@@ -188,7 +188,7 @@ export default function ChatPage() {
                       src={`${
                         user.user_data?.user_image.includes("http")
                           ? ""
-                          : "http://localhost:8000/app/media/"
+                          : "http://backend:8000/app/media/"
                       }${user.user_data.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />
@@ -224,7 +224,7 @@ export default function ChatPage() {
                   src={`${
                     userData?.user_image.includes("http")
                       ? ""
-                      : "http://localhost:8000/app/media/"
+                      : "http://backend:8000/app/media/"
                   }${userData?.user_image}`}
                   className=" w-16 h-16 rounded-full"
                 />

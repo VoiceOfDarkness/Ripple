@@ -32,7 +32,7 @@ export default function JobCard({ job }) {
     >
       <div className="w-full h-1/2 bg-inputGray">
         <img
-          src={`http://localhost:8000/app/media/${job.images[0].filename}`}
+          src={`http://backend:8000/app/media/${job.images[0].filename}`}
           // src={img}
           alt="gig-img"
         />
