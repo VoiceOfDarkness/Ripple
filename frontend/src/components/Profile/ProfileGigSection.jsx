@@ -21,16 +21,21 @@ import { ScrollArea } from "../ui/scroll-area";
 export const ProfileGigsSection = ({ user }) => {
   const dispatch = useDispatch();
   const gigs = useSelector((state) => state.gigs.gigs) || [];
-
-  const [isDelete, setDelete] = useState(false);
+  const [updateCount, setUpdateCount] = useState(0); // Yeni state tanımı
 
   useEffect(() => {
     dispatch(getGigs());
-  }, [dispatch, isDelete]);
+  }, [dispatch, updateCount]); // updateCount değiştiğinde getGigs çağrılır
 
   const filteredGigs = gigs?.filter(
     (gig) => gig?.freelancer.user.id === user.profile?.id
   );
+
+  const handleDeleteGig = (gigId) => {
+    dispatch(deleteGig(gigId)).then(() => {
+      setUpdateCount((prevCount) => prevCount + 1); // State'i güncelle
+    });
+  };
 
   return (
     <Card
@@ -51,14 +56,16 @@ export const ProfileGigsSection = ({ user }) => {
             className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 3xl:grid-cols-3"
             data-id="element-33"
           >
-            {filteredGigs.map((item, index) => (
+            {filteredGigs.map((item) => (
               <div
                 className="rounded-lg bg-gray-900 p-4 shadow-md"
                 key={item.id}
                 data-id="element-34"
               >
                 <img
-                  src={`http://backend:8000/app/media/${item.images[0].filename}`}
+                  src={`${import.meta.env.VITE_APP_MEDIA_URL}${
+                    item.images[0].filename
+                  }`}
                   alt="Gig"
                   className="h-56"
                   data-id="element-35"
@@ -76,16 +83,11 @@ export const ProfileGigsSection = ({ user }) => {
                   >
                     ${item.price}
                   </span>
-                  <span className="flex gap-3">
+                  <span className="flex items-center gap-3">
                     <Star />
                     {Number(item.rating).toFixed(1)}({item.num_reviews})
                   </span>
-                  <button
-                    onClick={() => {
-                      dispatch(deleteGig(item.id));
-                      setDelete((prevState) => !prevState);
-                    }}
-                  >
+                  <button onClick={() => handleDeleteGig(item.id)}>
                     Delete gig
                   </button>
                 </div>

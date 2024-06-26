@@ -123,7 +123,7 @@ export default function JobHeader() {
                       src={`${
                         user.profile?.user_image.includes("http")
                           ? ""
-                          : "http://backend:8000/app/media/"
+                          : import.meta.env.VITE_APP_MEDIA_URL
                       }${user.profile?.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

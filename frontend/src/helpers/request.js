@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const api = axios.create({
-  baseURL: "http://backend:8000/api/v1/",
+  baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
 export const getToken = () => {

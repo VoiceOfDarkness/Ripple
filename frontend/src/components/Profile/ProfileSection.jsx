@@ -38,6 +38,25 @@ export const ProfileSection = ({ user }) => {
     dispatch(profileActions.setProfile(response.data));
   };
 
+  const getDate = (date) => {
+    const localDate = new Date(date);
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${months[localDate.getMonth()]} ${localDate.getFullYear()}`;
+  };
+
   return (
     <Card
       className="w-1/2 max-md:w-full bg-black border text-white"
@@ -51,7 +70,7 @@ export const ProfileSection = ({ user }) => {
                 src={`${
                   user.profile?.user_image.includes("http")
                     ? ""
-                    : "http://backend:8000/app/media/"
+                    : import.meta.env.VITE_APP_MEDIA_URL
                 }${user.profile?.user_image}`}
                 alt="Profile"
                 data-id="element-4"
@@ -116,7 +135,7 @@ export const ProfileSection = ({ user }) => {
             />
             <span data-id="element-22">Member since</span>
             <span className="ml-auto" data-id="element-23">
-              Jan 2023
+              {getDate(user.profile?.created_at)}
             </span>
           </div>
           <ProfileFormSection user={user} />

@@ -24,7 +24,12 @@ export default function ChatPage() {
 
   const getDate = (date = null) => {
     const hours = date ? new Date(date) : new Date();
-    return `${hours.getHours() + (date ? 4 : 0)}:${hours.getMinutes()}`;
+    const minutes =
+      Number(hours.getMinutes()) / 10 <= 1
+        ? `0${hours.getMinutes()}`
+        : `${hours.getMinutes()}`;
+
+    return `${hours.getHours() + (date ? 4 : 0)}:${minutes}`;
   };
 
   const onEmojiClick = (emojiObject) => {
@@ -47,7 +52,7 @@ export default function ChatPage() {
     };
 
     getChat();
-  }, [dispatch, activeChat]);
+  });
 
   useEffect(() => {
     dispatch(getProfile());
@@ -111,7 +116,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (activeChat?.id) {
       const ws = new WebSocket(
-        `ws://backend:8000/api/v1/ws?chat_id=${activeChat?.id}`
+        `ws://localhost:8000/api/v1/ws?chat_id=${activeChat?.id}`
       );
 
       ws.onmessage = (event) => {
@@ -188,7 +193,7 @@ export default function ChatPage() {
                       src={`${
                         user.user_data?.user_image.includes("http")
                           ? ""
-                          : "http://backend:8000/app/media/"
+                          : import.meta.env.VITE_APP_MEDIA_URL
                       }${user.user_data.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />
@@ -224,7 +229,7 @@ export default function ChatPage() {
                   src={`${
                     userData?.user_image.includes("http")
                       ? ""
-                      : "http://backend:8000/app/media/"
+                      : import.meta.env.VITE_APP_MEDIA_URL
                   }${userData?.user_image}`}
                   className=" w-16 h-16 rounded-full"
                 />
