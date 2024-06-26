@@ -8,13 +8,10 @@ import { profileActions } from "./profile-slice";
 export const login = (email, password, navigate, redirectTo) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-in",
-        {
-          email: email,
-          password: password,
-        }
-      );
+      const res = await axios.post("http://backend:8000/api/v1/auth/sign-in", {
+        email: email,
+        password: password,
+      });
 
       Cookies.set("access_token", res.data.access_token, {
         expires: 7,
@@ -37,14 +34,11 @@ export const login = (email, password, navigate, redirectTo) => {
 export const createUser = (userName, password, email, navigate) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up",
-        {
-          username: userName,
-          email: email,
-          password: password,
-        }
-      );
+      const res = await axios.post("http://backend:8000/api/v1/auth/sign-up", {
+        username: userName,
+        email: email,
+        password: password,
+      });
       dispatch(authActions.clearErrorMessage());
       Cookies.set("temp_email", email, {
         expires: 7,
@@ -70,7 +64,7 @@ export const verifyUser = (code) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up/verify-code",
+        "http://backend:8000/api/v1/auth/sign-up/verify-code",
         code
       );
 
@@ -98,7 +92,7 @@ export const resendCode = () => {
     try {
       const email = Cookies.get("temp_email");
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up/resend-code",
+        "http://backend:8000/api/v1/auth/sign-up/resend-code",
         email
       );
       dispatch(authActions.clearErrorMessage());

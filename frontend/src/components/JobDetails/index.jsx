@@ -68,7 +68,7 @@ const JobDetails = () => {
                   src={`${
                     gig?.freelancer?.user.user_image.includes("http")
                       ? ""
-                      : "http://localhost:8000/app/media/"
+                      : "http://backend:8000/app/media/"
                   }${gig?.freelancer?.user.user_image}`}
                 />
               </Avatar>
@@ -119,7 +119,7 @@ const JobDetails = () => {
                 <CarouselItem key={index}>
                   <Card>
                     <img
-                      src={`http://localhost:8000/app/media/${item.filename}`}
+                      src={`http://backend:8000/app/media/${item.filename}`}
                       alt=""
                     />
                   </Card>
