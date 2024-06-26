@@ -50,7 +50,7 @@ export default function AuthPage() {
               </p>
 
               <Link
-                to="http://backend:8000/api/v1/auth/sign-in/google"
+                to="http://localhost:8000/api/v1/auth/sign-in/google"
                 className="flex justify-center gap-6 p-4 items-center border border-white w-1/2 rounded-xl hover:text-purple duration-200 hover:border-purple cursor-pointer"
               >
                 <Google style={{ fontSize: "2rem" }} />

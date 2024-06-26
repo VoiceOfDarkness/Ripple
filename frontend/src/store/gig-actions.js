@@ -7,7 +7,7 @@ import exp from "constants";
 export const getGigs = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get("http://backend:8000/api/v1/gigs");
+      const response = await axios.get("http://localhost:8000/api/v1/gigs");
 
       dispatch(
         gigActions.setGig({
@@ -44,7 +44,7 @@ export const deleteGig = (id) => {
   return async (dispatch) => {
     try {
       const response = await api.delete(`gig/${id}`);
-
+      
       dispatch(uiMessage("Deleted successfully", undefined, "success"));
     } catch (error) {
       dispatch(

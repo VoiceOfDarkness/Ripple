@@ -68,7 +68,7 @@ const JobDetails = () => {
                   src={`${
                     gig?.freelancer?.user.user_image.includes("http")
                       ? ""
-                      : "http://backend:8000/app/media/"
+                      : "http://localhost:8000/app/media/"
                   }${gig?.freelancer?.user.user_image}`}
                 />
               </Avatar>
@@ -94,16 +94,15 @@ const JobDetails = () => {
           </div>
         </div>
       </header>
-      <section className="mb-8">
-        <h2 className="text-3xl font-bold text-purple-500">
-          Python Developer, Data Extraction Specialist
-        </h2>
-        <p className="mt-2">
-          Hello there! My name is Kawsar, and I'm your go-to Python developer. I
-          specialize in data extraction, web scraping, web automation, custom
-          scripts, API development, and other related services.
-        </p>
-      </section>
+      {gig.freelancer.overview && (
+        <section className="mb-8">
+          <h2 className="text-3xl font-bold text-purple-500">
+            About Freelancer
+          </h2>
+          <p className="mt-2">{gig.freelancer.overview}</p>
+        </section>
+      )}
+
       <section className="mb-8">
         <h2 className="text-3xl font-bold">About this Gig</h2>
         <p className="mt-2">{gig.description}</p>
@@ -119,7 +118,7 @@ const JobDetails = () => {
                 <CarouselItem key={index}>
                   <Card>
                     <img
-                      src={`http://backend:8000/app/media/${item.filename}`}
+                      src={`http://localhost:8000/app/media/${item.filename}`}
                       alt=""
                     />
                   </Card>
@@ -138,12 +137,6 @@ const JobDetails = () => {
             Order
           </Button>
         )}
-      </section>
-      <section className="mb-8">
-        <h2 className="font-bold text-3xl text-purple-500">
-          Programming language
-        </h2>
-        <p className="mt-2">Python</p>
       </section>
       <section className="mb-8">
         {user?.id !== gig?.freelancer.user.id && (

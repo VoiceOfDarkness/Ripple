@@ -15,6 +15,7 @@ export default function ProfileFormSection({ user }) {
         first_name: values.first_name,
         last_name: values.last_name,
         user_name: values.user_name,
+        overview: values.overview,
       },
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -27,13 +28,23 @@ export default function ProfileFormSection({ user }) {
   return (
     <div className="mb-2 text-black" data-id="element-24">
       <Formik
-        initialValues={{
-          user_name: user.profile?.user_name || "",
-          first_name: user.profile?.first_name || "",
-          last_name: user.profile?.last_name || "",
-        }}
+        initialValues={
+          user.profile?.is_freelancer
+            ? {
+                user_name: user.profile?.user_name || "",
+                first_name: user.profile?.first_name || "",
+                last_name: user.profile?.last_name || "",
+                overview: user.profile?.overview || "",
+              }
+            : {
+                user_name: user.profile?.user_name || "",
+                first_name: user.profile?.first_name || "",
+                last_name: user.profile?.last_name || "",
+              }
+        }
         onSubmit={handleSubmit}
         enableReinitialize
+        key={user.profile?.is_freelancer}
       >
         {({ values, handleChange, handleBlur, isSubmitting }) => (
           <Form className="flex flex-col text-white gap-6">
@@ -67,11 +78,18 @@ export default function ProfileFormSection({ user }) {
               value={values.user_name}
               name="user_name"
             />
-            <Textarea
-              placeholder="Overview"
-              className="py-8 px-14 w-full text-xl bg-inputGray"
-              data-id="element-47"
-            />
+            {user.profile?.is_freelancer && (
+              <Textarea
+                placeholder="Overview"
+                className="py-8 px-14 w-full text-xl bg-inputGray"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.overview}
+                data-id="element-47"
+                name="overview"
+              />
+            )}
+
             <Button
               variant="outline"
               type="submit"
