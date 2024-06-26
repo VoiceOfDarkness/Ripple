@@ -63,7 +63,9 @@ export const ProfileGigsSection = ({ user }) => {
                 data-id="element-34"
               >
                 <img
-                  src={`http://localhost:8000/app/media/${item.images[0].filename}`}
+                  src={`${import.meta.env.VITE_APP_MEDIA_URL}${
+                    item.images[0].filename
+                  }`}
                   alt="Gig"
                   className="h-56"
                   data-id="element-35"
@@ -85,9 +87,7 @@ export const ProfileGigsSection = ({ user }) => {
                     <Star />
                     {Number(item.rating).toFixed(1)}({item.num_reviews})
                   </span>
-                  <button
-                    onClick={() => handleDeleteGig(item.id)}
-                  >
+                  <button onClick={() => handleDeleteGig(item.id)}>
                     Delete gig
                   </button>
                 </div>

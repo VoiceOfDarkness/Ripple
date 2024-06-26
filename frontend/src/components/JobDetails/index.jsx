@@ -68,7 +68,7 @@ const JobDetails = () => {
                   src={`${
                     gig?.freelancer?.user.user_image.includes("http")
                       ? ""
-                      : "http://localhost:8000/app/media/"
+                      : import.meta.env.VITE_APP_MEDIA_URL
                   }${gig?.freelancer?.user.user_image}`}
                 />
               </Avatar>
@@ -118,7 +118,9 @@ const JobDetails = () => {
                 <CarouselItem key={index}>
                   <Card>
                     <img
-                      src={`http://localhost:8000/app/media/${item.filename}`}
+                      src={`${import.meta.env.VITE_APP_MEDIA_URL}${
+                        item.filename
+                      }`}
                       alt=""
                     />
                   </Card>

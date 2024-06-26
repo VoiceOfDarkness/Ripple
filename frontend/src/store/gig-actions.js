@@ -2,12 +2,14 @@ import api from "../helpers/request";
 import { gigActions } from "./gig-slice";
 import axios from "axios";
 import { uiMessage } from "../helpers/uiMessage";
-import exp from "constants";
+import process from "process";
 
 export const getGigs = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/gigs");
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_API_URL}gigs`
+      );
 
       dispatch(
         gigActions.setGig({
@@ -44,7 +46,7 @@ export const deleteGig = (id) => {
   return async (dispatch) => {
     try {
       const response = await api.delete(`gig/${id}`);
-      
+
       dispatch(uiMessage("Deleted successfully", undefined, "success"));
     } catch (error) {
       dispatch(

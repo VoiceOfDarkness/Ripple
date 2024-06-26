@@ -70,7 +70,7 @@ export const ProfileSection = ({ user }) => {
                 src={`${
                   user.profile?.user_image.includes("http")
                     ? ""
-                    : "http://localhost:8000/app/media/"
+                    : import.meta.env.VITE_APP_MEDIA_URL
                 }${user.profile?.user_image}`}
                 alt="Profile"
                 data-id="element-4"

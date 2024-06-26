@@ -52,7 +52,7 @@ export default function ChatPage() {
     };
 
     getChat();
-  }, [dispatch, activeChat]);
+  });
 
   useEffect(() => {
     dispatch(getProfile());
@@ -193,7 +193,7 @@ export default function ChatPage() {
                       src={`${
                         user.user_data?.user_image.includes("http")
                           ? ""
-                          : "http://localhost:8000/app/media/"
+                          : import.meta.env.VITE_APP_MEDIA_URL
                       }${user.user_data.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />
@@ -229,7 +229,7 @@ export default function ChatPage() {
                   src={`${
                     userData?.user_image.includes("http")
                       ? ""
-                      : "http://localhost:8000/app/media/"
+                      : import.meta.env.VITE_APP_MEDIA_URL
                   }${userData?.user_image}`}
                   className=" w-16 h-16 rounded-full"
                 />
