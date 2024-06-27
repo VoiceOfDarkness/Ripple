@@ -75,6 +75,7 @@ class Gigs(BaseModel):
     id: int
     title: str
     price: Decimal
+    description: str
     seller_id: int
     freelancer: "FreelancerNoRelation"
     category: "Category"

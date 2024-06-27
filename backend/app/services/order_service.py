@@ -4,7 +4,7 @@ from app.services.base_service import BaseService
 from fastapi.responses import JSONResponse
 
 from app.schemas.user import User
-from app.schemas.order import CreateOrder
+from app.schemas.order import CreateOrder, UpdateOrder
 
 
 class OrderService(BaseService):
@@ -39,3 +39,8 @@ class OrderService(BaseService):
         if user.is_hire_manager:
             hire_manager = await self.hire_manager_repository.get_by_user_id(user.id)
             return await self.order_repository.get_by_hire_manager(hire_manager.id)
+
+    async def update_order(self, order_id: int, order: UpdateOrder, user: User):
+        await self.order_repository.update(order_id, order, user)
+
+        return JSONResponse(content={"message": "Order updated"}, status_code=200)

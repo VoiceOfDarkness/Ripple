@@ -38,4 +38,4 @@ async def update_order(
     current_user: User = Depends(get_current_user),
     service: OrderService = Depends(Provide[Container.order_service]),
 ):
-    return service.update(order_id, order)
+    return await service.update_order(order_id, order, current_user)
