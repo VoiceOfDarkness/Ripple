@@ -70,7 +70,7 @@ export default function MenuNavBar() {
                     src={`${
                       user.profile?.user_image.includes("http")
                         ? ""
-                        : "http://localhost:8000/app/media/"
+                        : import.meta.env.VITE_APP_MEDIA_URL
                     }${user.profile?.user_image}`}
                     className=" w-16 h-16 rounded-full"
                   />
@@ -182,7 +182,7 @@ export default function MenuNavBar() {
                       src={`${
                         user.profile?.user_image.includes("http")
                           ? ""
-                          : "http://localhost:8000/app/media/"
+                          : import.meta.env.VITE_APP_MEDIA_URL
                       }${user.profile?.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

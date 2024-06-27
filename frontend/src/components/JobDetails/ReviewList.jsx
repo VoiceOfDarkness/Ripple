@@ -27,7 +27,7 @@ export default function ReviewList({ reviews, user_id }) {
                       src={`${
                         item.user.user_image.includes("http")
                           ? ""
-                          : "http://localhost:8000/app/media/"
+                          : import.meta.env.VITE_APP_MEDIA_URL
                       }${item.user.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

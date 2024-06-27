@@ -9,7 +9,7 @@ export const login = (email, password, navigate, redirectTo) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-in",
+        `${import.meta.env.VITE_APP_API_URL}auth/sign-in`,
         {
           email: email,
           password: password,
@@ -38,7 +38,7 @@ export const createUser = (userName, password, email, navigate) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up",
+        `${import.meta.env.VITE_APP_API_URL}auth/sign-up`,
         {
           username: userName,
           email: email,
@@ -70,7 +70,7 @@ export const verifyUser = (code) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up/verify-code",
+        `${import.meta.env.VITE_APP_API_URL}auth/sign-up/verify-code`,
         code
       );
 
@@ -98,7 +98,7 @@ export const resendCode = () => {
     try {
       const email = Cookies.get("temp_email");
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/sign-up/resend-code",
+        `${import.meta.env.VITE_APP_API_URL}auth/sign-up/resend-code`,
         email
       );
       dispatch(authActions.clearErrorMessage());
