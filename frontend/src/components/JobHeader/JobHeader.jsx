@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../helpers/request";
 import { changeRole } from "../../store/auth-actions";
 import { searchGig } from "@/store/gig-actions";
+import { MEDIA } from "@/helpers/config";
 
 export default function JobHeader() {
   const [isTokenExist, setIsTokenExist] = useState(
@@ -123,7 +124,7 @@ export default function JobHeader() {
                       src={`${
                         user.profile?.user_image.includes("http")
                           ? ""
-                          : import.meta.env.VITE_APP_MEDIA_URL
+                          : MEDIA
                       }${user.profile?.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

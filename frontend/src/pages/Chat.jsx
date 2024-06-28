@@ -12,6 +12,7 @@ import { getDate } from "@/helpers/date";
 import { useProfile, useChat } from "@/hooks/useChat";
 import { useMessages } from "@/hooks/useMessages";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { MEDIA } from "@/helpers/config";
 
 export default function ChatPage() {
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -208,9 +209,7 @@ export default function ChatPage() {
                   {user.user_data?.user_image ? (
                     <img
                       src={`${
-                        user.user_data?.user_image.includes("http")
-                          ? ""
-                          : import.meta.env.VITE_APP_MEDIA_URL
+                        user.user_data?.user_image.includes("http") ? "" : MEDIA
                       }${user.user_data.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />
@@ -243,11 +242,9 @@ export default function ChatPage() {
               </button>
               {userData?.user_image ? (
                 <img
-                  src={`${
-                    userData?.user_image.includes("http")
-                      ? ""
-                      : import.meta.env.VITE_APP_MEDIA_URL
-                  }${userData?.user_image}`}
+                  src={`${userData?.user_image.includes("http") ? "" : MEDIA}${
+                    userData?.user_image
+                  }`}
                   className=" w-16 h-16 rounded-full"
                 />
               ) : (

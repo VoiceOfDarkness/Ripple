@@ -19,6 +19,7 @@ import {
 import Reviews from "./Review";
 import ReviewList from "./ReviewList";
 import { chatActions } from "@/store/chat-slice";
+import { MEDIA } from "@/helpers/config";
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -68,7 +69,7 @@ const JobDetails = () => {
                   src={`${
                     gig?.freelancer?.user.user_image.includes("http")
                       ? ""
-                      : import.meta.env.VITE_APP_MEDIA_URL
+                      : MEDIA
                   }${gig?.freelancer?.user.user_image}`}
                 />
               </Avatar>
@@ -118,7 +119,7 @@ const JobDetails = () => {
                 <CarouselItem key={index}>
                   <Card>
                     <img
-                      src={`${import.meta.env.VITE_APP_MEDIA_URL}${
+                      src={`${MEDIA}${
                         item.filename
                       }`}
                       alt=""

@@ -4,12 +4,13 @@ import Cookies from "js-cookie";
 import { uiMessage } from "../helpers/uiMessage";
 import api from "../helpers/request";
 import { profileActions } from "./profile-slice";
+import { API } from "@/helpers/config";
 
 export const login = (email, password, navigate, redirectTo) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}auth/sign-in`,
+        `${API}auth/sign-in`,
         {
           email: email,
           password: password,
@@ -39,7 +40,7 @@ export const createUser = (userName, password, email, navigate) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}auth/sign-up`,
+        `${API}auth/sign-up`,
         {
           username: userName,
           email: email,
@@ -71,7 +72,7 @@ export const verifyUser = (code) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}auth/sign-up/verify-code`,
+        `${API}auth/sign-up/verify-code`,
         code
       );
 
@@ -99,7 +100,7 @@ export const resendCode = () => {
     try {
       const email = Cookies.get("temp_email");
       const res = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}auth/sign-up/resend-code`,
+        `${API}auth/sign-up/resend-code`,
         email
       );
       dispatch(authActions.clearErrorMessage());

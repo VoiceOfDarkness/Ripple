@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Google } from "@mui/icons-material";
 import VerifyForm from "../components/LoginForm/VerifyForm/VerifyForm";
+import { API } from "@/helpers/config";
 
 export default function AuthPage() {
   const [params] = useSearchParams();
@@ -50,7 +51,7 @@ export default function AuthPage() {
               </p>
 
               <a
-                href={`${import.meta.env.VITE_APP_API_URL}auth/sign-in/google`}
+                href={`${API}auth/sign-in/google`}
                 className="flex justify-center gap-6 p-4 items-center border border-white w-1/2 rounded-xl hover:text-purple duration-200 hover:border-purple cursor-pointer"
               >
                 <Google style={{ fontSize: "2rem" }} />
