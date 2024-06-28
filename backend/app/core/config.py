@@ -9,11 +9,9 @@ from pydantic_settings import BaseSettings
 
 load_dotenv()
 
-ENV: str = ""
-
 
 class Settings(BaseSettings):
-    ENV: str = os.getenv("ENV", "dev")
+    ENV: str = os.getenv("DEV_ENV", True)
     API: str = os.getenv("API", "/api")
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "Ripple"
@@ -25,6 +23,8 @@ class Settings(BaseSettings):
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
 
     # front
+    if ENV:
+        FRONTEND_URL: str = os.getenv("FRONTEND_URL_DEV", "http://localhost:3000")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
     # media

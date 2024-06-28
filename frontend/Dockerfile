@@ -1,8 +1,13 @@
-FROM node:16-alpine
+FROM node:19-bullseye-slim
 
 WORKDIR /usr/src/app
+
 COPY package*.json ./
+
 RUN npm install
+
 COPY . .
 
-CMD [ "npm", "start" ]
+RUN npm run build
+
+CMD [ "npm", "run", "serve" ]

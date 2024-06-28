@@ -14,15 +14,15 @@ services:
       - db
       - redis
 
-  # frontend:
-  #   build: ./frontend
-  #   volumes:
-  #     - ./frontend:/app
-  #     - media:/app/media
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+      - media:/app/media
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
   db:
     image: postgres:13
@@ -60,6 +60,7 @@ services:
     command: -A app.tasks.email_service worker --loglevel=info
     volumes:
       - ./backend:/app
+    restart: unless-stopped
     depends_on:
       - backend
 
@@ -71,16 +72,6 @@ services:
     command: -A app.tasks.email_service beat --loglevel=info
     volumes:
       - ./backend:/app
-    depends_on:
-      - backend
-
-  nginx:
-    image: nginx:1.19
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - media:/app/media
-    ports:
-      - "80:80"
     depends_on:
       - backend
 
