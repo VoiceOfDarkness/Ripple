@@ -16,6 +16,8 @@ services:
 
   frontend:
     build: ./frontend
+    env_file:
+      - .env
     volumes:
       - ./frontend:/app
       - media:/app/media
