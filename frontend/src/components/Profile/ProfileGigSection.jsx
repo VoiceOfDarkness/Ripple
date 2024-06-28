@@ -63,7 +63,7 @@ export const ProfileGigsSection = ({ user }) => {
                 data-id="element-34"
               >
                 <img
-                  src={`${import.meta.env.VITE_APP_MEDIA_URL}${
+                  src={`${MEDIA}${
                     item.images[0].filename
                   }`}
                   alt="Gig"

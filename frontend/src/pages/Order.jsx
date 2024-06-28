@@ -12,7 +12,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrder } from "@/store/order-slice";
+import { getOrder, updateOrder } from "@/store/order-slice";
+import { getProfile } from "@/store/profile-slice";
 
 const OrdersPage = () => {
   const orders = useSelector((state) => state.order.orders);
@@ -21,11 +22,16 @@ const OrdersPage = () => {
 
   useEffect(() => {
     dispatch(getOrder());
-  }, [dispatch, user?.is_freelancer]);
+    dispatch(getProfile());
+  }, [dispatch, user.is_freelancer]);
 
-  const filteredOrders = user?.is_freelancer
+  const filteredOrders = user.profile?.is_freelancer
     ? orders.filter((item) => item.freelancer.user.id === user?.profile.id)
     : orders.filter((item) => item.hire_manager.user.id === user?.profile.id);
+
+  const handleChange = (order_id, status) => {
+    dispatch(updateOrder(order_id, status));
+  };
 
   return (
     <div
@@ -141,7 +147,22 @@ const OrdersPage = () => {
                   {item.total_price}
                 </TableCell>
                 <TableCell className="p-2" data-id="element-27">
-                  {item.status}
+                  {user.profile?.is_freelancer ? (
+                    <select
+                      className="bg-black"
+                      value={item.status}
+                      onChange={(e) => {
+                        handleChange(item.id, e.target.value);
+                      }}
+                    >
+                      <option value="pending">pending</option>
+                      <option value="in_progress">accepted</option>
+                      <option value="completed">completed</option>
+                      <option value="cancelled">cancelled</option>
+                    </select>
+                  ) : (
+                    item.status
+                  )}
                 </TableCell>
               </TableRow>
             ))

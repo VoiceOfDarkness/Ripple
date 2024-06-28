@@ -8,136 +8,154 @@ import { SmileIcon, SendIcon, ChevronLeft } from "lucide-react";
 import { getProfile } from "@/store/profile-slice";
 import EmojiPicker from "emoji-picker-react";
 import { chatActions } from "@/store/chat-slice";
+import { getDate } from "@/helpers/date";
+import { useProfile, useChat } from "@/hooks/useChat";
+import { useMessages } from "@/hooks/useMessages";
+import { useWebSocket } from "@/hooks/useWebSocket";
+import { MEDIA } from "@/helpers/config";
 
 export default function ChatPage() {
+  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  // const [messages, setMessages] = useState([]);
+  // const [allChat, setAllChat] = useState([]);
+  // const [socket, setSocket] = useState(null);
+  // const [activeChat, setActiveChat] = useState(null);
+
+  // const [userData, setUserData] = useState();
+  // const reciver = useSelector((state) => state.chat.reciver);
+  // const dispatch = useDispatch();
+  // const profile = useSelector((state) => state.profile.profile);
+  // const message = useRef();
+
+  // const getDate = (date = null) => {
+  //   const hours = date ? new Date(date) : new Date();
+  //   const minutes =
+  //     Number(hours.getMinutes()) / 10 <= 1
+  //       ? `0${hours.getMinutes()}`
+  //       : `${hours.getMinutes()}`;
+
+  //   return `${hours.getHours() + (date ? 4 : 0)}:${minutes}`;
+  // };
+
+  // const onEmojiClick = (emojiObject) => {
+  //   message.current.value += emojiObject.emoji;
+  // };
+
+  // useEffect(() => {
+  //   const getChat = async () => {
+  //     if (profile?.id && reciver) {
+  //       try {
+  //         const response = await api.post("/chat", {
+  //           user_id_2: reciver,
+  //         });
+  //         setActiveChat({ id: response.data.chat_id, user_id: reciver });
+  //         dispatch(chatActions.clearReciver());
+  //       } catch (error) {
+  //         console.error("Error fetching chat:", error);
+  //       }
+  //     }
+  //   };
+
+  //   getChat();
+  // });
+
+  // useEffect(() => {
+  //   dispatch(getProfile());
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   const getMessages = async () => {
+  //     if (activeChat) {
+  //       try {
+  //         const response = await api.get(`/chat/${activeChat.id}`);
+  //         const filteredData =
+  //           response.data.user_id_1 === profile.id
+  //             ? response.data.user2
+  //             : response.data.user1;
+
+  //         setUserData(filteredData);
+  //         const processedMessages = response.data.messages?.map((msg) => ({
+  //           content: msg.content,
+  //           type: msg.sender_id === profile.id ? "sent" : "received",
+  //           timestamp: getDate(msg.timestamp),
+  //         }));
+  //         setMessages(processedMessages);
+  //       } catch (error) {
+  //         console.error("Error fetching messages:", error);
+  //       }
+  //     }
+  //   };
+
+  //   const getAllChat = async () => {
+  //     try {
+  //       const response = await api.get(`/chat`);
+  //       if (profile?.id) {
+  //         const filteredData = response.data
+  //           .map((item) => {
+  //             if (item.user_id_1 === profile.id) {
+  //               return {
+  //                 id: item.id,
+  //                 user_id: item.user_id_2,
+  //                 user_data: item.user2,
+  //               };
+  //             } else if (item.user_id_2 === profile.id) {
+  //               return {
+  //                 id: item.id,
+  //                 user_id: item.user_id_1,
+  //                 user_data: item.user1,
+  //               };
+  //             }
+  //           })
+  //           .filter((item) => item !== null);
+  //         setAllChat(filteredData);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching all chats:", error);
+  //     }
+  //   };
+
+  //   getMessages();
+  //   getAllChat();
+  // }, [profile?.id, activeChat]);
+
+  // useEffect(() => {
+  //   if (activeChat?.id) {
+  //     const ws = new WebSocket(
+  //       `ws://localhost:8000/api/v1/ws?chat_id=${activeChat?.id}`
+  //     );
+
+  //     ws.onmessage = (event) => {
+  //       const newMessage = JSON.parse(event.data);
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         {
+  //           content: newMessage.content,
+  //           type: newMessage.sender_id === profile?.id ? "sent" : "received",
+  //           timestamp: getDate(),
+  //         },
+  //       ]);
+  //     };
+
+  //     setSocket(ws);
+
+  //     return () => {
+  //       ws.close();
+  //     };
+  //   }
+  // }, [profile?.id, activeChat]);
+
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [allChat, setAllChat] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [activeChat, setActiveChat] = useState(null);
-
-  const [userData, setUserData] = useState();
-  const reciver = useSelector((state) => state.chat.reciver);
-  const dispatch = useDispatch();
-  const profile = useSelector((state) => state.profile.profile);
   const message = useRef();
-
-  const getDate = (date = null) => {
-    const hours = date ? new Date(date) : new Date();
-    const minutes =
-      Number(hours.getMinutes()) / 10 <= 1
-        ? `0${hours.getMinutes()}`
-        : `${hours.getMinutes()}`;
-
-    return `${hours.getHours() + (date ? 4 : 0)}:${minutes}`;
-  };
+  const profile = useProfile();
+  const dispatch = useDispatch();
+  const reciver = useSelector((state) => state.chat.reciver);
+  const { activeChat, setActiveChat, allChat } = useChat(profile, reciver);
+  const { messages, setMessages, userData } = useMessages(activeChat, profile);
+  const socket = useWebSocket(activeChat, profile, setMessages);
 
   const onEmojiClick = (emojiObject) => {
     message.current.value += emojiObject.emoji;
   };
-
-  useEffect(() => {
-    const getChat = async () => {
-      if (profile?.id && reciver) {
-        try {
-          const response = await api.post("/chat", {
-            user_id_2: reciver,
-          });
-          setActiveChat({ id: response.data.chat_id, user_id: reciver });
-          dispatch(chatActions.clearReciver());
-        } catch (error) {
-          console.error("Error fetching chat:", error);
-        }
-      }
-    };
-
-    getChat();
-  });
-
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const getMessages = async () => {
-      if (activeChat) {
-        try {
-          const response = await api.get(`/chat/${activeChat.id}`);
-          const filteredData =
-            response.data.user_id_1 === profile.id
-              ? response.data.user2
-              : response.data.user1;
-
-          setUserData(filteredData);
-          const processedMessages = response.data.messages?.map((msg) => ({
-            content: msg.content,
-            type: msg.sender_id === profile.id ? "sent" : "received",
-            timestamp: getDate(msg.timestamp),
-          }));
-          setMessages(processedMessages);
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        }
-      }
-    };
-
-    const getAllChat = async () => {
-      try {
-        const response = await api.get(`/chat`);
-        if (profile?.id) {
-          const filteredData = response.data
-            .map((item) => {
-              if (item.user_id_1 === profile.id) {
-                return {
-                  id: item.id,
-                  user_id: item.user_id_2,
-                  user_data: item.user2,
-                };
-              } else if (item.user_id_2 === profile.id) {
-                return {
-                  id: item.id,
-                  user_id: item.user_id_1,
-                  user_data: item.user1,
-                };
-              }
-            })
-            .filter((item) => item !== null);
-          setAllChat(filteredData);
-        }
-      } catch (error) {
-        console.error("Error fetching all chats:", error);
-      }
-    };
-
-    getMessages();
-    getAllChat();
-  }, [profile?.id, activeChat]);
-
-  useEffect(() => {
-    if (activeChat?.id) {
-      const ws = new WebSocket(
-        `ws://localhost:8000/api/v1/ws?chat_id=${activeChat?.id}`
-      );
-
-      ws.onmessage = (event) => {
-        const newMessage = JSON.parse(event.data);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            content: newMessage.content,
-            type: newMessage.sender_id === profile?.id ? "sent" : "received",
-            timestamp: getDate(),
-          },
-        ]);
-      };
-
-      setSocket(ws);
-
-      return () => {
-        ws.close();
-      };
-    }
-  }, [profile?.id, activeChat]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -191,9 +209,7 @@ export default function ChatPage() {
                   {user.user_data?.user_image ? (
                     <img
                       src={`${
-                        user.user_data?.user_image.includes("http")
-                          ? ""
-                          : import.meta.env.VITE_APP_MEDIA_URL
+                        user.user_data?.user_image.includes("http") ? "" : MEDIA
                       }${user.user_data.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />
@@ -226,11 +242,9 @@ export default function ChatPage() {
               </button>
               {userData?.user_image ? (
                 <img
-                  src={`${
-                    userData?.user_image.includes("http")
-                      ? ""
-                      : import.meta.env.VITE_APP_MEDIA_URL
-                  }${userData?.user_image}`}
+                  src={`${userData?.user_image.includes("http") ? "" : MEDIA}${
+                    userData?.user_image
+                  }`}
                   className=" w-16 h-16 rounded-full"
                 />
               ) : (
@@ -244,7 +258,7 @@ export default function ChatPage() {
                 </p>
               </div>
             </div>
-            <ScrollArea className="flex-1 overflow-x-auto p-5 md:pr-3 ">
+            <ScrollArea className="flex-1 p-5 md:pr-3 ">
               {messages.map((item, index) => (
                 <div
                   key={index}
@@ -289,7 +303,7 @@ export default function ChatPage() {
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 />
                 {showEmojiPicker && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-[85%] mb-2">
                     <EmojiPicker onEmojiClick={onEmojiClick} />
                   </div>
                 )}
