@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/service-img-0.webp";
 import { Star } from "@mui/icons-material";
+import { MEDIA } from "@/helpers/config";
 
 const InfoTag = ({ children }) => {
   return (
@@ -32,7 +33,7 @@ export default function JobCard({ job }) {
     >
       <div className="w-full h-1/2 bg-inputGray">
         <img
-          src={`${import.meta.env.VITE_APP_MEDIA_URL}${job.images[0].filename}`}
+          src={`${MEDIA}${job.images[0].filename}`}
           // src={img}
           alt="gig-img"
         />

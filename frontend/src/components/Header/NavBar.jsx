@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getProfile } from "../../store/profile-slice";
 import { changeRole } from "../../store/auth-actions";
+import { MEDIA } from "@/helpers/config";
 
 export default function MenuNavBar() {
   const isTokenExist = Cookies.get("access_token") !== undefined;
@@ -70,7 +71,7 @@ export default function MenuNavBar() {
                     src={`${
                       user.profile?.user_image.includes("http")
                         ? ""
-                        : import.meta.env.VITE_APP_MEDIA_URL
+                        : MEDIA
                     }${user.profile?.user_image}`}
                     className=" w-16 h-16 rounded-full"
                   />
@@ -182,7 +183,7 @@ export default function MenuNavBar() {
                       src={`${
                         user.profile?.user_image.includes("http")
                           ? ""
-                          : import.meta.env.VITE_APP_MEDIA_URL
+                          : MEDIA
                       }${user.profile?.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

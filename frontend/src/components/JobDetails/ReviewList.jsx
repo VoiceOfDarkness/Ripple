@@ -4,6 +4,7 @@ import { MapPinIcon, StarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 import { deleteReview } from "@/store/review-slice";
+import { MEDIA } from "@/helpers/config";
 
 export default function ReviewList({ reviews, user_id }) {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export default function ReviewList({ reviews, user_id }) {
                       src={`${
                         item.user.user_image.includes("http")
                           ? ""
-                          : import.meta.env.VITE_APP_MEDIA_URL
+                          : MEDIA
                       }${item.user.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

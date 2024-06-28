@@ -2,14 +2,12 @@ import api from "../helpers/request";
 import { gigActions } from "./gig-slice";
 import axios from "axios";
 import { uiMessage } from "../helpers/uiMessage";
-import process from "process";
+import { API } from "@/helpers/config";
 
 export const getGigs = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}gigs`
-      );
+      const response = await axios.get(`${API}gigs`);
 
       dispatch(
         gigActions.setGig({
