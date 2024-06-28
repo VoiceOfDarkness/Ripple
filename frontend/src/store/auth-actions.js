@@ -28,6 +28,7 @@ export const login = (email, password, navigate, redirectTo) => {
       dispatch(
         authActions.setUser({
           errorMessage: error.response?.data?.detail,
+          status: error.response?.status,
         })
       );
     }

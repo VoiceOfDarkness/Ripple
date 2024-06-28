@@ -60,7 +60,6 @@ export default function GigsForm() {
       formData.append("files", selectedFiles[i]);
     }
 
-
     try {
       const response = await api.post("gigs/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -81,7 +80,12 @@ export default function GigsForm() {
   };
 
   return (
-    <Formik initialValues={initial} validate={validate} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initial}
+      validate={validate}
+      onSubmit={handleSubmit}
+      key={categories[0]?.id}
+    >
       {({ isSubmitting, values, handleChange, handleBlur, setFieldValue }) => (
         <Form className="max-w-full flex flex-col gap-10 p-8 bg-black text-white mt-10 mr-24 rounded-2xl">
           <div className="mb-6">

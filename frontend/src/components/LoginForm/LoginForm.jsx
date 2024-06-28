@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 import { createUser, login } from "../../store/auth-actions";
+import { resendCode } from "../../store/auth-actions";
 
 export default function LoginForm({ mode }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const errorMessages = useSelector((state) => state.auth.errorMessage);
+  const status = useSelector((state) => state.auth.status);
   const location = useLocation();
 
   useEffect(() => {
@@ -138,7 +140,22 @@ export default function LoginForm({ mode }) {
               component="div"
               className="text-red"
             />
-            {errorMessages && <p className="text-red">{errorMessages}</p>}
+            {status === 403 ? (
+              <p className="text-yellow-400">
+                {errorMessages}{" "}
+                <span
+                  className="text-linkBlue cursor-pointer"
+                  onClick={() => {
+                    dispatch(resendCode());
+                    navigate("?mode=verify");
+                  }}
+                >
+                  Send code again
+                </span>
+              </p>
+            ) : (
+              <p className="text-red">{errorMessages}</p>
+            )}
             <button
               type="submit"
               disabled={isSubmitting}

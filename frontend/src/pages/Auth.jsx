@@ -49,13 +49,13 @@ export default function AuthPage() {
                 </Link>
               </p>
 
-              <Link
-                to={`${import.meta.env.VITE_APP_API_URL}auth/sign-in/google`}
+              <a
+                href={`${import.meta.env.VITE_APP_API_URL}auth/sign-in/google`}
                 className="flex justify-center gap-6 p-4 items-center border border-white w-1/2 rounded-xl hover:text-purple duration-200 hover:border-purple cursor-pointer"
               >
                 <Google style={{ fontSize: "2rem" }} />
                 <p>Continue with Google</p>
-              </Link>
+              </a>
 
               <LoginForm mode={mode} />
             </div>

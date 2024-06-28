@@ -27,12 +27,24 @@ export const createOrder = (
   };
 };
 
+export const updateOrder = (order_id, status) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.patch(`order/${order_id}`, { status });
+    } catch (error) {
+      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
+    }
+  };
+};
+
 export const getOrder = () => {
   return async (dispatch) => {
     try {
       const response = await api.get("orders");
       dispatch(orderActions.setGig(response.data));
-    } catch (error) {}
+    } catch (error) {
+      dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
+    }
   };
 };
 

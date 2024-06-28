@@ -1,7 +1,4 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { getProfile } from "../store/profile-slice";
 import Cookies from "js-cookie";
 
 export default function ProtectedRoot() {

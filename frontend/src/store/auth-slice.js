@@ -5,10 +5,12 @@ export const authSlice = createSlice({
   initialState: {
     errorMessage: null,
     verify: null,
+    status: null,
   },
   reducers: {
     setUser(state, action) {
       state.errorMessage = action.payload.errorMessage;
+      state.status = action.payload.status;
       state.verify = action.payload.verify;
     },
     clearErrorMessage(state) {

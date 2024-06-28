@@ -44,7 +44,7 @@ export default function JobHeader() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    navigate(`?search=${searchQuery.current.value}`);
+    navigate(`/jobs?search=${searchQuery.current.value}`);
     searchQuery.current.value = "";
   };
 

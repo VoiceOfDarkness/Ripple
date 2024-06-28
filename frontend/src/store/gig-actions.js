@@ -2,7 +2,6 @@ import api from "../helpers/request";
 import { gigActions } from "./gig-slice";
 import axios from "axios";
 import { uiMessage } from "../helpers/uiMessage";
-import process from "process";
 
 export const getGigs = () => {
   return async (dispatch) => {

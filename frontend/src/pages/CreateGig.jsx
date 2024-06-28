@@ -10,9 +10,13 @@ export default function CreateGigPage() {
 
   useEffect(() => {
     dispatch(getProfile());
-  }, [dispatch, profile?.is_freelancer]);
+  }, [dispatch, profile.is_freelancer]);
 
-  return profile?.profile.is_freelancer ? (
+  if (!profile.profile) {
+    return <div>Loading...</div>;
+  }
+
+  return profile.profile?.is_freelancer ? (
     <GigsForm />
   ) : (
     <Navigate to="/profile" />
