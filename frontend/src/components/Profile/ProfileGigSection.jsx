@@ -1,22 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  CalendarIcon,
-  EditIcon,
-  MapPinIcon,
-  PlusIcon,
-  Share2Icon,
-  Star,
-} from "lucide-react";
+import { PlusIcon, Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { deleteGig, getGigs } from "@/store/gig-actions";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "../ui/scroll-area";
+import { MEDIA } from "@/helpers/config";
 
 export const ProfileGigsSection = ({ user }) => {
   const dispatch = useDispatch();
@@ -63,9 +52,7 @@ export const ProfileGigsSection = ({ user }) => {
                 data-id="element-34"
               >
                 <img
-                  src={`${MEDIA}${
-                    item.images[0].filename
-                  }`}
+                  src={`${MEDIA}${item.images[0].filename}`}
                   alt="Gig"
                   className="h-56"
                   data-id="element-35"

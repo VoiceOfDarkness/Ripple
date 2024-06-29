@@ -17,6 +17,7 @@ import api from "@/helpers/request";
 import { getProfile } from "@/store/profile-slice";
 import { useRef, useEffect } from "react";
 import ProfileFormSection from "./ProfileFormSection";
+import { MEDIA } from "@/helpers/config";
 
 export const ProfileSection = ({ user }) => {
   const fileInputRef = useRef();
@@ -68,9 +69,7 @@ export const ProfileSection = ({ user }) => {
             <Avatar className="mx-auto h-80 w-80" data-id="element-3">
               <AvatarImage
                 src={`${
-                  user.profile?.user_image.includes("http")
-                    ? ""
-                    : MEDIA
+                  user.profile?.user_image.includes("http") ? "" : MEDIA
                 }${user.profile?.user_image}`}
                 alt="Profile"
                 data-id="element-4"
