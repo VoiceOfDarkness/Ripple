@@ -37,6 +37,7 @@ class Message(SQLModel, table=True):
     sender_id: int = Field(index=True, foreign_key="user.id")
     content: str = Field(max_length=500)
     timestamp: datetime = Field(default_factory=datetime.now)
+    is_read: bool = Field(default=False)
     chat: "Chat" = Relationship(back_populates="messages")
     sender: "User" = Relationship(
         back_populates="sent_messages",
