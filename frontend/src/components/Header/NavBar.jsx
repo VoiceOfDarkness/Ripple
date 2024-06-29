@@ -41,11 +41,7 @@ export default function MenuNavBar() {
               Jobs
             </Link>
           </li>
-          <li>
-            <Link to="/" className="cursor-pointer">
-              Contact
-            </Link>
-          </li>
+
           {isTokenExist ? (
             <>
               <li
@@ -69,9 +65,7 @@ export default function MenuNavBar() {
                 {user.profile?.user_image ? (
                   <img
                     src={`${
-                      user.profile?.user_image.includes("http")
-                        ? ""
-                        : MEDIA
+                      user.profile?.user_image.includes("http") ? "" : MEDIA
                     }${user.profile?.user_image}`}
                     className=" w-16 h-16 rounded-full"
                   />
@@ -181,9 +175,7 @@ export default function MenuNavBar() {
                   {user.profile?.user_image ? (
                     <img
                       src={`${
-                        user.profile?.user_image.includes("http")
-                          ? ""
-                          : MEDIA
+                        user.profile?.user_image.includes("http") ? "" : MEDIA
                       }${user.profile?.user_image}`}
                       className=" w-16 h-16 rounded-full"
                     />

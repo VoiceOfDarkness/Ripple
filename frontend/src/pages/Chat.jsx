@@ -151,7 +151,7 @@ export default function ChatPage() {
   const reciver = useSelector((state) => state.chat.reciver);
   const { activeChat, setActiveChat, allChat } = useChat(profile, reciver);
   const { messages, setMessages, userData } = useMessages(activeChat, profile);
-  const socket = useWebSocket(activeChat, profile, setMessages);
+  const [socket, isActive] = useWebSocket(activeChat, profile, setMessages);
 
   const onEmojiClick = (emojiObject) => {
     message.current.value += emojiObject.emoji;
@@ -211,15 +211,15 @@ export default function ChatPage() {
                       src={`${
                         user.user_data?.user_image.includes("http") ? "" : MEDIA
                       }${user.user_data.user_image}`}
-                      className=" w-16 h-16 rounded-full"
+                      className=" w-20 h-20 rounded-full"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full flex justify-center items-center bg-purple">
+                    <div className="w-20 h-20 rounded-full flex justify-center items-center bg-purple">
                       {user.user_data.user_name[0].toUpperCase()}
                     </div>
                   )}
                   <div className="w-full pr-5">
-                    <p className="font-normal text-5xl md:text-xl">
+                    <p className="font-normal lg:text-3xl md:text-xl">
                       {user.user_data.user_name}
                     </p>
                   </div>
@@ -240,20 +240,27 @@ export default function ChatPage() {
               <button className="md:hidden" onClick={() => setActiveChat(null)}>
                 <ChevronLeft className="text-white w-20 h-20" />
               </button>
-              {userData?.user_image ? (
-                <img
-                  src={`${userData?.user_image.includes("http") ? "" : MEDIA}${
-                    userData?.user_image
+              <div className="relative">
+                {userData?.user_image ? (
+                  <img
+                    src={`${
+                      userData?.user_image.includes("http") ? "" : MEDIA
+                    }${userData?.user_image}`}
+                    className=" w-24 h-24 rounded-full"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex justify-center items-center bg-purple">
+                    {userData?.user_name[0].toUpperCase()}
+                  </div>
+                )}
+                <span
+                  className={`w-10 h-10 rounded-full inline-block border-4 border-black absolute right-0 bottom-[0px] ${
+                    isActive ? "bg-green-800" : "bg-red"
                   }`}
-                  className=" w-16 h-16 rounded-full"
-                />
-              ) : (
-                <div className="w-16 h-16 rounded-full flex justify-center items-center bg-purple">
-                  {userData?.user_name[0].toUpperCase()}
-                </div>
-              )}
-              <div>
-                <p className="font-bold text-4lg md:text-base">
+                ></span>
+              </div>
+              <div className="flex gap-3 items-center">
+                <p className="font-bold lg:text-3xl md:text-base">
                   {userData?.user_name}
                 </p>
               </div>
@@ -268,7 +275,7 @@ export default function ChatPage() {
                 >
                   <div className="flex flex-col">
                     <div
-                      className={`rounded-3xl md:text-base md:p-3 p-4 text-3xl ${
+                      className={`rounded-3xl md:text-base p-5 lg:text-3xl ${
                         item.type === "sent"
                           ? "bg-purple text-white"
                           : "bg-gray-700 text-white"

@@ -1,7 +1,6 @@
 // JobCard.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import img from "../../assets/service-img-0.webp";
 import { Star } from "@mui/icons-material";
 import { MEDIA } from "@/helpers/config";
 
