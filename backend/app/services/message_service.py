@@ -1,7 +1,6 @@
 from fastapi import WebSocketDisconnect, WebSocket, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-import logging
 import json
 import uuid
 
@@ -10,8 +9,6 @@ from app.repository.message_repository import MessageRepository
 from app.schemas.message import MessageCreate, ChatCreate
 from app.schemas.user import User
 from app.services.connection_manager import manager
-
-logger = logging.getLogger(__name__)
 
 
 class MessageService(BaseService):
@@ -44,7 +41,6 @@ class MessageService(BaseService):
     async def websocket_handler(
         self, websocket: WebSocket, chat_id: uuid.UUID, user: User
     ):
-        logger.info(f"AAAAAAAAAAA {user}")
         await manager.connect(websocket, user.id)
         try:
             while True:
@@ -53,19 +49,15 @@ class MessageService(BaseService):
                 content = message_data.get("content")
                 receiver_id = message_data.get("recipient_id")
 
-                logger.info(f"Received message: {content}")
-
                 if content:
                     message = MessageCreate(content=content, chat_id=chat_id)
                     await self.add_message(
                         user.id,
                         message,
                     )
-
                     await manager.send_personal_message(content, websocket, receiver_id)
 
         except WebSocketDisconnect:
-            manager.disconnect(user.id)
+            await manager.disconnect(user.id)
         except Exception as e:
-            logger.error(f"Error in websocket_handler: {e}")
             await websocket.close()

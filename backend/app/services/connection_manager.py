@@ -9,12 +9,12 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket, user_id: int):
         await websocket.accept()
         self.active_connections[user_id] = websocket
-        self.broadcast_user_status(user_id, is_online=True)
+        await self.broadcast_user_status(user_id, is_online=True)
 
     async def disconnect(self, user_id: int):
         if user_id in self.active_connections:
             del self.active_connections[user_id]
-            self.broadcast_user_status(user_id, is_online=False)
+            await self.broadcast_user_status(user_id, is_online=False)
 
     async def send_personal_message(
         self, message: str, websocket: WebSocket, user_id: int
