@@ -36,7 +36,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
 
   return (
     <m.div
-      className="fixed h-screen bg-black z-50 pr-24 rounded-r-3xl"
+      className="fixed h-full bg-black z-50 pr-24 rounded-r-3xl"
       initial={{ translate: 0 }}
       animate={isVisible ? { translate: 0 } : { translate: "-98.4%" }}
       transition={{ duration: 0.8 }}

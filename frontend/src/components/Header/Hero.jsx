@@ -16,7 +16,10 @@ export default function Hero() {
   return (
     <div
       className="w-full h-screen z-0 bg-no-repeat bg-cover bg-right flex items-center"
-      style={{ backgroundImage: `url(${heroImg})` }}
+      style={{
+        backgroundImage: `url("${heroImg}")`,
+        // backgroundImage: `url(${require("../../assets/hero-img.svg")})`,
+      }}
     >
       <Box className="reletive h-full text-white flex p-0">
         <div className="flex w-1/2 max-md:w-full flex-col justify-evenly h-full">

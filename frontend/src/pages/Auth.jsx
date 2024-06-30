@@ -2,7 +2,6 @@ import LoginForm from "../components/LoginForm/LoginForm";
 import signUpSvg from "../assets/SIGN-UP.svg";
 import man from "../assets/man.svg";
 import man2 from "../assets/man2.svg";
-import Box from "../layouts/Box";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Google } from "@mui/icons-material";
@@ -16,7 +15,7 @@ export default function AuthPage() {
 
   return (
     <div
-      style={{ backgroundImage: `url(${signUpSvg})` }}
+      style={{ backgroundImage: `url("${signUpSvg}")` }}
       className="h-screen bg-no-repeat bg-cover flex items-center w-full p-16"
     >
       <div className="lg:w-5/12 w-full flex flex-col justify-between h-full">

@@ -18,22 +18,21 @@ const OrdersPage = () => {
   const dispatch = useDispatch();
   const statuses = ["all", "pending", "in_progress", "completed", "cancelled"];
   const colors = {
-    pending: "yellow-500",
-    in_progress: "green-500",
-    completed: "blue-500",
-    cancelled: "red",
+    pending: "bg-yellow-500",
+    in_progress: "bg-green-500",
+    completed: "bg-blue-500",
+    cancelled: "bg-red",
   };
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
-    dispatch(getOrder());
     dispatch(getProfile());
-  }, [dispatch, user.is_freelancer, update]);
+    dispatch(getOrder());
+  }, [dispatch, user.is_freelancer]);
 
   const filteredOrders = user.profile?.is_freelancer
-    ? orders.filter((item) => item.freelancer.user.id === user?.profile.id)
-    : orders.filter((item) => item.hire_manager.user.id === user?.profile.id);
+    ? orders.filter((item) => item.freelancer.user.id === user.profile?.id)
+    : orders.filter((item) => item.hire_manager.user.id === user.profile?.id);
 
   const finalOrders =
     selectedStatus === "all"
@@ -42,12 +41,13 @@ const OrdersPage = () => {
 
   const handleChange = (order_id, status) => {
     dispatch(updateOrder(order_id, status));
-    setUpdate(!update);
   };
 
   const handleClick = (status) => {
     setSelectedStatus(status);
   };
+
+  console.log(orders);
 
   return (
     <div
@@ -148,11 +148,13 @@ const OrdersPage = () => {
                       <option value="completed">completed</option>
                       <option value="cancelled">cancelled</option>
                     </select>
+                  ) : item.status === "in_progress" ? (
+                    "accepted"
                   ) : (
-                    item.status === "in_progress" ? "accepted" : item.status
+                    item.status
                   )}
                   <div
-                    className={`w-3 h-3 rounded-full bg-${colors[item.status]}`}
+                    className={`w-3 h-3 rounded-full ${colors[item.status]}`}
                   ></div>
                 </TableCell>
               </TableRow>

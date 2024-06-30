@@ -10,7 +10,7 @@ export const createOrder = (
 ) => {
   return async (dispatch) => {
     try {
-      const response = await api.post("order", {
+      await api.post("order", {
         seller_id,
         gig_id,
         status,
@@ -30,7 +30,8 @@ export const createOrder = (
 export const updateOrder = (order_id, status) => {
   return async (dispatch) => {
     try {
-      const response = await api.patch(`order/${order_id}`, { status });
+      await api.patch(`order/${order_id}`, { status: status });
+      dispatch(getOrder());
     } catch (error) {
       dispatch(uiMessage(error.message, error.response?.data?.detail, "error"));
     }
