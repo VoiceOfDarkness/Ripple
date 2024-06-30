@@ -3,12 +3,15 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 import json
 import uuid
+import logging
 
 from app.services.base_service import BaseService
 from app.repository.message_repository import MessageRepository
 from app.schemas.message import MessageCreate, ChatCreate
 from app.schemas.user import User
 from app.services.connection_manager import manager
+
+logger = logging.getLogger(__name__)
 
 
 class MessageService(BaseService):
@@ -42,6 +45,7 @@ class MessageService(BaseService):
         self, websocket: WebSocket, chat_id: uuid.UUID, user: User
     ):
         await manager.connect(websocket, user.id)
+
         try:
             while True:
                 data = await websocket.receive_text()
@@ -49,15 +53,19 @@ class MessageService(BaseService):
                 content = message_data.get("content")
                 receiver_id = message_data.get("recipient_id")
 
+                logger.info(f"Received message from user {user.id}: {content}")
+
                 if content:
+                    await manager.send_personal_message(content, receiver_id)
                     message = MessageCreate(content=content, chat_id=chat_id)
-                    await self.add_message(
-                        user.id,
-                        message,
+                    await self.add_message(user.id, message)
+                    logger.info(
+                        f"Message stored in chat {chat_id}. Current connections: {manager.active_connections}"
                     )
-                    await manager.send_personal_message(content, websocket, receiver_id)
 
         except WebSocketDisconnect:
+            logger.info(f"User {user.id} left the chat")
             await manager.disconnect(user.id)
         except Exception as e:
+            logger.error(f"Error: {e}")
             await websocket.close()

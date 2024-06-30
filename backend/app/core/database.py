@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import (
 
 class Database:
     def __init__(self, db_url: str) -> None:
-        self._engine = create_async_engine(db_url, echo=True)
+        self._engine = create_async_engine(db_url)
         self._session_factory = async_scoped_session(
             async_sessionmaker(
                 autocommit=False,

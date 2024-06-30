@@ -1,34 +1,42 @@
 from fastapi import WebSocket
 from typing import Dict
+import logging
+import asyncio
+
+logger = logging.getLogger(__name__)
 
 
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[int, WebSocket] = {}
+        self.lock = asyncio.Lock()
 
     async def connect(self, websocket: WebSocket, user_id: int):
-        await websocket.accept()
-        self.active_connections[user_id] = websocket
-        await self.broadcast_user_status(user_id, is_online=True)
+        async with self.lock:
+            await websocket.accept()
+            self.active_connections[user_id] = websocket
+            logger.info(
+                f"User {user_id} connected. Current connections: {self.active_connections}"
+            )
 
     async def disconnect(self, user_id: int):
-        if user_id in self.active_connections:
-            del self.active_connections[user_id]
-            await self.broadcast_user_status(user_id, is_online=False)
+        async with self.lock:
+            if user_id in self.active_connections:
+                del self.active_connections[user_id]
+                logger.info(
+                    f"User {user_id} disconnected. Current connections: {self.active_connections}"
+                )
 
-    async def send_personal_message(
-        self, message: str, websocket: WebSocket, user_id: int
-    ):
-        if user_id in self.active_connections:
-            websocket = self.active_connections[user_id]
-            data = {"content": message}
-            await websocket.send_json(data)
-
-    async def broadcast_user_status(self, user_id: int, is_online: bool):
-        status_message = {"user_id": user_id, "is_online": is_online}
-        for connection_user_id, websocket in self.active_connections.items():
-            if connection_user_id != user_id:
-                await websocket.send_json(status_message)
+    async def send_personal_message(self, message: str, user_id: int):
+        async with self.lock:
+            logger.info(
+                f"Sending message to user {user_id}. Current connections: {self.active_connections}"
+            )
+            websocket = self.active_connections.get(user_id)
+            if websocket:
+                data = {"content": message}
+                logger.info(f"Message to user {user_id}: {data['content']}")
+                await websocket.send_json(data)
 
 
 manager = ConnectionManager()
