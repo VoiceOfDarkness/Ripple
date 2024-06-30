@@ -1,4 +1,4 @@
-import { act, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getDate } from "@/helpers/date";
 
 export const useWebSocket = (activeChat, profile, setMessages) => {

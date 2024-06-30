@@ -27,16 +27,6 @@ export default function MenuNavBar() {
       <div className="max-md:hidden">
         <ul className="flex gap-14 items-center font-semibold text-3xl">
           <li>
-            <Link to="/" className="cursor-pointer">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="cursor-pointer">
-              About
-            </Link>
-          </li>
-          <li>
             <Link to="jobs" className="cursor-pointer">
               Jobs
             </Link>

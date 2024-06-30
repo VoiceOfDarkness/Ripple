@@ -51,7 +51,7 @@ export default function ProfileFormSection({ user }) {
             <Input
               type="text"
               placeholder="First Name"
-              className="py-8 px-14 w-full text-xl bg-inputGray"
+              className="py-8 px-14 w-full text-xl placeholder:text-white placeholder:opacity-40 bg-inputGray"
               data-id="element-25"
               value={values.first_name}
               onChange={handleChange}
@@ -61,7 +61,7 @@ export default function ProfileFormSection({ user }) {
             <Input
               type="text"
               placeholder="Last Name"
-              className="py-8 px-14 w-full text-xl bg-inputGray"
+              className="py-8 px-14 w-full text-xl placeholder:text-white placeholder:opacity-40 bg-inputGray"
               data-id="element-26"
               value={values.last_name}
               name="last_name"
@@ -71,7 +71,7 @@ export default function ProfileFormSection({ user }) {
             <Input
               type="text"
               placeholder="Username"
-              className="py-8 px-14 w-full text-xl bg-inputGray"
+              className="py-8 px-14 w-full text-xl placeholder:text-white placeholder:opacity-40 bg-inputGray"
               data-id="element-27"
               onChange={handleChange}
               onBlur={handleBlur}
@@ -81,7 +81,7 @@ export default function ProfileFormSection({ user }) {
             {user.profile?.is_freelancer && (
               <Textarea
                 placeholder="Overview"
-                className="py-8 px-14 w-full text-xl bg-inputGray"
+                className="py-8 px-14 w-full text-xl placeholder:text-white placeholder:opacity-40 bg-inputGray"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.overview}

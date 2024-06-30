@@ -39,9 +39,20 @@ export default function GigsForm() {
 
   const validate = (values) => {
     const errors = {};
-    if (!values.title) errors.title = "Required";
+    if (!values.title) {
+      errors.title = "Required";
+    } else if (values.title.length > 80) {
+      errors.title = "Title must be less than 80 characters";
+    }
+
     if (!values.description) errors.description = "Required";
-    if (!values.price) errors.price = "Required";
+
+    if (!values.price) {
+      errors.price = "Required";
+    } else if (values.price > 10000) {
+      errors.price = "Price must be less than 10000";
+    }
+
     if (!values.date) errors.date = "Required";
 
     return errors;
@@ -103,7 +114,7 @@ export default function GigsForm() {
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="I will do something I'm really good at"
-              className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full border-none text-2xl"
+              className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white placeholder:opacity-40 focus:border-2 focus:outline-none w-full border-none text-2xl"
             />
             {/* <span className="text-gray-500">0 / 80 max</span> */}
             <ErrorMessage name="title" component="div" className="text-red" />
@@ -118,7 +129,7 @@ export default function GigsForm() {
                 as="select"
                 name="category"
                 placeholder="Category"
-                className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
+                className="bg-inputBack py-8 px-14 rounded-xl focus:border-2 focus:outline-none w-full"
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -139,7 +150,7 @@ export default function GigsForm() {
               value={values.description}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="bg-inputBack py-8 px-14 rounded-xl text-2xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full border-none"
+              className="bg-inputBack py-8 px-14 rounded-xl text-2xl placeholder:text-white placeholder:opacity-40 focus:border-purple focus:border-2 focus:outline-none w-full border-none"
             />
             <ErrorMessage
               name="description"
@@ -157,7 +168,7 @@ export default function GigsForm() {
               onBlur={handleBlur}
               type="number"
               placeholder="Enter price"
-              className="bg-inputBack py-8 px-14 text-2xl rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full border-none"
+              className="bg-inputBack py-12 px-14 text-2xl rounded-xl placeholder:text-white placeholder:opacity-40 focus:border-purple focus:border-2 focus:outline-none w-full border-none"
             />
             <ErrorMessage name="price" component="div" className="text-red" />
           </div>
@@ -173,7 +184,7 @@ export default function GigsForm() {
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="Enter delivery time in days"
-              className="bg-inputBack py-8 px-14 text-2xl rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full border-none"
+              className="bg-inputBack py-12 px-14 text-2xl rounded-xl placeholder:text-white placeholder:opacity-40 focus:border-purple focus:border-2 focus:outline-none w-full border-none"
             />
             <ErrorMessage name="date" component="div" className="text-red" />
           </div>
@@ -182,7 +193,7 @@ export default function GigsForm() {
             <p className="mb-2">Upload images that represent your service.</p>
             <input
               type="file"
-              className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
+              className="bg-inputBack py-8 px-14 rounded-xl focus:border-purple focus:border-2 focus:outline-none w-full"
               name="files"
               placeholder="File"
               multiple
@@ -206,100 +217,4 @@ export default function GigsForm() {
       )}
     </Formik>
   );
-}
-
-{
-  /* <Formik initialValues={initial} validate={validate} onSubmit={handleSubmit}>
-{({ isSubmitting, values, handleChange, handleBlur, setFieldValue }) => (
-  <Form
-    className="text-white flex flex-col gap-6 mt-10 mr-24"
-    encType="multipart/form-data"
-  >
-    <Field
-      type="text"
-      name="title"
-      value={values.title}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      placeholder="Write Title"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none"
-    />
-    <ErrorMessage name="title" component="div" className="text-red" />
-
-    <Field
-      as="textarea"
-      name="description"
-      value={values.description}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      placeholder="Description"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none"
-    />
-    <ErrorMessage
-      name="description"
-      component="div"
-      className="text-red"
-    />
-
-    <Field
-      as="select"
-      name="category"
-      placeholder="Category"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
-      onChange={handleChange}
-      onBlur={handleBlur}
-    >
-      {categories.map((category) => (
-        <option value={category.id} key={category.id}>
-          {category.name}
-        </option>
-      ))}
-    </Field>
-    <ErrorMessage name="category" component="div" className="text-red" />
-
-    <Field
-      type="number"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
-      name="price"
-      placeholder="Price"
-      onChange={handleChange}
-      onBlur={handleBlur}
-      min="0"
-    />
-    <ErrorMessage name="price" component="div" className="text-red" />
-
-    <Field
-      type="number"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
-      name="date"
-      placeholder="Day"
-      onChange={handleChange}
-      onBlur={handleBlur}
-    />
-    <ErrorMessage name="date" component="div" className="text-red" />
-
-    <input
-      type="file"
-      className="bg-inputBack py-8 px-14 rounded-xl placeholder:text-white focus:border-purple focus:border-2 focus:outline-none w-full"
-      name="files"
-      placeholder="File"
-      multiple
-      onChange={(event) => {
-        handleFileChange(event);
-        setFieldValue("files", event.currentTarget.files);
-      }}
-    />
-
-    <button
-      type="submit"
-      disabled={isSubmitting}
-      className={`bg-buttonPruple rounded-full p-8 w-1/2 self-center ${
-        isSubmitting ? "opacity-75" : ""
-      } hover:opacity-80 duration-150`}
-    >
-      Create gig
-    </button>
-  </Form>
-)}
-</Formik> */
 }

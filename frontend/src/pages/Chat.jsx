@@ -153,6 +153,16 @@ export default function ChatPage() {
   const { messages, setMessages, userData } = useMessages(activeChat, profile);
   const [socket, isActive] = useWebSocket(activeChat, profile, setMessages);
 
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView();
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const onEmojiClick = (emojiObject) => {
     message.current.value += emojiObject.emoji;
   };
@@ -265,7 +275,7 @@ export default function ChatPage() {
                 </p>
               </div>
             </div>
-            <ScrollArea className="flex-1 p-5 md:pr-3 ">
+            <ScrollArea className="flex-1 p-5 md:pr-3">
               {messages.map((item, index) => (
                 <div
                   key={index}
@@ -293,6 +303,7 @@ export default function ChatPage() {
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </ScrollArea>
             <form
               className="flex items-center relative space-x-10 mr-6 ml-6 mb-3 mt-4"

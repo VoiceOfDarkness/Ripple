@@ -90,7 +90,6 @@ const JobDetails = () => {
                 <GlobeIcon className="w-8 h-8" />
                 <span className="ml-1">I speak Azerbaijani, English</span>
               </div>
-              <div className="text-gray-500">591 orders completed</div>
             </div>
           </div>
         </div>
@@ -118,12 +117,7 @@ const JobDetails = () => {
               {gig?.images?.map((item, index) => (
                 <CarouselItem key={index}>
                   <Card>
-                    <img
-                      src={`${MEDIA}${
-                        item.filename
-                      }`}
-                      alt=""
-                    />
+                    <img src={`${MEDIA}${item.filename}`} alt="" />
                   </Card>
                 </CarouselItem>
               ))}

@@ -15,6 +15,7 @@ import MyJobPage from "./pages/MyWork";
 import { useEffect } from "react";
 import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFound";
+import Payment from "./pages/Payment";
 
 function App() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function App() {
             <Route path="/mywork" element={<MyJobPage />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
+          <Route path="/payment" element={<Payment />} />
         </Route>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="*" element={<NotFoundPage />} />

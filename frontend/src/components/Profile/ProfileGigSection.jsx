@@ -47,14 +47,14 @@ export const ProfileGigsSection = ({ user }) => {
           >
             {filteredGigs.map((item) => (
               <div
-                className="rounded-lg bg-gray-900 p-4 shadow-md"
+                className="rounded-lg flex flex-col bg-gray-900 p-6 shadow-md"
                 key={item.id}
                 data-id="element-34"
               >
                 <img
                   src={`${MEDIA}${item.images[0].filename}`}
                   alt="Gig"
-                  className="h-56"
+                  className="h-[15rem] object-cover"
                   data-id="element-35"
                 />
                 <p className="mt-2 text-white" data-id="element-36">
@@ -74,10 +74,10 @@ export const ProfileGigsSection = ({ user }) => {
                     <Star />
                     {Number(item.rating).toFixed(1)}({item.num_reviews})
                   </span>
-                  <button onClick={() => handleDeleteGig(item.id)}>
-                    Delete gig
-                  </button>
                 </div>
+                <button className="p-3 bg-gray-700 mt-4 flex-grow-0 rounded-xl" onClick={() => handleDeleteGig(item.id)}>
+                  Delete gig
+                </button>
               </div>
             ))}
             <Link

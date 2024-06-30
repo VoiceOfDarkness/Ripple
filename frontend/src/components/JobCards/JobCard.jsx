@@ -27,14 +27,14 @@ export default function JobCard({ job }) {
 
   return (
     <div
-      className="bg-black w-full h-max shadow-md rounded-3xl cursor-pointer overflow-hidden"
+      className="bg-black w-full shadow-md rounded-3xl cursor-pointer overflow-hidden"
       onClick={handleClick}
     >
-      <div className="w-full h-1/2 bg-inputGray">
+      <div className="w-full h-[23rem] bg-inputGray">
         <img
           src={`${MEDIA}${job.images[0].filename}`}
-          // src={img}
           alt="gig-img"
+          className="w-full h-full object-cover"
         />
       </div>
       <div className="p-5">
@@ -48,18 +48,9 @@ export default function JobCard({ job }) {
           <p>({job.num_reviews})</p>
         </div>
         <div className="flex mt-10 gap-10">
-          {/* {job.isNew && (
-          <span className="bg-red text-white py-1 px-3 rounded-3xl">New</span>
-        )}
-        {job.isFeatured && (
-          <span className="bg-purple text-white py-1 px-3 rounded-3xl">
-            Featured
-          </span>
-        )} */}
           <p>{job.category.name}</p>
         </div>
         <div className="flex w-full justify-between content-between mt-10">
-          {/* <p className="text-PlaceHolderGray">{job.postedAt} minute ago</p> */}
           <p className="text-PlaceHolderGray">From ${job.price}</p>
         </div>
       </div>

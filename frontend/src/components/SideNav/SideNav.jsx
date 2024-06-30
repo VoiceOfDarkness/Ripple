@@ -1,6 +1,7 @@
 import AnnouncementsIcon from "../Icons/AnnouncementsIcon";
 import MyWorkIcon from "../Icons/MyWorkIcon";
 import { ShoppingCart } from "lucide-react";
+import { Checklist } from "@mui/icons-material";
 import ChatIcon from "../Icons/ChatIcon";
 import MyProfileIcon from "../Icons/MyProfileIcon";
 import PaymentIcon from "../Icons/PaymentIcon";
@@ -27,7 +28,7 @@ export default function SideNav({ isVisible, setIsVisible }) {
   const menu = [
     ["Jobs", <AnnouncementsIcon />, "/jobs"],
     isTokenExist && ["My Work", <MyWorkIcon />, "/mywork"],
-    ["Orders", <ShoppingCart />, "/orders"],
+    ["Orders", <Checklist style={{fontSize: "2.5rem"}}/>, "/orders"],
     ["Chat", <ChatIcon />, "/chat"],
     ["My profile", <MyProfileIcon />, "/profile"],
     ["Payment Info", <PaymentIcon />, "/payment"],
