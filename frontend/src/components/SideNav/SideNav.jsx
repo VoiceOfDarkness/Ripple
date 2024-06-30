@@ -1,15 +1,13 @@
 import AnnouncementsIcon from "../Icons/AnnouncementsIcon";
 import MyWorkIcon from "../Icons/MyWorkIcon";
-import StatisticIcon from "../Icons/StatisticIcon";
+import { ShoppingCart } from "lucide-react";
 import ChatIcon from "../Icons/ChatIcon";
 import MyProfileIcon from "../Icons/MyProfileIcon";
 import PaymentIcon from "../Icons/PaymentIcon";
-import { Settings } from "@mui/icons-material";
 import HelpIcon from "../Icons/HelpIcon";
 import LogOutIcon from "../Icons/LogOutIcon";
 import StarShape from "../ui/StarShape";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
 
 import { motion as m } from "framer-motion";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -29,11 +27,10 @@ export default function SideNav({ isVisible, setIsVisible }) {
   const menu = [
     ["Jobs", <AnnouncementsIcon />, "/jobs"],
     isTokenExist && ["My Work", <MyWorkIcon />, "/mywork"],
-    ["Statistics", <StatisticIcon />, "/orders"],
+    ["Orders", <ShoppingCart />, "/orders"],
     ["Chat", <ChatIcon />, "/chat"],
     ["My profile", <MyProfileIcon />, "/profile"],
     ["Payment Info", <PaymentIcon />, "/payment"],
-    ["Settings", <Settings style={{ fontSize: "2.5rem" }} />, "/settings"],
   ].filter(Boolean);
 
   return (
