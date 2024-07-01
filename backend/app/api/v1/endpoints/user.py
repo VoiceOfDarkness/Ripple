@@ -10,15 +10,6 @@ user_router = APIRouter(
 )
 
 
-@user_router.get("/{user_id}", response_model=FreelancerResponse)
-@inject
-async def get_freelancer(
-    user_id: int,
-    service: UserService = Depends(Provide[Container.user_service]),
-):
-    return await service.get_freelancer(user_id)
-
-
 @user_router.get("/profile", response_model=User)
 @inject
 async def get_profile(
@@ -26,6 +17,15 @@ async def get_profile(
     service: UserService = Depends(Provide[Container.user_service]),
 ):
     return await service.get_profile(current_user)
+
+
+@user_router.get("/{user_id}", response_model=FreelancerResponse)
+@inject
+async def get_freelancer(
+    user_id: int,
+    service: UserService = Depends(Provide[Container.user_service]),
+):
+    return await service.get_freelancer(user_id)
 
 
 @user_router.patch("/profile", status_code=status.HTTP_200_OK)
