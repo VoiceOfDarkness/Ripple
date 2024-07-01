@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFound";
 import Payment from "./pages/Payment";
+import UserDetails from "./pages/UserDetails";
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function App() {
         <Route element={<JobMainLayout />}>
           <Route path="/jobs" element={<JobMain />} />
           <Route path="/job/:jobId" element={<JobDetails />} />
+          <Route path="/user/:userId" element={<UserDetails />} />
           <Route element={<ProtectedRoot />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/orders" element={<OrdersPage />} />

@@ -3,7 +3,14 @@ import JobCard from "./JobCard";
 import { useEffect, useState } from "react";
 import { getCategories } from "../../store/category-actions";
 
-export default function JobCardsList({ jobs }) {
+import { CustomPagination } from "../Pagination/CustomPagination";
+
+export default function JobCardsList({
+  jobs,
+  currentPage,
+  setCurrentPage,
+  totalItems,
+}) {
   const [currentCategory, setCurrentCategory] = useState("");
   const categories = useSelector((state) => state.category.categories);
   const dispatch = useDispatch();
@@ -24,7 +31,7 @@ export default function JobCardsList({ jobs }) {
       {jobs.length === 0 ? (
         <div className="mt-32 text-6xl">Not found gig</div>
       ) : (
-        <>
+        <div className="relative">
           <div
             className="mt-24 mr-20 overflow-x-auto"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -70,7 +77,16 @@ export default function JobCardsList({ jobs }) {
               <JobCard key={job.id} job={job} />
             ))}
           </div>
-        </>
+          {totalItems > 10 && (
+            <div className="relative left-[45%] -translate-x-1/2 my-16">
+              <CustomPagination
+                totalItems={totalItems}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
+          )}
+        </div>
       )}
     </>
   );

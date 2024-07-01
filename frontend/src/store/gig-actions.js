@@ -4,10 +4,12 @@ import axios from "axios";
 import { uiMessage } from "../helpers/uiMessage";
 import { API } from "@/helpers/config";
 
-export const getGigs = () => {
+export const getGigs = (currentPage) => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`${API}gigs`);
+      const response = await axios.get(
+        `${API}gigs?page=${currentPage || 1}&size=10`
+      );
 
       dispatch(
         gigActions.setGig({

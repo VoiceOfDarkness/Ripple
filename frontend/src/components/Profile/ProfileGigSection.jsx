@@ -9,14 +9,14 @@ import { MEDIA } from "@/helpers/config";
 
 export const ProfileGigsSection = ({ user }) => {
   const dispatch = useDispatch();
-  const gigs = useSelector((state) => state.gigs.gigs) || [];
+  const gigs = useSelector((state) => state.gigs.gigs?.data) || [];
   const [updateCount, setUpdateCount] = useState(0); // Yeni state tanımı
 
   useEffect(() => {
     dispatch(getGigs());
   }, [dispatch, updateCount]); // updateCount değiştiğinde getGigs çağrılır
 
-  const filteredGigs = gigs?.filter(
+  const filteredGigs = gigs.filter(
     (gig) => gig?.freelancer.user.id === user.profile?.id
   );
 
@@ -75,7 +75,10 @@ export const ProfileGigsSection = ({ user }) => {
                     {Number(item.rating).toFixed(1)}({item.num_reviews})
                   </span>
                 </div>
-                <button className="p-3 bg-gray-700 mt-4 flex-grow-0 rounded-xl" onClick={() => handleDeleteGig(item.id)}>
+                <button
+                  className="p-3 bg-gray-700 mt-4 flex-grow-0 rounded-xl"
+                  onClick={() => handleDeleteGig(item.id)}
+                >
                   Delete gig
                 </button>
               </div>
