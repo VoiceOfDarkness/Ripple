@@ -6,6 +6,7 @@ from app.models.user import Freelancer
 from app.models.review import Review
 from app.repository.base_repository import BaseRepository
 from app.schemas.services import CreateGigs
+from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -57,6 +58,10 @@ class GigRepository(BaseRepository):
 
     async def get_all_paginated(self, page: int, per_page: int) -> Optional[List[Gigs]]:
         async with self._session_factory() as session:
+            total_stmt = select(func.count(Gigs.id))
+            total_result = await session.execute(total_stmt)
+            total = total_result.scalar()
+
             offset = (page - 1) * per_page
             stmt = (
                 select(Gigs)
@@ -70,7 +75,16 @@ class GigRepository(BaseRepository):
             )
             result = await session.execute(stmt)
             db_obj = result.scalars().all()
-            return db_obj
+
+            total_pages = (total + per_page - 1) // per_page
+
+            return {
+                "data": db_obj,
+                "current_page": page,
+                "page_size": per_page,
+                "total_items": total,
+                "total_pages": total_pages,
+            }
 
     async def get_by_id(self, gig_id: int):
         async with self._session_factory() as session:

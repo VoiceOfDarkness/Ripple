@@ -84,5 +84,13 @@ class Gigs(BaseModel):
     images: List["Image"]
 
 
+class PaginatedGigs(BaseModel):
+    data: List[Gigs]
+    current_page: int
+    page_size: int
+    total_items: int
+    total_pages: int
+
+
 class GigDetail(Gigs):
     reviews: List["Reviews"]

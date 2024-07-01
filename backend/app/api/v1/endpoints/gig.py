@@ -3,7 +3,7 @@ from typing import List
 
 from app.core.container import Container
 from app.core.dependencies import get_current_user
-from app.schemas.services import BaseGigs, Gigs, GigDetail
+from app.schemas.services import BaseGigs, Gigs, GigDetail, PaginatedGigs
 from app.schemas.user import User
 from app.services.gig_service import GigService
 from dependency_injector.wiring import Provide, inject
@@ -13,7 +13,7 @@ from pydantic import ValidationError
 gig_router = APIRouter(tags=["gigs"])
 
 
-@gig_router.get("/gigs", response_model=List[Gigs])
+@gig_router.get("/gigs", response_model=PaginatedGigs)
 @inject
 async def get_gigs(
     page: int = 1,
