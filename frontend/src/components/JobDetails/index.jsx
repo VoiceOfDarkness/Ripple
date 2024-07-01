@@ -1,6 +1,6 @@
 // JobDetails.js
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
@@ -80,7 +80,15 @@ const JobDetails = () => {
             )}
             <div className="ml-4 flex flex-col gap-3">
               <h2 className="text-3xl font-bold text-purple-500">
-                {gig?.freelancer?.user.user_name}
+                <Link
+                  to={
+                    gig?.freelancer?.user_id === user?.id
+                      ? "/profile"
+                      : `/user/${gig?.freelancer?.user_id}`
+                  }
+                >
+                  {gig?.freelancer?.user.user_name}
+                </Link>
               </h2>
               <div className="flex items-center text-gray-500">
                 <MapPinIcon className="w-8 h-8" />

@@ -28,7 +28,7 @@ export default function JobMain() {
     <div className="pb-12">
       <JobCardsList
         jobs={query.get("search") ? searchedGig : gigs?.data || []}
-        totalItems={gigs.total_items}
+        totalItems={gigs?.total_items}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
       />

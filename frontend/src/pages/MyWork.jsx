@@ -6,7 +6,7 @@ import { getProfile } from "../store/profile-slice";
 
 export default function MyJobPage() {
   const dispatch = useDispatch();
-  const gigs = useSelector((state) => state.gigs.gigs);
+  const gigs = useSelector((state) => state.gigs.gigs.data) || [];
   const profile = useSelector((state) => state.profile.profile);
 
   useEffect(() => {

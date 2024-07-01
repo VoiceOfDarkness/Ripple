@@ -13,7 +13,6 @@ const InfoTag = ({ children }) => {
 };
 
 export default function JobCard({ job }) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
   // const handleToggle = (event) => {
@@ -40,16 +39,19 @@ export default function JobCard({ job }) {
       <div className="p-5">
         <h1 className="text-white font-bold mt-5">{job.title}</h1>
         <h2 className="text-white">{job.company}</h2>
-        <div className="flex gap-3 mt-10 items-center">
+        <div className="flex gap-3 text-white mt-10 items-center">
           <div className="flex items-center gap-1">
             <Star style={{ marginBottom: "2px" }} />
             <span>{Number(job.rating).toFixed(1)}</span>
           </div>
           <p>({job.num_reviews})</p>
         </div>
-        <div className="flex mt-10 gap-10">
-          <p>{job.category.name}</p>
-        </div>
+        {job.category?.name && (
+          <div className="flex mt-10 gap-10">
+            <p>{job.category.name}</p>
+          </div>
+        )}
+
         <div className="flex w-full justify-between content-between mt-10">
           <p className="text-PlaceHolderGray">From ${job.price}</p>
         </div>
