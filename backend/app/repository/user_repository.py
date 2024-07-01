@@ -2,9 +2,11 @@ from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
 from app.models.user import HireManager, Freelancer, User
+from app.models.services import Gigs
 from app.repository.base_repository import BaseRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 
 
 class UserRepository(BaseRepository):
@@ -55,6 +57,20 @@ class FreelancerRepository(BaseRepository):
             session.add(freelancer)
             await session.commit()
             await session.refresh(freelancer)
+
+    async def get_profile(self, user_id: int):
+        async with self.session_factory() as session:
+            stmt = (
+                select(Freelancer)
+                .options(
+                    selectinload(Freelancer.user),
+                    selectinload(Freelancer.gigs).selectinload(Gigs.images)
+                )
+                .filter(Freelancer.user_id == user_id)
+            )
+            result = await session.execute(stmt)
+            freelancer = result.scalars().first()
+        return freelancer
 
     async def get_by_user_id(self, user_id: int):
         async with self.session_factory() as session:

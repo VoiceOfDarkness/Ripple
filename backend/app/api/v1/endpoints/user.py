@@ -1,13 +1,22 @@
 from app.core.container import Container
 from app.core.dependencies import get_current_user
-from app.schemas.user import UpdateUser, User
+from app.schemas.user import UpdateUser, User, FreelancerResponse
 from app.services.user_service import UserService
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Form, Depends, File, UploadFile, status
 
 user_router = APIRouter(
-    prefix="/user", tags=["user"], dependencies=[Depends(get_current_user)]
+    prefix="/user", tags=["user"]
 )
+
+
+@user_router.get("/{user_id}", response_model=FreelancerResponse)
+@inject
+async def get_freelancer(
+    user_id: int,
+    service: UserService = Depends(Provide[Container.user_service]),
+):
+    return await service.get_freelancer(user_id)
 
 
 @user_router.get("/profile", response_model=User)

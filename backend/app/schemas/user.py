@@ -55,10 +55,29 @@ class BaseFreelancer(BaseModel):
 
 
 class Freelancer(BaseFreelancer):
-    overview: str | None
     user: User
     orders: List["Order"]
     gigs: List["Gigs"]
+
+
+class FreelancerGigsImages(BaseModel):
+    id: int
+    filename: str
+    gig_id: int
+
+
+class FreelancerGigs(BaseModel):
+    id: int
+    title: str
+    price: float
+    rating: float
+    num_reviews: int
+    images: List[FreelancerGigsImages]
+
+
+class FreelancerResponse(BaseFreelancer):
+    user: User
+    gigs: List["FreelancerGigs"]
 
 
 class CreateFreelancer(BaseFreelancer):
@@ -66,7 +85,6 @@ class CreateFreelancer(BaseFreelancer):
 
 
 class FreelancerNoRelation(BaseFreelancer):
-    overview: str | None
     user: "User"
 
 

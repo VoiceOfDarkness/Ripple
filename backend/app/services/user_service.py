@@ -30,6 +30,10 @@ class UserService(BaseService):
         except Exception as e:
             raise Exception("Error getting user by username or email: ", e)
 
+    async def get_freelancer(self, user_id: int):
+        freelancer = await self.freelancer_repository.get_profile(user_id)
+        return freelancer
+
     async def get_profile(self, user: User):
         user_data = user.model_dump()
         if user.is_freelancer:
